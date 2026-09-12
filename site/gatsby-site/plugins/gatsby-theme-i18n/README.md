@@ -1,1 +1,0 @@
-This is a modified version of the `gatsby-theme-i18n` plugin, which seems to have been abandoned.
