@@ -1,0 +1,53 @@
+import { format, fromUnixTime } from 'date-fns';
+import { LocalizedLink } from 'plugins/gatsby-theme-i18n';
+import React from 'react';
+import { Highlight } from 'react-instantsearch';
+import { VIEW_TYPES } from 'utils/discover';
+import WebArchiveLink from '../../../components/ui/WebArchiveLink';
+
+export function citationReportUrl(item, viewType) {
+  let path = null;
+
+  if (viewType === VIEW_TYPES.INCIDENTS) {
+    path = '/cite/' + item.incident_id;
+  } else {
+    if (item.is_incident_report) {
+      path = '/cite/' + item.incident_id + '#r' + item.objectID;
+    } else {
+      path = `/reports/${item.report_number}`;
+    }
+  }
+
+  return path;
+}
+
+export function HeaderTitle({ item, ...props }) {
+  return (
+    <div>
+      <h5 {...props}>
+        <LocalizedLink
+          to={citationReportUrl(item, props.viewType)}
+          className="no-underline font-bold text-inherit"
+          title={item.title}
+        >
+          <Highlight
+            hit={item}
+            attribute={props.viewType === VIEW_TYPES.INCIDENTS ? 'incident_title' : 'title'}
+          />
+        </LocalizedLink>
+      </h5>
+    </div>
+  );
+}
+
+export function SourceDomainSubtitle({ item, className }) {
+  return (
+    <div className={`${className || ''} text-inherit`}>
+      <WebArchiveLink url={item.url} date={item.date_submitted}>
+        {item.source_domain} &middot; {format(fromUnixTime(item.epoch_date_published), 'yyyy')}
+      </WebArchiveLink>
+    </div>
+  );
+}
+
+export default {};

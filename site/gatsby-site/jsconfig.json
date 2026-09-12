@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "jsx": "react",
+    "checkJs": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "components/*": [
+        "src/components/*"
+      ],
+      "elements/*": [
+        "src/elements/*"
+      ],
+      "hooks/*": [
+        "src/hooks/*"
+      ],
+      "contexts/*": [
+        "src/contexts/*"
+      ],
+      "mongodb/*": [
+        "src/mongodb/*"
+      ],
+      "pages/*": [
+        "src/pages/*"
+      ],
+      "services/*": [
+        "src/services/*"
+      ],
+      "templates/*": [
+        "src/templates/*"
+      ],
+      "utils/*": [
+        "src/utils/*"
+      ],
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "public"
+  ]
+}
