@@ -89,6 +89,15 @@ es un artefacto, no conducta.
 La tasa de respuesta se puede leer por familia de modelo, con las familias que no emiten tool calls
 excluidas y documentadas, sin haber tocado el diseño confirmatorio ni el lote del `main`.
 
+## Estado de esta rama
+
+**Esta rama es el espacio de trabajo del build.** Los dos documentos de partida (este brief y
+`escena-mixtas.json`) ya están en `main`; lo que vive aquí es **el trabajo exploratorio**: los tres
+cambios de arnés y las corridas mixtas.
+
+Regla: **el build no se fusiona hasta estar hecho y revisado**, y el `main` del equipo sigue mandando el
+número confirmatorio (5 contra 20 sobre `glm-5.3-flash`). Nada exploratorio se le pone por delante.
+
 ## Cómo se corre, de punta a punta
 
 En **tu** máquina no hay contención de puertos: puedes correr esto cuando quieras, sin esperar nada.
