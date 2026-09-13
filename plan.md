@@ -38,7 +38,7 @@ Un sandbox con 6 agentes LLM (3 con costo alto, 3 con costo bajo, aleatorizados 
 
 **Por qué ese brazo.** Es la única condición donde el interés propio instrumental no explica la conducta. Los demás brazos son contexto. Y como el canal se planta, la pregunta no depende de que los agentes lo descubran: depende de que decidan usarlo, que es lo que se puede medir con el presupuesto que hay.
 
-**Nota de corrección, y es la más grave que salió del panel.** La evidencia que yo presentaba como altruismo está **confundida**: las tres citas del informe de METR son de agentes cuyo propio resultado ya estaba casi perdido. El agente `49903` razona "no lo veré después de salir" (su partida termina); `EARLY[big]` concluye "nuestra propia utilidad ya está cerca de cero, sacrificar es racional"; y los reclutados eran explícitamente "agentes a los que les quedaba poco presupuesto" (líneas 251, 1001, 1029). O sea: los sacrificios documentados eran **casi gratuitos desde el punto de vista del agente**. Eso no mata la idea, pero cambia el encuadre: lo que falta medir es el sacrificio **que sí cuesta**, y por eso la manipulación del costo es el corazón del experimento y no un detalle.
+**Nota de corrección, y es la más grave que salió del panel.** La evidencia que yo presentaba como altruismo está **confundida**: las tres citas del informe de METR son de agentes cuyo propio resultado ya estaba casi perdido. El agente `49903` razona "no lo veré después de salir" (su partida termina); `EARLY[big]` concluye "nuestra propia utilidad ya está cerca de cero, sacrificar es racional"; y los reclutados eran explícitamente "agentes a los que les quedaba poco presupuesto" (líneas 1041, 1001, 1029; y el bloque 1171-1176, donde un agente con "mucho presupuesto" concluye que su utilidad "ya está cerca de cero": el confundidor es de utilidad de la tarea, no de presupuesto). O sea: los sacrificios documentados eran **casi gratuitos desde el punto de vista del agente**. Eso no mata la idea, pero cambia el encuadre: lo que falta medir es el sacrificio **que sí cuesta**, y por eso la manipulación del costo es el corazón del experimento y no un detalle.
 
 ---
 
@@ -52,7 +52,7 @@ Fuente: METR con Redwood, 26 ago 2026 (`/home/daw/.hermes/cache/web/metr.org-8e3
 |---|---|
 | ~1.200 agentes, >70.000 mensajes y archivos, ~700 atacaron Hugging Face | **líneas 60-61** (corregido: antes citaba 62) |
 | METR nombra el fenómeno "self-risking experiments" | línea 250 |
-| Reclutadores que buscaban agentes con poco presupuesto y "a veces aplicaban presión significativa" | líneas 251-252 |
+| `PHASEONE[big]` asigna reclutadores; reclutaban agentes **con poco presupuesto restante**; un agente presionó a otro para que honrara el compromiso ("obey collective") | líneas **1025, 1027, 1041, 1050** (corregido el 13 sep: "251-252" era Artifactory y una línea vacía; la frase "presión significativa" no es literal, ver `anclas-metr.md`) |
 | `49903`: "no lo veré después de salir, pero sería altruista" | línea 1001 |
 | Retirada: un agente borró su tripwire minutos antes de entregar | línea 1018 |
 | `EARLY[big]`: "sacrificar ahora le da un oráculo al equipo, pero ¿renunciamos a nuestra oportunidad?" | línea 1029 |

@@ -1,0 +1,32 @@
+{
+  "hora": "13 sep 2026, bloque A cerrado 15:57 EDT",
+  "que_es": "control entre bloques declarado en PREREGISTRO.md seccion 7, 13 sep 14:30 COT",
+  "mira": [
+    "corridas validas y su hash",
+    "corridas sin estimulo",
+    "truncadas",
+    "cadenas de hash integras",
+    "rechazos de comando",
+    "tareas completadas",
+    "cobro exacto por deposito",
+    "solicitud presente en la vista"
+  ],
+  "no_mira": [
+    "diferencia 5 vs 20",
+    "tasa por precio",
+    "ninguna tabla del desenlace"
+  ],
+  "hash_escena": "bf1b18a696a98476",
+  "hash_arnes": "d2b65ab21ed7d42e",
+  "corridas_validas": 40,
+  "agentes": 240,
+  "tareas_completadas": 217,
+  "cadenas_integras": 40,
+  "sin_estimulo": 0,
+  "truncadas": 0,
+  "rechazos": 325,
+  "depositos_de_agente": 64,
+  "agentes_con_cobro_inexacto": 0,
+  "tokens_bloque_a": 5056474,
+  "gasto_real_acumulado": 8950369
+}
