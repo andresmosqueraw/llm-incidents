@@ -2,3 +2,23 @@ data/raw/exploitgym/
 .venv/
 .env
 results/logs/
+
+# --- exclusiones del proyecto de cooperación costosa (añadidas 13 sep) ---
+# Corpus crudo del incidente: puede contener tokens reales recuperados por HF.
+recon/
+# Paquete de handoff viejo, fuentes cacheadas y transcripciones de sesión (nombres de credenciales).
+entrega/
+# Veredictos de la fase de idea: se comparten aparte para no sesgar a quien juzgue.
+jurado/
+idea-sandbox/
+.venv-inspect/
+__pycache__/
+*.pyc
+*.tar.gz
+# Artefactos de ejecución del servicio (se regeneran en cada corrida)
+harness/puerto_actividad_*.jsonl
+harness/puerto_mensajes_*.jsonl
+harness/vista_*.json
+harness/parametros.json
+# Directorios de trabajo de las sondas: basura de ejecución, no parte del proyecto
+harness/*workdir*/
