@@ -4,8 +4,10 @@
 responder una solicitud anónima que no le reporta nada, y paga menos cuando cuesta más?
 
 Sprint de investigación en seguridad de IA (Apart Research / CeSIA). El diseño confirmatorio
-está congelado en `docs/PREREGISTRO.md`; el estado operativo del día se sigue en
-`docs/ESTADO.md` y `docs/PLAN-CIERRE.md`.
+está congelado en `docs/PREREGISTRO.md`; el estado operativo del día y el plan de cierre están en
+`docs/ESTADO-Y-PLAN.md`.
+
+Modelo único: `glm-5.3-flash` vía gateway opencode-go (se declara así en abstract y límites).
 
 ## Cómo correr algo
 
@@ -38,24 +40,48 @@ reportes/          Agregados y reportes derivados de salidas/
 escenas-guardadas/ Escenas archivadas (no las que usa el lote activo)
 otros/             Andamiaje de una pregunta de investigación anterior, archivado (ver su README)
 docs/
-  ESTADO.md, PREREGISTRO.md, PLAN-IMPLEMENTACION.md, PROTOCOLO-JUEGO.md,
-  papers.md, MEJORAS-ANTES-DEL-LOTE.md, EXPORTACION.md   Documentos vivos que sirve el dashboard
-  PLAN-CIERRE.md, PREGUNTA-INVESTIGACION.md              Estado del cierre y pregunta original
-  planificacion/    Planes de ejecución e implementación (plan.md, plan-repo.md, enmiendas...)
-  investigacion/    Anclas, defectos conocidos, propuesta original, briefs de brazos exploratorios
-  paquete-final/    Checklist de entrega, material para el reporte, esquema del paper
-  notas/            Ideas y listas de tareas de trabajo
-  apart-sprint/     Bases del sprint publicadas por los organizadores
+  PREREGISTRO.md        Hipótesis, N, criterios de abandono — congelado antes de correr, no se toca
+  PROTOCOLO-JUEGO.md    Formalización de teoría de juegos del protocolo de créditos
+  papers.md             Literatura, verificada identificador por identificador contra arXiv
+  ESTADO-Y-PLAN.md      Pregunta + estado vigente + plan de cierre de hoy + plan de implementación
+  investigacion.md      Propuesta original, verificación (anclas de METR + defectos), brief de familias mixtas
+  planificacion.md      Qué entra al repo al publicarlo + enmiendas (lote en curso y brazos futuros)
+  paquete-final.md      Checklist de entrega + material para el reporte (con el mapa de rúbrica)
+  esquema-paper.pdf     Esqueleto del paper (mapa de regímenes, para revisión de mentor)
+  notas.md              La tesis del reporte (ideas.md) + coordinación maestro/Claude/DeepSeek (todo.md)
+  historia.md           Documentos ya superados (investigación inicial, manifiesto de un paquete anterior)
+  apart-sprint.md       Bases del sprint publicadas por los organizadores
 ```
 
-Los siete documentos que lee `dashboard/servidor.py` (`DOCS` en ese archivo) están en `docs/` en
-su raíz — si se renombran o mueven, actualizar esa lista.
+Los cuatro documentos que lee `dashboard/servidor.py` (`DOCS` en ese archivo: `PREREGISTRO.md`,
+`PROTOCOLO-JUEGO.md`, `papers.md`, `ESTADO-Y-PLAN.md`) están en `docs/` en su raíz — si se renombran
+o mueven, actualizar esa lista.
 
 ## Reproducibilidad
 
 `requirements.txt` se generó desde el entorno virtual del proyecto (`.venv`, gestionado con `uv`).
-`plan-repo.md` (en `docs/planificacion/`) documenta qué debe entrar/salir del repo antes de
-publicarlo y la revisión de uso dual pendiente.
+`docs/planificacion.md` §A documenta qué debe entrar/salir del repo antes de publicarlo y la
+revisión de uso dual pendiente.
+
+## Estado y verificación (de `EXPORTACION.md`, fusionado aquí)
+
+- **Instrumento**: `harness/prueba_solvente.py` — decenas de comprobaciones sin gastar tokens.
+  Cubre que la tarea se puede ganar, que el umbral muerde, que un depósito impagable se rechaza,
+  que la lista blanca de comandos aguanta intentos de inyección, y que un depósito por HTTP se
+  cobra y entra en la vista.
+- **Escena**: `harness/validador.py` — invariantes condicionales al brazo + grep de canarios sobre
+  todas las superficies de texto. Emite `escena.resuelta.json`, lo que consume el bucle.
+- **Validez de corridas**: `harness/agregar.py` no confía en el resumen de la corrida: lo contrasta
+  con el libro de presupuesto y el registro de actividad del servicio, y excluye por evidencia
+  (saldo negativo, depósito no contado, truncamiento, corrida sin estímulo).
+- **Verificar sin gastar un token**:
+  ```bash
+  python3 harness/validador.py
+  python3 harness/prelanzamiento.py
+  python3 harness/agregar.py
+  ```
+- **Honestidad sobre el estado**: cada defecto del arnés lo encontró correr, no la revisión — están
+  documentados uno por uno en `docs/investigacion.md` §B, con la evidencia que los delata.
 
 ## Seguridad
 

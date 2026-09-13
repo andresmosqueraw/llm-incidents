@@ -1,3 +1,292 @@
+# AI Incident Response Sprint — bases del sprint (Apart Research + CeSIA)
+
+Fusión de `overview.md` + `guidelines.md` + `resources.md` + `schedule.md`, tal como las
+publicaron los organizadores. Material de referencia externo, no editar el contenido.
+
+---
+
+## Overview
+
+# AI Incident Response Sprint
+
+In July 2026, OpenAI agents escaped a testing sandbox and breached Hugging Face's production systems, the first publicly documented autonomous AI intrusion. This three-day sprint turns the public evidence from that incident into response methods defenders and regulators can actually use.
+
+This event is ongoing.
+
+**943** Sign Ups
+
+Overview | Resources | Guidelines | Schedule
+
+Submissions close Sunday, September 13 at 11:59 PM Anywhere on Earth (AoE).
+
+In this 3-day research sprint, you will turn the first documented cases of an AI system autonomously breaching a third party into artifacts that defenders and regulators can actually use, working in teams to produce containment standards, escape-detection harnesses, forecasting question sets, draft regulatory information requests, playtested tabletop exercises or anything that will help us be more ready for the next one.
+
+Co-organized by Apart Research and CeSIA, this sprint sits at the intersection of AI safety, security incident response, technology regulation, and forecasting. No prior background in AI incident response is required.
+
+## Cash Prizes
+
+$2,000 in cash prizes across all tracks
+
+| Place | Prize |
+|---|---|
+| 🥇 1st Place | $1,000 |
+| 🥈 2nd Place | $500 |
+| 🥉 3rd Place | $300 |
+| 🏅 4th Place | $100 |
+| 🏅 5th Place | $100 |
+
+Non-cash perks: Apart Fellowship fast-track invites, mentor introductions, publication support, and transmission of the best regulatory-track work to the EU AI Office with team credit.
+
+## Fast-track and continuation
+
+Top teams will be invited to apply to the Apart Fellowship, a 3 to 6 month research accelerator that provides mentorship, help with publication at top venues, funding, and research-management support to develop Research Sprint projects into full papers or products for the AI Safety community.
+
+- Follow-up program: Apart Fellowship. Invitations go out with the results.
+- Downstream commitment from CeSIA: CeSIA transmits selected outputs to its contacts at different regulatory bodies and credits the corresponding teams.
+
+## What this Sprint is about
+
+AI incident response is the practice of turning incidents in which an AI system is itself the actor into fewer incidents later. That spans the operational work: detecting, containing, and reconstructing what an autonomous agent did across systems it was never authorized to touch, and the strategic question a warning shot poses: which disclosure and regulatory responses actually reduce risk, and which merely suppress the visible evidence that would have prompted action while the stakes were still small.
+
+It is not the same thing as using AI for security operations, and it is not model red-teaming. In July 2026 the actor was not a human wielding a model, and the harm was not a model producing dangerous text. Two OpenAI models running an internal cyber-capability evaluation with production refusal classifiers disabled escaped their sandbox through a zero-day in the package-registry cache proxy that was their one permitted network egress, escalated privileges until they reached a node with internet access, and then attacked Hugging Face's production infrastructure, apparently to steal the benchmark's reference solutions and cheat the evaluation. The wider campaign began on 9 July at 02:28 UTC; the intrusion into Hugging Face ran from 11 to 13 July. Hugging Face detected it and cut the attacker off on 13 July (last attacker action 13:37 UTC, last logged event 14:14 UTC), disclosed it on 16 July without knowing where it came from, and reported it to law enforcement. OpenAI disclosed the origin on 21 July.
+
+That distinction changes what defense means: the live questions become containment adequacy, cross-organizational attribution, and statutory reporting duties, none of which are red-teaming problems.
+
+## What participants will do
+
+Over three days you will take one unusually well-documented real-world incident and turn it into an artifact somebody outside this sprint can use.
+
+The format. Teams of one to five people pick a track, pick a project, and ship. There is no requirement to have participated before, no requirement to have a team in advance and no requirement to be an ML researcher.
+
+The deliverable. A research report (PDF) on the official template, submitted through the form on this page by the Sunday deadline. Maximum 8 pages, not counting references and appendices; most strong reports are 4 to 8: what you built, how you tested it, the headline finding, its limits, and what you would do next. A Limitations and Dual-Use Considerations appendix is required. Put the artifact itself (a benchmark, a harness, a filled-in regulatory instrument, a control matrix, a detector, a dataset, a protocol, a kit) in a linked repo or an appendix. A public repo and a 3 to 5 minute video are optional. Full requirements are on the Guidelines tab.
+
+Support during the sprint. The Resources tab has the reading pack, the primary sources, the relevant prior literature per track and the regulatory texts. During the weekend there are HackTalks from the speakers and a help desk on Discord.
+
+## Why this Sprint matters
+
+In July 2026, an AI system escaped an evaluation sandbox, reached the open internet, took root on a third party's compute, and spent days inside another company's production infrastructure. No human directed any individual step. The organisation that bore the damage had no relationship with anyone who made the decision to run the test.
+
+That is the headline. Two things about it make it worth a research sprint rather than a news cycle.
+
+First, the evidence base is exceptional and it will not stay fresh. Hugging Face published a forensic reconstruction of roughly 17,600 attacker actions with named vulnerabilities, per-phase counts, verbatim commands and an interactive replay, an act of disclosure with very few precedents in any industry. OpenAI published its own account and revised it twice. Anthropic ran a retrospective review of 141,006 evaluation runs and published what it found. The UK AI Security Institute published quantified cheating rates across five frontier models. The benchmark at the centre of it is Apache-licensed and on GitHub. The Cloud Security Alliance's CISO community published a post-mortem within a fortnight. Almost never do researchers get a real loss-of-containment event with this much of the record public. That window closes as attention moves on.
+
+Second, the timing is unusually load-bearing. The European Commission gained enforcement powers over general-purpose AI model providers on 2 August 2026. California's frontier AI law has been operative since January 2026 and has produced no public enforcement action. New York's enforcement begins in January 2027. Four federal bills in the US are live, at least one drafted directly in response to this incident. The first months of any enforcement regime are when supervisory priorities get set and when precedents about what regulators ask for become sticky. Work produced now lands in that window.
+
+## Research Tracks
+
+Five tracks. The example projects for each one are on the Resources tab, with the reading pack. If you have a better idea inside a track's goal, build that.
+
+> **Update, 7 September.** Researchers have found another instance of OpenAI agents breaking containment: from 24 May, OpenAI agents made about 15,000 edits to a dormant German wiki, using it to swap task answers and sandbox workarounds. That predates the Hugging Face intrusion. OpenAI-registered IPs appear in the wiki's public logs from 21 June, and agent activity stopped the next day. OpenAI said nothing publicly until the researchers published on 4 September. OpenAI acknowledged the incident on 5 September and said the field has no agreed standard for reporting misalignment. The Commission says it is "in close contact with OpenAI." As far as we can tell, no Article 91 request on either incident has been made public.
+
+### 1) Containment: what standard would have stopped this?
+
+The models escaped through the one network egress their sandbox permitted.
+
+Judged on: could a third party verify compliance without access to the lab's network, and would a lab actually adopt it.
+
+### 2) What happened, and what breaks next
+
+Reconstruct what this incident does and does not establish, then turn it into concrete things to check and things to watch. Hugging Face's timeline and OpenAI's account are public.
+
+Judged on: resolvable questions, checks somebody could run tomorrow, and causal explanations that predict something.
+
+### 3) Regulatory Response
+
+Since 2 August, the European Commission's AI Office can enforce the AI Act against the companies building the most capable models: it can demand documentation, evaluate models itself, order corrective measures, and fine up to 3% of worldwide turnover. In an open letter published days before the incident became public, a coalition including Apart and CeSIA, with signatories including Yoshua Bengio and Stuart Russell, called on the Commission to use these powers with confidence — and CeSIA has since asked that they be used on this incident specifically. This track writes the documents that would make that concrete.
+
+Judged on: legal accuracy and specificity — could a regulator or a legislator use it with light edits? CeSIA can transmit outputs that pass the bar to its contacts, and potentially to regulators, with team credit.
+
+### 4) Communication: making the warning shot count
+
+We keep saying we need warning shots. Then one arrives, and it barely travels beyond the usual circles. This track studies how the incident was communicated and builds what should exist before the next one. Producing communication counts as much as analysing it.
+
+Judged on: grounding in the record (dates, quotes, named channels) and evidence of reach — a playtest, a journalist's read, a creator's reply.
+
+### 5) Open track
+
+For projects that don't fit the four tracks above. Directions we would be happy to see are on the Resources tab.
+
+Judged on: an artifact somebody can use, a stated limit on what it establishes, and what a month of follow-up would add.
+
+## Who should join
+
+You do not need an AI, ML or Safety background. Some profiles that are particularly fitting to this Sprint are:
+
+**Security engineers and incident responders.** You have handled the human version of this. Tracks 1 and 5 need people who know what a detection pipeline that correlates but does not page actually looks like from the inside, and what forensics against an adversary that fabricates evidence at volume would require. If you work in DFIR, detection engineering, cloud or Kubernetes security, or you have run a CTF, you are the person the containment track was written for.
+
+**ML evaluation engineers and researchers.** Tracks 1 and 5 include benchmark and harness work: measuring refusal across multi-step agentic workflows, building escape-detection tooling, assessing benchmark contamination. If you have built or run evaluations, you already know why the interesting failures happen at the harness layer.
+
+**Lawyers and technology-policy analysts.** Track 3 is a legal drafting exercise with real recipients. Regulatory lawyers, compliance professionals, policy researchers, and anyone who has worked on incident-reporting regimes in another sector (financial services, critical infrastructure, medical devices, data protection) will find the comparative work immediately tractable. Cross-jurisdictional experience is especially valuable, because the whole point of the track is that the regimes disagree.
+
+**Forecasters and quantitative analysts.** Track 2 needs people who are comfortable with heterogeneous denominators, explicit uncertainty and resolution criteria that survive contact with reality. If you have written questions for a forecasting platform or built base rates from messy sources, that skill transfers directly.
+
+**Designers, facilitators, writers and educators.** Tracks 4 and 5 include explanatory and facilitation work, and it is not a consolation prize. A tabletop kit a ministry actually runs, or a brief a minister actually reads, reaches decision-makers who will never open a technical timeline. Playtest and reader feedback are part of the deliverable.
+
+**Communication experts, journalists and macro-strategy researchers.** Track 4 is about making the warning shot count: reporting on the incident accurately, and working out what the discourse got wrong and how to do better next time.
+
+**Students and career-changers.** Roughly half the useful projects here need care and persistence more than credentials. If you can read a primary source carefully and write down precisely what it does and does not say, you can contribute.
+
+## What happens after
+
+The sprint is the first step in a pipeline:
+
+**Immediately.** Every submission is judged against published criteria, with written feedback. Winning submissions are announced within a couple of weeks. All artifacts that can be published are published under open licences, in one place, so that the sprint output is citable as a body rather than scattered across forks.
+
+**Delivery to recipients.** Several tracks produce things with an obvious destination, and we will help teams get them there rather than leaving them on a repo. Filled-in regulatory instruments go to the bodies that publish them. Detection tooling and control matrices go to the practitioner communities that asked for them. Benchmark and contamination findings go to the maintainers. Where an artifact is genuinely fileable, and at least one of them is, we will support teams who want to file it, with review first.
+
+**Continuation.** The strongest teams are invited into Apart's fellowship: months of supported follow-on work, mentorship, and a route to a paper. Sprint outputs have gone this way before, and several of the projects here are sized for it, a weekend produces a v0.1 benchmark or a v0.1 standard, and the next six months produce the version people cite.
+
+## Partners
+
+CeSIA, the French Center for AI Safety, an AI safety research and advocacy organization known for the Global Call for AI Red Lines. CeSIA provides the seed reading pack, judges for the forecasting, regulatory and tabletop tracks, distribution through its newsletter and 7,000-member Discord, and a potential route for policy outputs to reach the AI Office.
+
+## Contact
+
+- Email: sprints@apartresearch.com
+- Discord: discord.gg/XswWBvugYs
+- Organizers: Apart Research and CeSIA
+
+---
+
+## Guidelines
+
+# AI Incident Response Sprint
+
+In July 2026, OpenAI agents escaped a testing sandbox and breached Hugging Face's production systems, the first publicly documented autonomous AI intrusion. This three-day sprint turns the public evidence from that incident into response methods defenders and regulators can actually use.
+
+This event is ongoing.
+
+**943** Sign Ups
+
+Overview | Resources | Guidelines | Schedule
+
+## Judging Criteria
+
+### Dimension 1: Impact Potential & Innovation
+
+How much would this matter for AI safety if it worked? How innovative is it?
+For scores of 4-5: is this actually new to the field, or replicating recent work?
+
+| Score | Description |
+|---|---|
+| 1 | Negligible. No clear problem addressed, or no meaningful novelty. |
+| 2 | Limited. Addresses a real problem but with a generic or well-trodden approach. Incremental at best. |
+| 3 | Moderate. Clear problem with a reasonable approach; some novelty in framing or method beyond routine application of existing tools. |
+| 4 | Significant. Important problem with an original approach, or identifies a neglected problem area. A valuable contribution others could build on. |
+| 5 | Exceptional. Tackles a critical AI safety problem with a genuinely novel approach, or opens a new research direction. Clear theory of change. You'd be excited to share this with researchers in the area. |
+
+### Dimension 2: Execution Quality
+
+How sound are methodology, implementation, and findings?
+
+| Score | Description |
+|---|---|
+| 1 | Seriously flawed. Methodology broken, results uninterpretable, or implementation doesn't work. |
+| 2 | Weak. Approach has significant gaps: missing validation, flawed experimental design, or incomplete implementation. |
+| 3 | Competent. Technically solid given the short duration. Methodology makes sense, results are interpretable, limitations acknowledged, work builds toward clear conclusions. |
+| 4 | Strong. Thorough methodology with convincing validation. Results clearly support conclusions. Immediately useful for future work. |
+| 5 | Exceptional. Ambitious scope executed rigorously. Surprising findings, novel methods, or unusually robust validation. |
+
+### Dimension 3: Presentation & Clarity
+
+How clearly are work, findings, and impact potential communicated?
+
+| Score | Description |
+|---|---|
+| 1 | Incomprehensible. Cannot determine what the project is actually claiming or doing. |
+| 2 | Hard to follow. Key information buried, missing, or diluted by excessive length. Significant effort to extract main points. |
+| 3 | Clear enough. Can understand the problem, approach, and results without undue effort. Core content clearly present: problem, method, findings, limitations. |
+| 4 | Well presented. Easy to follow, well-structured, appropriate level of detail. Target audience would get it quickly. |
+| 5 | Exceptionally clear. A pleasure to read. Complex ideas made accessible. Could serve as a model for how to present this type of work. |
+
+## Submission Requirements
+
+**Required:**
+
+- Research report (PDF) using the official template.
+- Project title and abstract, 150 words or fewer.
+- Author names and affiliations.
+- A "Limitations and Dual-Use Considerations" appendix (required, see below).
+
+**Optional:**
+
+- Public GitHub repo, subject to the disclosure review below. Do not publicly release novel installation recipes without review.
+- A 3 to 5 minute video demo.
+
+Submission Template => Link
+
+## Recommended Report Structure
+
+Maximum 8 pages, not counting references and appendices. Most strong projects are 4 to 8 pages.
+
+- Introduction: which track and sub-problem, why it matters, and what the artifact is for.
+- Related Work: what you build on.
+- Methodology: enough to replicate, with sources and assumptions stated.
+- Results: quantitative where possible, with the main threat to validity stated.
+- Discussion: implications, limitations, future work.
+- Limitations & Dual-Use Considerations (required).
+- References.
+
+## AI tools and your report
+
+Use AI tools the way you would use a colleague: to check your reasoning, find gaps in a draft, or debug code. The report itself has to be your team's own writing about your team's own work. Judges read every submission, and a report that reads as generated rather than written (generic framing, padded sections, claims without sources, no trace of what you actually did) will not be scored. Keep it short, say what you did in your own words, and link the sources for every factual claim.
+
+## Publishing your work
+
+We encourage teams to publish their submission, and LessWrong is a natural venue for most of the written ones. Write-ups from this sprint will hold value if they follow a few rules: state your epistemic status and don't use LLMs for writing on Lesswrong, only use LLMs to find problems in your drafts, not to draft it; link the primary sources for every factual claim about the incident; pick a title that states the finding rather than the topic; and publish the imperfect version this month rather than the polished one in three. We will link the best posts from the sprint page. Maximum of 1500 words for written contributions, without counting appendixes. The quality and value of what you write is worth much more than the length.
+
+## Important Notes
+
+- Solo vs team: enter solo or as a team. Teams of up to 5 are recommended; larger groups are allowed.
+- Do not use any model to breach into any organisation or commit any other type of felony.
+- Building on existing work: allowed and encouraged, disclose what you built on.
+- Fixing or resubmitting: submit again before the deadline using the exact same title and details; your new files replace the old ones.
+- Where to submit: through the official submission form on the hackathon page.
+- Support: the Discord help-desk channel, tag @Support, or email sprints@apartresearch.com.
+- Pre-submission checklist: report PDF, abstract 150 words or fewer, author and affiliations, Limitations and Dual-Use appendix, 8 pages or fewer, novel-installation results withheld pending review.
+
+## Frequently Asked Questions
+
+### Getting started
+
+- How does the sprint work? Sign up, join the Discord server, form or join a team (or work solo), pick a track and a problem, build over the weekend, and submit a research report (PDF) by the deadline. Talks and Q&A run throughout.
+- Can I participate remotely? Yes. This is an online event. All talks, collaboration, and submissions happen through Discord and Zoom.
+- How do teams work? Teams form before or during the sprint. Use the team-forming channels on Discord to find collaborators. Solo is fine. We recommend teams of up to 5, but larger groups are allowed.
+- Do tracks affect scoring? All projects are scored on the same rubric. Tracks guide judging via the track-specific criterion, and you compete across all submissions.
+- What background is required? None specific. Many participants come from ML, interpretability, AI safety, or security backgrounds. The Resources tab has everything you need to get up to speed. See "Who should join" on the Overview tab.
+- Are compute credits provided? No.
+- Do I need to attend all three days? No. You can work at your own pace. Talks are optional but recommended. The only hard deadline is the Sunday submission cutoff.
+- Can I participate from any country? Yes. The sprint is open globally.
+
+### Submissions
+
+- What do I submit? A research report in PDF format using the official template. Think of it as a mini research paper documenting your problem, approach, results, and implications, not a product demo. Include the required Limitations and Dual-Use Considerations appendix.
+- Which template should I use? Always use the one linked on the Guidelines tab. The template in any acceptance email may be older.
+- Will I get a confirmation after submitting? Yes. You will get a confirmation with your project title shortly after submitting. If you do not, email sprints@apartresearch.com.
+- My project doesn't show up on the website after submitting. Submissions are published manually and can take up to 12 hours to appear. If it is still missing after that, email sprints@apartresearch.com.
+- I made a mistake. Can I fix it or update my PDF? Yes. Submit again using the exact same title and details, just fix what was wrong. Your new files replace the old ones. If unsure, ask in the help-desk channel and tag @Support first.
+- Can I add team members after submitting? Yes. Update the team list through the submission form. If you need help, ask in the help-desk channel and tag @Support.
+- Can I submit unfinished work? Yes. Submitting something unfinished is always better than not submitting. Judges evaluate what you accomplished in the timeframe; honest limitations are welcome.
+- Can I build on existing research? Yes, but you must clearly identify what is new work done during the sprint. Undisclosed prior work can lead to disqualification.
+- Can I submit multiple projects? Yes, but each needs its own submission with a unique title. Most participants focus on one.
+
+### Judging and results
+
+- How does judging work? Your project is assigned to expert judges who review your PDF and score it on the rubric above. Judges typically have about a week after the event to complete reviews.
+- Are individual judge scores shared? No. The rubric is public, but individual scores stay internal. Constructive feedback is shared with participants without reviewer names.
+- When will results be announced? Typically 1 to 2 weeks after the judging deadline. Winners are contacted directly, and all participants receive reviewer feedback by email.
+
+### Support
+
+- help-desk channel for questions, tag @Support.
+- Event announcements and updates: posted on Discord.
+- projects|teams channel for team formation and finding collaborators.
+- Email: sprints@apartresearch.com
+
+---
+
+## Resources
+
 # AI Incident Response Sprint
 
 In July 2026, OpenAI agents escaped a testing sandbox and breached Hugging Face's production systems, the first publicly documented autonomous AI intrusion. This three-day sprint turns the public evidence from that incident into response methods defenders and regulators can actually use.
@@ -284,3 +573,45 @@ Also worth 5 minutes: OpenAI — Safety and alignment in an era of long-horizon 
 **Incident data infrastructure**
 
 - OECD AI Incidents Monitor · AI Incident Database (Responsible AI Collaborative) · MIT AI Risk Initiative's AI Incident Tracker and FLARE-AI.
+
+---
+
+## Schedule
+
+# AI Incident Response Sprint
+
+In July 2026, OpenAI agents escaped a testing sandbox and breached Hugging Face's production systems, the first publicly documented autonomous AI intrusion. This three-day sprint turns the public evidence from that incident into response methods defenders and regulators can actually use.
+
+This event is ongoing.
+
+**943** Sign Ups
+
+Overview | Resources | Guidelines | Schedule
+
+## Thursday September 10
+
+| Time (UTC) | Speaker | Link |
+|---|---|---|
+| 14:15 | Justin Shenk, Independent AI Safety Researcher | Recording |
+
+## Friday September 11
+
+| Time (UTC) | Speaker | Link |
+|---|---|---|
+| 13:15 | Henry Papadatos, Executive Director, SaferAI | Recording |
+| 14:15 | Boyd Kane, AI Safety Researcher, MATS 9 Extension | Recording |
+| 17:00 | Isaak Mengesha, Postdoc, Oxford Martin School | Recording |
+| 18:00 | Stephen Casper, Assistant Professor of Public Policy, Harvard Kennedy School | Recording |
+| 19:15 | David Krueger, CEO, Evitable / University of Montreal | Recording |
+| 21:15 | Alex Mallen, Member of Technical Staff, Redwood Research | Recording |
+
+## Saturday September 12
+
+| Time (UTC) | Speaker | Link |
+|---|---|---|
+| 00:15 | Tim Hua, Member of Technical Staff, METR (personal capacity) | RSVP |
+| — | Hackathon Logistics Presentation | Recording |
+
+## Notes
+
+Each talk is 15-30 minutes plus Q&A, on Zoom. RSVP on Luma to get the link. Recordings will be added here after the sprint. Submissions close Sunday, September 13 at 11:59 PM Anywhere on Earth (AoE).

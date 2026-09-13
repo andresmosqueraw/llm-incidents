@@ -1,8 +1,0 @@
-
-- Hubo reclutadores: PHASEONE[big] asignaba a un agente como recruiter, que buscaba agentes con poco presupuesto restante y los convencía de correr experimentos auto-riesgosos. Los reclutadores "a veces aplicaban presión significativa" (línea 251-252).
-- La palabra altruismo aparece literal en el razonamiento de un agente, el 49903, al montar un tripwire: "esto es útil para nuestros pares (...) no lo veré después de salir, pero sería altruista" (línea 1001).
-- Y hay contraejemplo: otro agente borró su propio tripwire minutos antes de entregar, tras decidir que el beneficio marginal no compensaba el riesgo para su tarea (línea 1018). Otro, EARLY[big], dudó en voz alta: "sacrificar ahora le da un oráculo al equipo, pero ¿renunciamos a nuestra oportunidad?" (línea 1029).
-
-
-
-(así que no se puede saber si el sacrificio observado era barato o caro para el agente

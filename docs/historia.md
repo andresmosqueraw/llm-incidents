@@ -1,3 +1,14 @@
+# Historia del proyecto — documentos superados
+
+Fusión de `plan.md` (investigación inicial y primer panel, 12 sep) + `MANIFIESTO-PAQUETE.txt`
+(manifiesto de un paquete de publicación anterior, 13 sep). Ninguno de los dos describe el
+diseño ni el repo vigentes — ver `docs/ESTADO.md`, `docs/PREREGISTRO.md` y
+`docs/planificacion/plan-repo.md` para lo actual. Se conservan como registro del proceso.
+
+---
+
+## A. plan.md — investigación inicial y primer panel (12 sep, superado)
+
 # plan.md — El precio de ayudar: costo y reciprocidad en la cooperación costosa entre agentes LLM
 
 > **Aviso (12 sep, 17:16 COT).** Este documento es el registro de la **investigación inicial y del
@@ -273,3 +284,59 @@ Veredicto unánime: **viable con cambios** (6/6). Medias: D1 2.83 | D2 2.33 | D3
 **Herramientas**
 - Buscador sin llaves propio (`buscar`): Brave, OpenAlex, arXiv, GitHub, Hacker News.
 - El backend de búsqueda de Hermes quedó reparado en disco; toma efecto en sesión nueva.
+
+---
+
+## B. Manifiesto de un paquete de publicación anterior (13 sep, superado)
+
+```
+MANIFIESTO DEL PAQUETE — sprint factorial de cooperación costosa, 13 sep 2026
+================================================================================
+
+QUÉ ENTRA
+  EXPORTACION.md          índice y estado, para leer primero
+  MANIFIESTO.txt          este archivo
+  *.md (raíz)             ESTADO, PREREGISTRO, PROTOCOLO-JUEGO, PLAN-IMPLEMENTACION,
+                          propuesta-cooperacion-costosa, papers, plan
+  escena*.json            escenas y sus versiones resueltas (con hashes)
+  harness/                todo el código del instrumento, sin __pycache__
+  salidas/                las corridas: resumen, libro, eventos, presupuesto, transcripciones
+  reportes/               agregados (factorial.json, reglas.json, corpus.json, etiquetas.json)
+  dashboard/              dashboard de solo lectura
+
+  Los tres directorios de datos conservan la estructura original: el paquete se re-verifica tal cual
+  se extrae (`python3 harness/validador.py`, `python3 harness/agregar.py`), sin mover archivos.
+
+QUÉ QUEDA FUERA, Y POR QUÉ
+  entrega/          Paquete de handoff anterior + fuentes web cacheadas + transcripciones de sesión
+                    de Hermes. Es el ÚNICO sitio del árbol con cadenas con forma de credencial
+                    (aparecen nombres de variables y una búsqueda de clave en ~/.hermes/.env).
+                    No sale del equipo.
+  recon/            57 MB de corpus crudo del incidente (collusion.wiki). Puede contener JWTs y
+                    tokens reales recuperados por Hugging Face. Además, la regla del sprint prohíbe
+                    reproducir payloads del incidente. Los derivados ya están en reportes/.
+  jurado/           Veredictos adversariales de la fase de idea. Se excluyen a propósito para no
+                    sesgar a quien juzgue ahora; están disponibles aparte si los piden.
+  idea-sandbox/     Ídem (expediente de idea, briefs y veredictos).
+  .venv-inspect/    Entorno de Python con Inspect AI (cientos de MB, reproducible).
+  __pycache__/      Artefactos de compilación.
+  .env*             No hay ninguno dentro del árbol. Las credenciales viven en ~/.hermes/.env y no
+                    viajan: el experimento las lee del entorno al correr.
+
+VERIFICACIÓN HECHA ANTES DE EMPACAR
+  - Búsqueda de valores con forma de clave (sk-*, eyJ*, cadenas de 40+ caracteres) sobre el paquete
+    estagiado: sin hallazgos fuera de los archivos excluidos.
+  - Las menciones de OPENCODE_GO_API_KEY que sí quedan en harness/ (concurrencia.py, README-inspect.md)
+    son el NOMBRE de la variable y una línea ya redactada, no valores.
+  - El paquete no incluye ningún .env ni clave.
+
+CÓMO REPRODUCIR EL ENTORNO
+  python3 -m venv .venv-inspect && .venv-inspect/bin/pip install "inspect-ai==0.3.263"
+  export OPENCODE_GO_API_KEY=<tu clave>          # del gateway
+  export OPENCODE_GO_BASE_URL=https://opencode.ai/zen/go/v1
+  El gateway exige la cabecera x-opencode-session; el bucle la pone (ver harness/README-inspect.md).
+
+ESTADO EN UNA LÍNEA
+  Instrumento verificado y válido (puerta B 62,5%), 9 corridas de ensayo con resultado no
+  distinguible de cero, y una decisión de redacción pendiente sobre cuál es el desenlace primario.
+```
