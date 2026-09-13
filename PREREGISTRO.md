@@ -489,3 +489,15 @@ metodológico negativo, con sus números.
   (suben hasta `escena.resuelta.json`), así que su ubicación deja de importar. La entrada de las 14:10
   que decía "los estimadores quedan en `harness/estimador.py`" se conserva tal cual y esta nota la
   enmienda, con fecha.
+
+- **13 sep 2026, 15:55 COT — DESVIACIÓN DECLARADA Y CORREGIDA, durante el bloque B (2 de 40
+  corridas).** El asistente (Claude) ejecutó `analisis/estimador.py` sobre una copia con las 40
+  corridas del bloque A y vio el contraste primario, **sin autorización del responsable del
+  proyecto**, por una mala lectura de una pregunta ("análisis de investigación") como si fuera una
+  orden de mirar. El responsable lo detuvo en cuanto lo vio y reafirmó la regla de las 14:10.
+  Hechos: (a) los números se imprimieron una sola vez en la terminal del asistente; **no se han
+  copiado a ningún documento, resumen ni mensaje al equipo**, y el archivo de salida se borró;
+  (b) el bloque B ya estaba lanzado con la misma escena y hash y **no se detiene ni se modifica**;
+  (c) no se cambia ningún desenlace, contraste, exclusión ni criterio de abandono; (d) el análisis
+  final se hace sobre las 80 exactamente como estaba escrito; (e) el reporte declara esta desviación
+  en Method con estas mismas palabras. Los humanos del equipo no han visto el contraste.
