@@ -487,3 +487,13 @@ metodológico negativo, con sus números.
   primario) de la tabla de generalización por modelo; `instrumento.json` se regeneró con
   `prueba_solvente.py` tras el cambio (apto, 45+ comprobaciones). En el reporte esto va como
   generalización exploratoria en Discussion/Limitations, nunca con el mismo estatus que H1.
+- **13 sep 2026, ~15:20 COT, corrección de redacción a la enmienda de las 14:35, antes de correr ese
+  brazo.** Esa enmienda decía "en la misma escena y el mismo hash" para el precio 0, y eso es
+  imposible: el precio es parte de la escena, así que el brazo **tiene su propio hash** por
+  construcción. Lo correcto, y lo que se hará: la escena de costo cero se **genera desde la misma
+  escena base** —mismos textos, misma estructura, misma semilla, mismos puertos— y **lo único que
+  cambia son los precios** (`asignacion.autosuficientes.precios` a 0 y `precio.depositar_*` a 0;
+  consultar y comando siguen costando 1). Su hash es `47302f2c7c4bd21b`, ya validado con los
+  invariantes y sin fugas de canarios. La comparación con los brazos pagados es legítima porque el
+  texto que el agente lee es idéntico salvo la cifra del precio; la diferencia de hash se declara en
+  la Tabla 2 y **nunca se mezclan** las dos series en un mismo cálculo.
