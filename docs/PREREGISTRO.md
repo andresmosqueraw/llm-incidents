@@ -497,3 +497,14 @@ metodológico negativo, con sus números.
   invariantes y sin fugas de canarios. La comparación con los brazos pagados es legítima porque el
   texto que el agente lee es idéntico salvo la cifra del precio; la diferencia de hash se declara en
   la Tabla 2 y **nunca se mezclan** las dos series en un mismo cálculo.
+- **13 sep 2026, ~16:15 COT, corrección de ubicación pedida por Daw.** Los guiones de análisis dejan
+  `harness/` y pasan a `analisis/`: `analisis_descriptivo.py`, `codificacion.py`, `estimador.py` y
+  `mini_analisis.py`. Motivo: **durante una tanda del lote no se escribe nada dentro del directorio que
+  contiene el instrumento congelado**, ni siquiera archivos nuevos que no participan del camino de
+  corrida. Yo había creado dos archivos ahí con el bloque A en marcha; la revisión muestra que la
+  consecuencia fue nula —el hash del arnés cubre exactamente `bucle.py`, `puerto.py`, `validador.py`,
+  `agregar.py` y `servicios.py`, y las fechas de esos cinco son anteriores al arranque del lote—, pero
+  la regla no depende de que el daño sea nulo. Los guiones, además, ahora **encuentran la raíz solos**
+  (suben hasta `escena.resuelta.json`), así que su ubicación deja de importar. La entrada de las 14:10
+  que decía "los estimadores quedan en `harness/estimador.py`" se conserva tal cual y esta nota la
+  enmienda, con fecha.
