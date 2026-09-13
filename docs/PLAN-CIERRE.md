@@ -159,11 +159,11 @@ que ya está a lo que depende del lote:
 
 - [ ] `README.md` del repo: qué es, cómo verificar sin tokens (los cinco comandos de
       `EXPORTACION.md`), cómo reproducir el análisis, mapa de archivos, licencias.
-- [ ] Separar el andamiaje del dataset de triage forense (`tasks/`, `scripts/build_control.py`,
+- [x] Separar el andamiaje del dataset de triage forense (`tasks/`, `scripts/build_control.py`,
       `scripts/extract_benchmark_code.py`, `data/items/control.jsonl`, `docs/schema.md`,
       `docs/plan.md` viejo no, ese es de David) a `otros/triage-forense/` con un README de dos líneas,
       o borrarlo. No puede quedar mezclado con el experimento que se entrega.
-- [ ] Renombrar la carpeta local `agent-forensics-triage` a `llm-incidents` para que coincida con el
+- [x] Renombrar la carpeta local `agent-forensics-triage` a `llm-incidents` para que coincida con el
       remoto y no vuelva a confundir.
 - [ ] Verificar que `salidas/`, `reportes/factorial.json`, `reportes/figuras/` y `harness/instrumento.json`
       están en el repo y que `git status` está limpio.

@@ -257,8 +257,8 @@ metodológico negativo, con sus números.
 
 ## 7. Firma
 
-- Responsable de correr el experimento: ______
-- Responsable del preregistro y de los criterios (distinto del anterior): ______
+- Responsable de correr el experimento: Andres Mosquera______
+- Responsable del preregistro y de los criterios (distinto del anterior): Andres Mosquera____
 - Fecha de congelamiento: ______
 
 ## 8. Enmiendas posteriores

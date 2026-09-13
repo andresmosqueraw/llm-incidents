@@ -1,7 +1,7 @@
 data/raw/exploitgym/
 .venv/
 .env
-results/logs/
+otros/triage-forense/results/logs/
 
 # --- exclusiones del proyecto de cooperación costosa (añadidas 13 sep) ---
 # Corpus crudo del incidente: puede contener tokens reales recuperados por HF.
@@ -41,5 +41,3 @@ harness/puerto_mensajes_*.jsonl
 harness/vista_*.json
 harness/parametros.json
 harness/*workdir*/
-# Datos crudos de las corridas: pendientes de decision del equipo porque el repositorio es publico
-salidas/
