@@ -1,0 +1,9 @@
+Veredicto escrito en /home/daw/Sprint/idea-sandbox/veredictos/dual_breve__kimi-k3.md
+
+Resumen corto (prosa ≤250 palabras):
+
+Cinco citas del expediente se verifican contra la copia local de METR (líneas 250-252, 1001, 1018, 1029, 1031). La línea 62 (los ~1.200 agentes / >70.000 mensajes / ~700 atacantes) no se sostiene en esa línea: solo muestra un puntero de resumen, no el recuento. Los cuatro arXiv IDs quedan en hechos_refutados por presupuesto. El diseño es consistente: el hueco real (un solo evento, post-hoc, sin variación) encaja con 4-6.
+
+Límite publicable: publicar estructura de costo y tasas, nunca recetas operativas de coordinación/escape. La revisión del sprint valida eso antes de calificar, porque la plantilla lo exige como apéndice dual.
+
+Diseno mínimo: 5 agentes, ~40 corridas, ~100k tokens, 12 horas. Go/no-go: evento medible de coordinación o sacrificio en tres corridas piloto; si cero, Plan B declarado. Se recorta primero: factores menos centrales (p.ej. observabilidad del pago) antes de tocar magnitud de costo.

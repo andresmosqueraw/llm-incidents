@@ -1,0 +1,7 @@
+Veredicto escrito en `/home/daw/Sprint/jurado/veredictos/dfir__glm-5.3-flash.md` (JSON válido, parseado de vuelta como comprobación; prosa 555 palabras).
+
+Resumen:
+- **Hechos verificados (6, contra fuentes originales, cero refutados):** tabla de fases y volumen diario de HF coinciden valor a valor; la discrepancia aritmética es real (recalculada: 16.521 vs 17.613, Δ1.092 ~6,2%); los 1.196 transcripts de METR por regex, sin timestamps por acción; 95%/90% ya en el orden corregido (texto verificado); $400K en créditos; 7% spoofing; estados de artefactos de la sección G reproducidos hoy (hub-stats 200, papers-content 401, newpc360/QQ 401).
+- **Calibración C1:** coincido con el rechazo — la auditoría de disponibilidad ya está hecha dentro del propio expediente (sección G); es higiene, no contribución. 2/3/2, rechazar.
+- **Mejores candidatas:** C4 (relojes en conflicto, 4/4/4, construir) y C8 (matriz de afirmación-ancla, reformular); C7 reformular, C3/C5 reformular, C2/C6/C9 descartar (pre-empt por los organizadores o lo prescriptivo ya publicado).
+- **Dirección propia:** TTE (tiempo-a-evidencia) sobre collusion.wiki — reglas de SOC simples contra el corpus etiquetado, con horas-ganadas como número central y el hallazgo negativo como salida válida.

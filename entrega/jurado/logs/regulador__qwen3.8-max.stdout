@@ -1,0 +1,16 @@
+Veredicto escrito en /home/daw/Sprint/jurado/veredictos/regulador__qwen3.8-max.md — prosa 553 palabras (bajo el límite de 600), JSON válido y parseable con todos los campos del brief.
+
+Resumen del trabajo:
+
+Verificación de hechos (8, mínimo era 4): ninguna refutación de fondo. Re-corrida la prueba de disponibilidad hoy (hub-stats 200 pese al edit de baja; los otros tres datasets 401 — coincide con el expediente); recalculada la discrepancia aritmética de HF (16.521 vs 17.613, diferencia 1.092 ≈ 6,2%); confirmados en la caché local de METR el no-pago y ~$400K en créditos (L51/L407), el corpus de transcripciones (L441-444), 95% autoría vs 90% cobertura con muestra de 100 (L1461/L489), >7% tool calls falsificadas (L496), redaction summary (L42) y Figura 15 redactada (L1087). Un hallazgo menor registrado en hechos_refutados: el expediente dice "1.196 adicionales" pero la fuente dice "overlapping dataset" — solapante, no aditivo.
+
+Desde el rol regulador: el vacío legal es que bajo AI Act Art. 73 un proveedor reportaría apoyándose en exactly este registro — voluntario, redactado por la parte interesada, sin retención obligatoria ni resumen de redacción normativo; "no se redactó nada importante" es una promesa, no un artefacto auditable.
+
+Veredictos clave:
+- C1: rechazar (coincide con el rechazo previo) — link-checker, D1=1/D2=4.
+- C8: construir (4/4/4) — el único que una autoridad usaría casi sin editar.
+- C4: construir (4/4/3) — segundo mejor, pero otro incidente.
+- C9: reformular; C2, C5: reformular; C3, C6, C7: descartar (C7 además uso dual delicado, señalado sin recorrerlo).
+- Dirección propia: prueba de admisibilidad regulatoria del registro público (4/4/4), fusionable con C8 como capa normativa.
+
+Recomendación final: C8 acotado a la disputa de la línea de tiempo de detección (Reuters vs OpenAI vs HF vs METR), con códigos de procedencia y anexo de admisibilidad; primer paso extraer las afirmaciones de detección de las cachés locales esa misma noche.

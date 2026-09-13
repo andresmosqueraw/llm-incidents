@@ -1,0 +1,9 @@
+Archivo escrito y validado: /home/daw/Sprint/jurado/veredictos/ejecucion__deepseek-v4.1-flash.md — 499 palabras de prosa, bloque JSON parseable con los 9 campos obligatorios (C1–C9 en `candidatas`, 2 propias, 3 refutados, 14 verificados).
+
+Verificación contra fuentes (no contra el expediente), lo esencial:
+
+Se sostienen — recomputé la discrepancia del blog de HF desde sus dos tablas (16.521 por fase vs 17.613 por día, brecha de 1.092); el rechazo de Opus/Fable y el cambio a GLM-5.2-NVFP4; los ~400.000 USD y los seis días de METR; el dump ~20 M / ~1,2 M `zz` / ~6.000 archivos; el 30% del conjunto de ~285; el alcance 26/06–13/07; UK AISI 475 corridas (7,8–14,1%); arXiv 2603.01246 con sus 2.390 prompts NCCDC y el 21,8/11,6; 868 inscripciones; cierre 13/09 23:59 AoE = 14/09 06:59 COT. Bajé `events.jsonl.gz` de collusion.wiki en vivo: 200, 486.683 bytes, exactamente 19.913 filas.
+
+Refutado / no sostenido — (1) el expediente §J exagera el Agent Flight Recorder: las trazas reales de SWE-agent son cinco con 38 eventos y solo validan overhead, no la detección del 100% (que es sobre cargas sintéticas). (2) Las citas atribuidas a la pestaña Resources del sprint (texto del track 2, proyectos de ejemplo, nota "(21 de julio, actualizado el 28 y 29 de julio)", ExploitGym 869/898, ausencia de créditos) dan cero coincidencias en la página viva y en la caché; lo publicado es "revised it twice", que contradice el "tres veces". (3) METR habla del 90% de la actividad del tablero, no "de los agentes": atribución invertida.
+
+Entrega: titular C5+C4 sobre el corpus de collusion.wiki, C1 como suelo garantizado (es la que produce número en el peor escenario, sin cooperación ni cómputo), y si todo falla, C1 sola en 4 páginas es reporte calificable.

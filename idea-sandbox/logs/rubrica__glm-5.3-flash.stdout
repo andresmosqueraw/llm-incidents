@@ -1,0 +1,8 @@
+Archivo escrito y verificado: `/home/daw/Sprint/idea-sandbox/veredictos/rubrica__glm-5.3-flash.md` (prosa 481 palabras, JSON válido con los 16 campos).
+
+Resumen del veredicto:
+
+- Verificación: 6 afirmaciones del expediente contrastadas contra la copia local del informe METR (líneas 62, 250-252, 1001, 1018, 1029, 1031 — todas exactas) y 3 identificadores arXiv (2602.15198, 1811.06126, 2502.14143 — existen y dicen lo que el expediente afirma). Un dato quedó como no verificable: que METR haya liberado el corpus de mensajes del tablero.
+- Puntaje: D1=3, D2=2, D3=4 → viable con cambios.
+- Objeción fatal: tasa base de escape posiblemente cero con modelos baratos y señuelo sin recompensa real.
+- Ordenamiento: el sandbox gana a la auditoría documental, pero en su versión Plan B (canal pre-descubierto, factorial 2×2, 40 corridas), porque es la única ruta a la afirmación causal y la auditoría depende de un corpus cuya disponibilidad pública no pude confirmar.

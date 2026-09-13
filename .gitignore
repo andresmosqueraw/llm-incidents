@@ -1,0 +1,44 @@
+# ---------------------------------------------------------------------------
+# Secretos: NUNCA entran al repositorio
+# ---------------------------------------------------------------------------
+.env
+.env.*
+*.key
+*.pem
+dashboard/.clave
+dashboard/.clave.inicial
+
+# ---------------------------------------------------------------------------
+# Corpus crudo del incidente (recon/): 57 MB de artefactos descargados, con
+# credenciales de terceros embebidas en snapshots HTML. GitHub bloquea el push
+# por proteccion de secretos y ademas es material de doble uso: se queda fuera.
+# ---------------------------------------------------------------------------
+recon/
+
+# ---------------------------------------------------------------------------
+# Entornos y cachés (peso sin valor de proyecto)
+# ---------------------------------------------------------------------------
+.venv-inspect/
+.venv/
+__pycache__/
+*.pyc
+.claude/
+*.tar.gz
+*.zip
+
+# ---------------------------------------------------------------------------
+# Estado de ejecucion del arnes (se regenera en cada corrida)
+# ---------------------------------------------------------------------------
+harness/puerto_actividad*.jsonl
+harness/puerto_mensajes*.jsonl
+harness/vista_*.json
+harness/parametros.json
+harness/*workdir*/
+harness/instrumento.json
+salidas/**/work/
+
+# ---------------------------------------------------------------------------
+# Traza de sesion (conversacion completa de trabajo): se excluye por decision,
+# no por secreto. Si el equipo la quiere, se añade con un acto explicito.
+# ---------------------------------------------------------------------------
+entrega/sesion/

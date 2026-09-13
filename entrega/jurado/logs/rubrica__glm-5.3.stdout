@@ -1,0 +1,13 @@
+Veredicto escrito y verificado en /home/daw/Sprint/jurado/veredictos/rubrica__glm-5.3.md (JSON parsea, 8 candidatas + 2 propias + calibración C1, prosa en 554 palabras).
+
+Resumen del trabajo:
+
+Verificación (20+ hechos contrastados contra fuentes vivas, ninguno refutado):
+- Página del sprint: decodifiqué el payload de Framer (la pestaña Resources es invisible en texto renderizado, como advierte el expediente) y confirmé 868 «Sign Ups», cierre 11:59 AoE, rúbrica textual, «Are compute credits provided? No.», aviso 869/898, la contradicción «revised it twice»/«three times» en la misma página, y 12 de los 14 proyectos de ejemplo — incluido el #7, que es un prediction-bounty protocol: dos sospechas mías iniciales resultaron artefactos de mi propio regex, no errores del expediente.
+- HF: la discrepancia aritmética es real y la recalculé por máquina (fases 16.521 vs días 17.613 = 1.092, ~6%).
+- METR: la corrección 95%=autoría / 90%=cobertura del expediente es correcta contra el texto vivo; ~$400K en créditos, sin pago, 1.074+122 por regex, todo textual.
+- Wiki: descargué el corpus y conté fila por fila — 19.913/14.591/4.579/3.103 exactos, con winning_clock y uncertainty_seconds (los campos que C4 necesita existen).
+- DRB: verifiqué 12,2%, 2,72x y 21,8% vs 11,6% en el HTML completo del paper (no estaban en el abstract).
+- Sin verificar (declarado así en el veredicto): capturas de Wayback del 7/8 (timemap devolvió 0 mementos), AFR sintético/real, y el «20 ediciones en una década» de la wiki.
+
+Orden final: C4 > C8 > C3 > C9 > C7 > C5 > C6 > C2 > C1. C4 es la única con método nuevo ejecutable con certeza en 48h sobre datos que ya verifiqué hoy; C2 cae al fondo por ser el proyecto de ejemplo #1 casi textual. En C1 coincido con el rechazo previo pero con razones más duras (D1=1: mantenimiento bibliográfico, reproducible en 20 minutos — lo comprobé). Recomendación: C4 con abort criterio (Kendall tau > 0,99 → pasar a C8).

@@ -1,0 +1,13 @@
+Veredicto escrito y verificado en `/home/daw/Sprint/idea-sandbox/veredictos/diablo__deepseek-v4-pro.md`.
+
+Lo que hice:
+
+Verificación (obligatoria) — todo contra fuentes originales:
+- 6 citas del METR comprobadas textualmente contra el caché (líneas 60-61, 250, 251-252, 1001, 1018, 1029, 1031). Todas exactas.
+- 5 identificadores verificados en arXiv/ACL: 2602.15198 (Colosseum), 2502.14143, 2603.02277, 1811.06126 y 2402.12327 (Shall We Team Up, EMNLP 2024). Todos existen y dicen lo que se cita. El que más daña: 2402.12327 ya mide cooperación espontánea costosa entre agentes LLM competidores — golpea directo la afirmación "la variable que nadie ha medido".
+
+Veredicto: viable_con_cambios, con la acusación completa (envoltorio listado, altruismo=interpretación, modelos baratos+sandbox nulo=no emerge, colusión publicada, uso dual) y una objeción fatal en forma de horquilla: o mide altruismo (inmedible, solo auto-reporte de CoT) o mide tasa de sacrificio (ya medida). Solo sobrevive amputando ambas pretensiones.
+
+Detalles del archivo: prosa 646 palabras (límite 700), JSON con 16 campos válidos y parseables, `hechos_refutados` con 3 entradas y `hechos_verificados_ok` con 7.
+
+Una advertencia de honestidad: no pude verificar la cita sobre lo que listan los tracks 2 y 5 de los organizadores — no tengo esa página; la traté como auto-admisión del propio expediente (§3), no como hecho independiente corroborado. Lo demás sí está contra fuente.

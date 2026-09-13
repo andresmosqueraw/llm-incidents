@@ -1,0 +1,9 @@
+Veredicto escrito en /home/daw/Sprint/jurado/veredictos/diablo__deepseek-v4-pro.md (prosa ~330 palabras + JSON válido).
+
+Lo esencial:
+
+- Verifiqué 8 hechos contra las fuentes originales (HF, METR, sprint, arXiv GovAI/Flight Recorder, collusion.wiki). El expediente resiste: re-sumé las tablas de HF y su discrepancia aritmética es real (16.521 vs 17.613 vs ~17.600). La corrección de METR (95% autoría / 90% cobertura) está confirmada en el propio post.
+- Dos hallazgos en mi contra: (1) el expediente reporta "~18.000 posts" del segundo incidente pero omite que la página del sprint dice "~15.000 edits" y su corpus trae 14.591 revisiones — tres cifras para un mismo hecho, material para C8. (2) El desglose METR de 285/1.196 transcripciones no lo pude verificar en texto público.
+- Objeción fatal de cada candidata: C2 es el proyecto de ejemplo nº1 literal; C6 ya está en el track abierto con prior art; C9 repite lo prescriptivo ya publicado; C7 no prueba nada real y el 4x ya lo publicó HF; C3 no tiene datos (transcripciones no públicas); C5 tiene baseline amañado y contrafactual infalsificable; C1 mide el registro, no el incidente (coincido con el rechazo previo); C8 es anotación, no hallazgo.
+- Única que sobrevive: C4 (corpus real descargable, produce un número) — veredicto "construir", con su objeción no mortal anotada.
+- Propuesta propia más fuerte que las nueve: un denominador de consistencia del registro (re-derivar cada cifra de los 5 informes + diff de revisiones → tasa de consistencia falsable), con los dos hallazgos ya anclados. Recomendación final: construir eso.

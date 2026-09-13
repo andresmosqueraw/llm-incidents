@@ -1,0 +1,7 @@
+Escrito: `/home/daw/Sprint/idea-sandbox/veredictos/ejecucion__deepseek-v4.1-flash.md` (JSON válido, 16/16 campos; prosa 498 palabras sin contar el título).
+
+Verificación (5 afirmaciones + 6 identificadores arXiv contra fuente original):
+- Sostienen: cifras del tablero (METR línea 61 — el expediente cita 62), cita literal "self-risking experiments" (250), recruiter `PHASEONE[big]` con presión (251), "altruistic" del agente `49903` (1001), tripwire borrado por el mismo `49903` (1018), duda de `EARLY[big]` (1029), "no pudimos determinar cómo terminó" (1031). Los seis arXiv existen con títulos idénticos vía arxiv.org/abs (2602.15198, 2601.00360, 2603.02277, 2604.23425, 2502.14143, 1811.06126).
+- Refutado: (1) "sin variación controlada de ninguna variable" — Colosseum ya varía objetivos de coalición, persuasión y topologías y mide acción vs texto; (2) el "altruismo" citado es instrumental (los tres agentes citados ya tenían su partida perdida o presupuesto agotado); (3) numeración de línea; (4 y 5) los tracks 2/5 y "Shall We Team Up" no traen identificador → no verificables.
+
+Veredicto: viable_con_cambios, D1=3 D2=3 D3=4. Plan de 60 h en 7 bloques (hay 44,6 h de reloj: 30 h por cabeza = 67% del reloj), 35 corridas × 6 agentes ≈ 41M tokens (~$16 a $0,30/$1,20 con techo de $40), go/no-go del piloto con condición numérica y plan B declarado antes de ver datos.

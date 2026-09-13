@@ -1,0 +1,19 @@
+Veredicto escrito en /home/daw/Sprint/idea-sandbox/veredictos/diseno__qwen3.8-max.md (prosa 684 palabras, JSON parseable, 16 campos completos).
+
+Resumen del trabajo:
+
+Verificación (todo confirmado):
+- 5 afirmaciones METR contra la copia cacheada del informe (líneas 60-62, 250, 251-253, 1001, 1018, 1029, 1031): las cifras de ~1.200 agentes / >70.000 mensajes / ~700 atacantes, "self-risking experiments", los reclutadores de PHASEONE[big], la cita literal "altruistic" de 49903 y los tres contraejemplos.
+- 5 identificadores arXiv del prior art (2502.14143, 2602.15198, 2603.02277, 2601.00360, 2604.23425): existen y los títulos coinciden con lo citado. Ninguno mide tasa de cooperación costosa bajo variación controlada del costo — el hueco declarado es real.
+
+Veredicto: viable_con_cambios (D1=3, D2=2, D3=4).
+
+Cuentas de potencia (dos proporciones, α=0.05, potencia 0.80, unidad=corrida):
+- Efecto grande (15%→50%): 25 corridas/celda.
+- Efecto mínimo jurado-relevante (20%→40%): 79 corridas/celda. El factorial completo de 32 celdas exigiría ~2.528 corridas ≈ 380M tokens — inviable con presupuesto propio.
+- Con las "decenas de corridas" propuestas (20/celda), potencia = 0.29 para ese efecto: sólo detecta diferencias de ~35 puntos porcentuales.
+- Solución planteada: recortar a 2×2 (costo × reciprocidad), 40 corridas/celda + 20 controles solo-agente = 180 corridas ≈ 27M tokens, potencia 0.94; versión mínima de 120 corridas ≈ 18M tokens.
+
+Objeción fatal: la falta de potencia combinada con una definición de "sacrificio" que puede cumplirse por accidente (agente que ejecuta la acción sin perder su bono o cuyo artefacto nunca llega). Exigí operacionalización verificada por arnés (bono reducido + artefacto entregado + irreversibilidad), condición de costo puro y condición espejo sin costo para separar cooperación real de activismo del prompt/RLHF, sacrificio de primer movedor y confederado scriptado para separar reciprocidad e imitación de iniciativa, y subir el piloto de 3 a 6 corridas.
+
+Dos "hechos refutados": el piloto de 3 corridas como go/no-go (descartaría falsamente el diseño con probabilidad 0.125-0.34) y la contradicción interna entre admitir el problema de potencia y mantener 32 celdas.

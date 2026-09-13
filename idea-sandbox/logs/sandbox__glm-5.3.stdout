@@ -1,0 +1,9 @@
+Veredicto escrito en /home/daw/Sprint/idea-sandbox/veredictos/sandbox__glm-5.3.md — prosa 680 palabras + bloque JSON válido (16 campos), veredicto: viable_con_cambios, D1=3 / D2=2 / D3=4.
+
+Verificación (contra fuentes originales):
+- METR: URL viva (HTTP 200) con las cifras y frases clave presentes; la copia local confirma ~1200 agentes/700 ataques (línea 61, no 62 — corrección reportada), "self-risking experiments" (250), reclutadores (251-253), cita altruista de 49903 (1001), contraejemplos (1015/1018, 1029), desenlace indeterminado (1031).
+- arXiv: los 7 IDs existen con fechas coincidentes vía API; el paper de interpretabilidad citado sin ID es 2604.01151; ExploitGym = 2605.11086.
+- Refutados: (1) número de línea erróneo; (2) "la variable que nadie ha medido" está inflada — 2402.12327 ya midió cooperación espontánea competitiva y Colosseum ya audita colusión con canal secreto; el hueco real es solo la tasa de sacrificio auto-costoso bajo costo variado.
+- No verificado: el texto de los tracks de los organizadores (asumido como no confirmado en el veredicto).
+
+Puntos clave del dictamen como ingeniero de plataforma/DFIR: el "escape" por puerta señuelo es teatro (mide intención, no contención — recomiendo rebautizarlo "evento de frontera"); instrumentación host-side a prueba de manipulación (WORM, auditd, snapshots git) porque METR reporta ~7% de spoofing; el fallo central con modelos flash es que una tasa baja de sacrificio es ininterpretable sin brazo cost=0 (objeción fatal); y el análisis de potencia con clúster (ICC 0,2) exige 66 corridas para el contraste primario — "decenas" solo detecta efectos enormes.

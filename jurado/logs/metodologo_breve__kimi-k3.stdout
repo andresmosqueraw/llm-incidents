@@ -1,0 +1,9 @@
+Veredicto escrito en `/home/daw/Sprint/jurado/veredictos/metodologo_breve__kimi-k3.md`.
+
+Puntos clave:
+- C1 rechazada (coincide con el rechazo previo): no es falsable; el número de decaimiento no distingue nulo de positivo.
+- Amenaza principal a validez: sesgo de selección del corpus METR (regex de canal, sin marcas temporales).
+- Recomendación: C3 (sesgo de selección) + test propio de falsación con bootstrap.
+- 4 hechos marcados en `hechos_refutados` como no verificables por falta de presupuesto web.
+
+Prosa de ~180 palabras. JSON válido incluido.
