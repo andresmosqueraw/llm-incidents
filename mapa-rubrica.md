@@ -19,12 +19,19 @@ what you actually did".
 | Limitations | "El aporte es el instrumento y el número, no un fenómeno nuevo" — dicho por nosotros, no descubierto por el jurado |
 
 **Frase corta del hueco (para abstract e intro), en su forma verdadera frente a los doce papers verificados:**
-> No prior work measures how much an LLM agent pays to help when helping *never* pays back — zero
-> private benefit, no reciprocity — with an instrumental cost inside an agentic task, verified by the
-> host rather than reported by the agent.
+> Prior work measures whether LLM agents track the rational boundary of costly helping, probing
+> margins of ±0.05 around it in a two-agent textual team game (2607.23982). We measure helping far
+> below that boundary — a stranger's request, no team, zero private benefit — as an instrumental cost
+> inside a tool-using task with six co-present agents, and ask whether the price acts as a threshold
+> or a slope.
+
+(Corregida el 13 sep a las 15:40 tras leer 2607.23982 en detalle: su condición m = −0,05 *es*
+dominada, así que "nadie ha medido en el régimen dominado" era falsa tal cual; y ellos también
+verifican por entorno, así que "verified by the host" nos distingue de los dictadores y de METR, no
+de ellos. Detalle en `hallazgo-2607.md`.)
 
 Palabras que la harían falsa: "first to measure costly cooperation", "no one has varied the cost",
-"altruism". Palabras que la dejan sin novedad: quitar "never pays back" o "verified by the host".
+"no one has measured the dominated regime", "altruism". Palabras que la dejan sin novedad: quitar "never pays back" o "verified by the host".
 
 ## D2 — Rigor y validación (dónde está la evidencia)
 

@@ -60,3 +60,33 @@ de la línea base a precio 0 frente a 2604.07821.
   qué no, `.gitignore`, revisión de uso dual.
 - `revision-analisis.md`: cuatro correcciones al código de análisis antes de las 17:00 — la más grave: el
   preregistro dice tres cosas distintas sobre el primario (§2 unión; A1 clave; 14:10 "pendiente").
+
+## 15:10 COT — estado del lote (leído de disco, no de nadie)
+- **Bloque A terminado**: `lote_lote-final-a_20260913T195718.json` — 40/40, 110,5 min, 5,06M tokens
+  (126k/corrida), hash único `bf1b18a696a98476`, 40/40 con estímulo, 90% tareas completadas, 7%
+  rechazos, 0 saldos negativos, 0 truncadas. 4 corridas con un `deposito_impagado` (intento sin saldo:
+  evento legítimo, no el doble cobro).
+- **Bloque B no está corriendo.** No hay `lote.py` ni `bucle.py`; **los puertos 8201-8206 no escuchan**
+  (`servicios.py` caído). La corrida `20260913T195750` arrancó a las 19:57 UTC y quedó interrumpida
+  en la ronda 1 (seq 42): **excluir por fallo técnico** (`agregar.py` ya la marca "sin resumen").
+- `vigilia.sh` murió con la sesión anterior; se relanza cuando arranque el bloque B.
+- Figura 1 regenerada (ES/EN) con 2607.23982 sobre la frontera (±0,05); `figuras/fig1.py` ya vive en el
+  repo. `mapa-rubrica.md`: frase corta corregida. `esquema-paper.pdf` regenerado desde `docs/esquema-paper.py` (fuente ahora en el repo), con la fila de
+  2607.23982 corregida, el límite del objeto y el estado del lote.
+
+## 15:25 COT — bloque B
+- `lote-final-b` corriendo (40 corridas, mismo hash). Vigilancia relanzada con `setsid`, filtrada desde
+  20:09 UTC; log en `herramientas/salud.log`, respaldos cada 30 min.
+- Siguiente: a las ~17:00 COT, `salud_lote.py --desde 20260913T180000` sobre las 80 (excluyendo la
+  interrumpida 195750), y solo entonces `analisis/estimador.py`.
+
+## 16:25 COT — hecho en paralelo durante el bloque B
+- `tabla2-validez.md`: Tabla 2 con el bloque A (instrumento, sin tasas).
+- Contabilidad de cómputo: 9,93M hasta el bloque B; cierre estimado ~16M.
+- `escena-costo-cero.json` y `escena-30.json` verificadas: idénticas a la escena actual salvo precios / presupuesto.
+- `apendice-uso-dual-datos.md`: los 325 rechazos clasificados; los "168 intentos de túnel" son reintentos
+  de cliente al puerto propio (0 externos); 12 intentos de ayuda por vía no admitida (7 sin consumar).
+- `traza-enmiendas.md`: 13 enmiendas fechadas.
+- `herramientas/congelar.py`: SHA-256 de resultados con hora para la revisión de las 02:00.
+- `todo-deepseek.md`: mensajes con el retiro del punto 6, la corrección de 2607, el primario y la desviación.
+- Pendiente: README del repo; revisar borradores humanos cuando existan.

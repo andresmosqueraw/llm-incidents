@@ -9,3 +9,14 @@ salud del lote — 19:48 UTC — corridas desde 20260913T191500
     194635  sin resumen (en curso o interrumpida)
   minutos entre arranques: media 4.4, máximo 12.1
 19:48 UTC respaldo respaldos/lote_20260913T1948.tar.gz 1.3M
+=== 20:12 UTC — bloque B ===
+salud del lote — 20:12 UTC — corridas desde 20260913T200900
+  terminadas: 1   en curso/interrumpidas: 1
+  hash de escena: ÚNICO bf1b18a696a98476
+  tokens: 100,941 de 5,200,000 (2%)   media/corrida 100,941
+  tareas completadas: 5/6 (83%)   rechazos: 7/107 eventos (7%)   depósitos por http: 2
+  con estímulo: 1/1   saldos negativos: 0   truncadas: 0
+  ALERTAS:
+    201135  sin resumen (en curso o interrumpida)
+  minutos entre arranques: media 1.7, máximo 1.7
+20:12 UTC respaldo respaldos/lote_20260913T2012.tar.gz 1.4M
