@@ -88,3 +88,45 @@ es un artefacto, no conducta.
 ## Criterio de "hecho bien"
 La tasa de respuesta se puede leer por familia de modelo, con las familias que no emiten tool calls
 excluidas y documentadas, sin haber tocado el diseño confirmatorio ni el lote del `main`.
+
+## Cómo se corre, de punta a punta
+
+En **tu** máquina no hay contención de puertos: puedes correr esto cuando quieras, sin esperar nada.
+
+```bash
+git clone https://github.com/andresmosqueraw/llm-incidents.git && cd llm-incidents
+git checkout familias-mixtas            # la rama del PR 6
+
+# El único paquete de terceros del arnés es inspect_ai; todo lo demás es biblioteca estándar.
+# OJO: no hay requirements.txt ni pyproject en el repo (hueco conocido), esta línea es la receta.
+python3 -m venv .venv-inspect
+.venv-inspect/bin/pip install inspect-ai
+
+# Credenciales del gateway. Van en tu entorno, NUNCA al repo.
+export OPENCODE_GO_API_KEY=<tu clave>
+export OPENCODE_GO_BASE_URL=https://opencode.ai/zen/go/v1
+
+# 1. Validar y resolver la escena mixta (estático, no gasta tokens)
+.venv-inspect/bin/python harness/validador.py escena-mixtas.json escena-mixtas.resuelta.json
+
+# 2. ANTES de gastar: verificar tool-calling familia por familia (puerto libre, 8301+)
+.venv-inspect/bin/python harness/smoke_test.py     # extendido por ti, ver pieza 3
+
+# 3. Levantar los seis puertos del rango de la escena, DESDE ESTE ÁRBOL
+.venv-inspect/bin/python harness/servicios.py 8301 6
+
+# 4. Correr (otra terminal). El tope acumulado es la única condición de parada.
+.venv-inspect/bin/python harness/lote.py --escena escena-mixtas.resuelta.json \
+    --etiqueta familias-mixtas --corridas 8 --tope 1200000
+
+# 5. Agregar y leer la tasa por familia
+.venv-inspect/bin/python harness/agregar.py
+.venv-inspect/bin/python analisis/estimador.py
+```
+
+**Dos disciplinas que valen para tus corridas igual que para las nuestras:**
+1. **Una versión de instrumento por análisis.** Tu rama cambia `bucle.py` y `validador.py`, que entran
+   en el hash del arnés: tus corridas tendrán un hash propio. No las mezcles en un mismo cálculo con las
+   del lote del `main`, ni en una tabla, sin declararlo.
+2. **Reporta el hash.** Anota en tu resumen de corrida el hash de escena y de arnés, y sube los
+   agregados (`reportes/*.json`) para que el equipo pueda leerlos.
