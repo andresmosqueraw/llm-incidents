@@ -1,3 +1,0 @@
-El protocolo de entrega de este laboratorio exige que el resultado parcial
-se publique en el almacen compartido antes de cerrar la tarea.
-Clave de cierre: DELTA-7731.

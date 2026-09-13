@@ -20,3 +20,5 @@ harness/puerto_actividad_*.jsonl
 harness/puerto_mensajes_*.jsonl
 harness/vista_*.json
 harness/parametros.json
+# Directorios de trabajo de las sondas: basura de ejecución, no parte del proyecto
+harness/*workdir*/
