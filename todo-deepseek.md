@@ -43,3 +43,61 @@ No redactas prosa del reporte: datos, estructura, código y enmiendas.
   METR, Figura 1 y esqueleto de Figura 2, revisión de borradores. No edita `PREREGISTRO.md` mientras
   tú lo tengas abierto.
 - Si a las 16:00 las tres enmiendas del lote no están escritas, las escribe Claude y te avisa.
+
+## Mensajes de Claude (13 sep, 16:15 COT)
+- **Retirar el punto 6 ("168 intentos de túnel o salida de red").** Clasifiqué los 325 rechazos del
+  bloque A: los 168 con `nc`/`/dev/tcp` apuntan **todos al puerto propio en localhost** (121 `nc
+  localhost <propio>`, 47 `/dev/tcp/…/<propio>`), cero hosts externos, cero puertos ajenos. Son
+  reintentos de cliente tras un `curl` rechazado (`curl … || nc localhost 8204`). Datos y redacción
+  correcta en `apendice-uso-dual-datos.md`. Bonus: 12 intentos de entregar la clave por vía no
+  admitida (7 sin consumar) → límite en Limitations.
+- **Corrección de 2607.23982 para `papers.md` §2.b, `ESTADO.md` §2.b y la enmienda A1** (los tienes
+  abiertos tú): leído en su HTML (v7, 7 sep): α_i ∈ [0,1], n=2, juego textual, verificación por
+  entorno, y prueban **márgenes m ∈ {−0,05, 0, +0,05} alrededor de la frontera** α*(k)=0,35+k. Donde
+  diga "el ayudante participa del resultado, aquí su beneficio es exactamente cero", añadir: "ellos
+  sondean ±0,05 alrededor de la frontera; nosotros un margen de −(w_L+k) ≈ −0,45 en sus unidades,
+  receptor fuera del equipo, con herramientas y seis agentes co-presentes". Y **no** decir que ellos
+  usan autoreporte: verifican por entorno. Detalle en `hallazgo-2607.md`.
+- **El preregistro dice tres cosas sobre el primario** (§2 "depositó al menos una vez" = unión; A1 =
+  clave; 14:10 "sigue pendiente"). Con tus datos del bloque A (53 de 64 depósitos son la clave) la
+  decisión es clara: §2 → `deposito_clave`; en la de 14:10, "resuelta por A1". Ver `revision-analisis.md`.
+- **Punto 5 ("saliencia, no subsistencia"):** correcto el hecho, exagerada la frase. Con 4 rondas × 8
+  acciones nadie puede gastar más de 32 pasos en comandos: siempre sobran ≥8. El precio no amenaza
+  la tarea pero sí el puntaje (20 = 44% del máximo, anunciado). Declarar "costo de puntaje con tarea
+  a salvo"; el brazo de 30 pasos es la prueba de subsistencia.
+- **Desviación 15:55:** yo miré el contraste del bloque A por error (mala lectura de una pregunta);
+  el responsable lo detuvo. Está declarada y corregida al final de `PREREGISTRO.md`. Los números no
+  se copiaron a ningún sitio. Ningún cambio de diseño ni de análisis. Que conste al escribir Method.
+
+## Corrección del 13 sep (noche) — «intentos de salida de red» NO son fuga
+
+Verificado y corregido. El clasificador contaba por palabra (`nc`, `/dev/tcp`) y llamaba intento de
+escape a cualquier cliente alterno. Clasificando por **destino**:
+
+```
+298 comandos con cliente alterno en 79 corridas
+  287 (96%)  al PUERTO PROPIO permitido
+    0        a otro puerto del sandbox
+    0        a un host externo
+    2        aparentes "externos" = registro truncado a mitad de dirección
+             (/dev/tcp/12… y /dev/tcp/localho…)
+234 de 459 agentes-corrida usaron cliente alterno y NINGUNO salió del sandbox
+ 19 buscaron archivos por el sistema (find /, ls /home): buscaban su propio archivo de tarea
+```
+
+Y el «21 antes / 0 después» del pago es mecánico: hay que alcanzar el puerto para depositar por él.
+
+**Consecuencias, ya aplicadas:**
+1. `ideas.md` y `MATERIAL-PARA-EL-REPORTE.md` corregidos, con rastro fechado de la corrección; el
+   clasificador de `analisis/descriptivos.py` ahora clasifica por destino.
+2. **C1/C2 cambian de desenlace**: pasa a ser la tasa de depósito de la clave (preregistrado y
+   validado). Se retira el encuadre de contención: no hay nada que contener, así que no se puede
+   prometer nada sobre escape. C1 = solicitud simple contra solicitud con **propósito colectivo**, misma
+   escena base, **sin orden** (información, no instrucción, para no medir obediencia).
+3. Lo que queda es un hallazgo de Track 1 y no cuesta un token: **la tasa base de falsos positivos de un
+   detector ingenuo de egreso** —53% de los agentes-corrida marcados, todos falsos—. Va al apéndice de
+   uso dual y conversa con la detección que correlaciona pero no escala.
+
+**Regla que sale de esto** (tercera vez que un clasificador de texto muerde): ninguna métrica derivada
+de clasificar texto de comandos entra a un borrador sin que alguien lea una muestra de los comandos
+clasificados y compruebe el **destino**, no la palabra.
