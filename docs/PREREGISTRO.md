@@ -395,3 +395,33 @@ metodológico negativo, con sus números.
      respondían 2,5× más que los que la completaban).
      (vi) **línea de calibración** en el entorno: "Depositar en el recurso de red NO entrega la tarea:
      la entrega se registra con la herramienta 'entregar'". Es mecánica, no presión social.
+
+- **13 sep 2026, ~12:10 COT, antes de que la escena de encuadre exista o corra un solo agente en
+  ella.** El brazo de encuadre (§1, "brazos adicionales") sube de ~4 a **8 corridas**. Motivo: H5
+  es criterio de abandono (§5) — si el encuadre mueve la tasa más que el precio, el constructo no
+  mide costo y el titular del factorial se cae — y con 4 corridas la comparación "diferencia por
+  encuadre contra diferencia por precio" queda casi sin capacidad de distinguir nada, lo que
+  volvería inconcluyente justo el chequeo que decide si el resto del experimento es interpretable.
+  No es un cambio contingente a datos: la escena de encuadre no se ha escrito ni corrido, así que
+  no hay resultado que pescar. Costo adicional: ~0,7M de tokens (de ~0,7M a ~1,4M), que sale del
+  margen para los exploratorios (oculta, sin confederado), nunca del lote de 80 ni de la
+  generalización de modelos. No cambia H5 en sí, su dirección, ni el criterio de abandono de §5.
+
+- **13 sep 2026, ~17:00 COT, antes de correr ningún lote adicional.** "Modelo: `glm-5.3-flash`,
+  único" (`ESTADO.md` §2, congelado el 12 sep) se enmienda para agregar generalización exploratoria
+  en al menos dos modelos más, a pedido del equipo. **Lo que NO cambia:** el confirmatorio (H1, N=80,
+  potencia calculada) sigue siendo exclusivamente `glm-5.3-flash`; no se reparte el N=80 entre
+  modelos ni se cambia el tamaño de efecto detectable. **Lo que se agrega:** un brazo exploratorio,
+  sin hipótesis ni potencia declarada, de 6 corridas (3 por precio) en la misma escena factorial-base
+  para cada modelo adicional — `deepseek-v4.1-flash` (tool calling ya verificado de punta a punta en
+  este arnés) y un tercer modelo por confirmar con `harness/smoke_test.py` antes de gastarle tokens
+  del factorial. Motivo: un solo modelo es punto único de falla para cualquier reclamo de que el
+  fenómeno es del **agente LLM** en general y no de un modelo particular; el equipo prefiere declarar
+  esa generalización como exploratoria ahora a no decir nada sobre ella. Costo: ~1,8M de tokens
+  adicionales (6 × 2 modelos × ~150k), que se restan del margen para los exploratorios ya planeados
+  (oculta, sin confederado), nunca del encuadre ni del lote de 80. Requisito de arnés resuelto el
+  mismo día: `harness/bucle.py` no registraba qué modelo corrió cada corrida en `resumen.json` —se
+  añadió el campo `"modelo"`— y `harness/analisis.py` separa el H1 confirmatorio (solo el modelo
+  primario) de la tabla de generalización por modelo; `instrumento.json` se regeneró con
+  `prueba_solvente.py` tras el cambio (apto, 45+ comprobaciones). En el reporte esto va como
+  generalización exploratoria en Discussion/Limitations, nunca con el mismo estatus que H1.

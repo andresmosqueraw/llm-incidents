@@ -130,6 +130,9 @@ def cargar_corrida(d: str, heredado: dict) -> dict | None:
 
     return {
         "corrida": nombre, "brazo": brazo, "escena": res.get("escena"), "hash_escena": res.get("hash_escena"),
+        # corridas de antes del 13 sep (enmienda multi-modelo) no traen "modelo" en resumen.json: eran
+        # todas glm-5.3-flash, el único modelo corrido hasta entonces.
+        "modelo": res.get("modelo", "glm-5.3-flash"),
         "valida": not problemas, "problemas": problemas, "estimulo": bool(solicitudes),
         "tokens": res.get("tokens_totales"), "rondas": res.get("rondas"),
         "depositos": [x for x in res.get("depositos", []) if x.get("via") != "confederado"],
@@ -216,9 +219,15 @@ def signo(difs: list[float]) -> dict:
 # ----------------------------------------------------------------------------------------------
 # análisis
 # ----------------------------------------------------------------------------------------------
+MODELO_PRIMARIO = "glm-5.3-flash"
+
+
 def analizar(corridas: list[dict], boot: int, semilla: int, codificacion: str | None) -> dict:
     rnd = random.Random(semilla)
-    fact = [c for c in corridas if c["brazo"] == "factorial" and c["valida"]]
+    fact_todos = [c for c in corridas if c["brazo"] == "factorial" and c["valida"]]
+    # H1 confirmatorio queda restringido al modelo primario (así se preregistró y así se calculó la
+    # potencia); las corridas de otros modelos son la generalización exploratoria de más abajo.
+    fact = [c for c in fact_todos if c["modelo"] == MODELO_PRIMARIO]
     cero = [c for c in corridas if c["brazo"] == "costo_cero" and c["valida"]]
     enc = [c for c in corridas if c["brazo"] == "encuadre" and c["valida"]]
     sin_est = [c for c in corridas if c["brazo"] in ("factorial", "sin_confederado") and not c["estimulo"]
@@ -349,6 +358,27 @@ def analizar(corridas: list[dict], boot: int, semilla: int, codificacion: str | 
         "lectura": "descriptivo, sin prueba; corridas sin estímulo son de calibración y de otra escena",
     }
 
+    # ---- generalización exploratoria: otros modelos (enmienda del 13 sep, sin hipótesis ni potencia) ----
+    modelos = sorted({c["modelo"] for c in fact_todos})
+    out["generalizacion_modelos"] = {
+        "nota": "Exploratorio. H1 confirmatorio es solo del modelo primario (arriba). Esto es una "
+                f"réplica a escala pequeña en otros modelos, sin potencia declarada: N por modelo "
+                f"suele ser ~6 corridas, no 80.",
+        "modelo_primario": MODELO_PRIMARIO,
+        "por_modelo": {
+            m: {
+                "n_corridas": sum(1 for c in fact_todos if c["modelo"] == m),
+                "tasa_precio_5": boot_media([c["tasa_barato"] for c in fact_todos if c["modelo"] == m],
+                                            boot, rnd),
+                "tasa_precio_20": boot_media([c["tasa_caro"] for c in fact_todos if c["modelo"] == m],
+                                             boot, rnd),
+                "diferencia_pareada": boot_media(
+                    [c["dif_tasa"] for c in fact_todos if c["modelo"] == m], boot, rnd),
+            }
+            for m in modelos
+        },
+    }
+
     # ---- descriptivos ----
     def desc(campo, precio):
         vals = [a[campo] for c in fact for a in c["agentes"].values()
@@ -475,6 +505,16 @@ def markdown(a: dict) -> str:
                  f"{h7['reporte_no_acreditado (afirma depositar, el libro no lo tiene)'][p]['casos']}/"
                  f"{h7['reporte_no_acreditado (afirma depositar, el libro no lo tiene)'][p]['n_agentes']} |")
     L += ["", f"_{h7['nota']}_", ""]
+    gm = a["generalizacion_modelos"]
+    L += [f"## Generalización exploratoria por modelo (sin potencia, N pequeño por modelo)", "",
+          f"_{gm['nota']}_", "",
+          "| Modelo | N corridas | Tasa precio 5 | Tasa precio 20 | Diferencia pareada |",
+          "|---|---|---|---|---|"]
+    for m, d in gm["por_modelo"].items():
+        marca = " (primario)" if m == gm["modelo_primario"] else ""
+        L.append(f"| {m}{marca} | {d['n_corridas']} | {_ic(d['tasa_precio_5'])} | "
+                 f"{_ic(d['tasa_precio_20'])} | {_ic(d['diferencia_pareada'], pct=False)} |")
+    L += [""]
     tx = a["taxonomia"]
     L += [f"## Taxonomía de depósitos ({tx['fuente']}, n = {tx['n']})", "", "| Tipo | Precio 5 | Precio 20 |", "|---|---|---|"]
     tipos = sorted(set(tx["por_precio"]["5"]) | set(tx["por_precio"]["20"]))

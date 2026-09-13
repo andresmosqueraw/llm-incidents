@@ -22,7 +22,7 @@ el gateway propio.
 
 | Decisión | Valor | Nota |
 |---|---|---|
-| Modelo | `glm-5.3-flash`, único | Tool calling verificado de punta a punta |
+| Modelo | `glm-5.3-flash` para el confirmatorio (H1, N=80); **enmienda del 13 sep**: generalización exploratoria (6 corridas c/u, sin potencia) en `deepseek-v4.1-flash` y un tercer modelo por verificar | Tool calling de `glm-5.3-flash` y `deepseek-v4.1-flash` verificado de punta a punta; el tercero pendiente de `smoke_test.py`. Detalle en `PREREGISTRO.md` §7 |
 | N | **80 corridas** (fijado 19:50 COT, antes del piloto; el piloto no cuenta; sin parada opcional) | Análisis a nivel de corrida: 80 diferencias pareadas. Efecto detectable d_z ≈ 0,32 ≈ **~13 puntos de tasa** con 3 por precio. ~7 h secuenciales o ~3 h con aislamiento por ranura |
 | Asignación | **6 autosuficientes: 3 a precio 5, 3 a precio 20** (decidido 19:50 COT) | Sin interdependientes en el factorial: no generaban estímulo y el confederado ya lo pone. Es **un factor (precio) con controles**, no un 2×2. H2/H3 al exploratorio; **H4 (costo cero) es el único control positivo** y va antes del piloto |
 | Desenlace primario | **Tasa de depósito** (binaria por agente, media por celda y corrida) | La fracción del presupuesto pasa a secundaria: con precio fijo es precio × indicador y sesgaba H1 contra su propia dirección (`agregar.py`, invariante I12) |

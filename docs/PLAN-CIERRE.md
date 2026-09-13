@@ -18,13 +18,14 @@ pueda reportar.
 | Parte de la pregunta | Desenlace | Cómo se estima | Estado |
 |---|---|---|---|
 | "¿Cuánto sacrifica?" | **Primario preregistrado:** tasa de depósito (binaria por agente), por celda y corrida | Media por celda; IC95 por bootstrap **por corrida** (10.000 remuestreos) | 9 corridas hechas; **bootstrap sin código** |
-| "¿Cuánto sacrifica?" | Secundario: fracción del presupuesto (precio × indicador) | Igual | En `agregar.py` |
+| "¿Cuánto sacrifica?" | **Secundario, reportado con el mismo peso de tabla y figura que el primario (nunca solo en texto):** fracción del presupuesto (precio × indicador) | Igual | En `agregar.py` |
 | "para responder una solicitud" | **Secundario declarado hoy:** `deposito_clave` (lo depositado responde a la solicitud) | Igual, reportado al lado del primario | Campo existe en `resumen.json`; **`agregar.py` no lo agrega** |
 | "¿paga menos cuando cuesta más?" | **H1:** diferencia pareada por corrida, caros menos baratos | 80 diferencias en {−1, −⅔, …, +1}; IC95 bootstrap; regla: si no excluye el cero se reporta *no distinguible de cero con este N* | 9 de 80 |
 | ¿El instrumento mide? | **H4:** costo cero ≥ 60% | Ya corrido dos veces: 45,8% [27,9; 64,9] y luego 62,5% [48,4; 74,8] sobre 48 | **Hecho; reportar las dos** |
-| ¿Mide costo o retórica? | **H5:** encuadre, ~4 corridas | Comparar movimiento por encuadre contra movimiento por precio | **Escena no existe** |
+| ¿Mide costo o retórica? | **H5:** encuadre, ~8 corridas (subido de 4 antes de correr la escena — es el criterio de abandono que decide si el constructo mide costo, y 4 corridas lo dejaban subpotenciado) | Comparar movimiento por encuadre contra movimiento por precio | **Escena no existe** |
 | Secundarios conductuales | H6 directivo, H6b acatamiento, H7 falsificación | Codificación de los textos de `depositos` por dos anotadores ciegos; falsificación desde `eventos.jsonl` | Reglas fijadas en `PREREGISTRO.md` §4; **sin script ni muestra** |
 | Exploratorio | H8: presencia percibida de receptor | Descriptivo: celda 3 (con confederado) contra corridas sin estímulo de calibración | Datos ya existen |
+| ¿Generaliza a otros modelos? | **Enmienda del 13 sep, exploratoria:** tasa por precio en 2 modelos más (6 corridas c/u), sin potencia | Misma escena factorial-base, `analisis.py` la separa del H1 confirmatorio | `glm-5.3-flash` (primario) hecho; los otros dos, **sin correr** |
 
 ---
 
@@ -36,12 +37,50 @@ pueda reportar.
    acto que la solicitud elicita). Cambiar el primario ahora sería post hoc y un juez lo vería.
 2. **N = 80, sin parada opcional, las 9 de ensayo cuentan.** Faltan **71 corridas**. A ~147k tokens
    por corrida son ~10,4M. Gastado hasta hoy ≈ 4,4M (sondas 1,43 + costo cero 1,42 + ensayo 1,5).
-   Con encuadre (~0,7M) el total llega a ~15,5M de un techo de 20M. **Los exploratorios (oculta,
-   sin confederado) solo si el lote termina antes de las 20:00 COT.**
+   **Encuadre sube de 4 a 8 corridas (~1,4M en vez de ~0,7M)**, decidido ahora, antes de que esa
+   escena exista o corra un solo agente en ella: H5 es criterio de abandono (§5 de `PREREGISTRO.md`)
+   y con 4 corridas la comparación "encuadre contra precio" queda casi sin poder decir nada. El
+   total llega a ~16,2M de un techo de 20M. **Los exploratorios (oculta, sin confederado) solo si
+   el lote termina antes de las 20:00 COT y sobran tokens tras el encuadre reforzado.**
 3. **Lote secuencial, sin aislamiento por ranura.** Implementarlo hoy es riesgo sin retorno: ahorra
    ~3 h pero puede introducir un defecto nuevo en el instrumento con hashes ya atados. 71 corridas
    secuenciales a ~5,5 min son ~6,5 h. Arrancando a las 12:00, termina hacia las 18:30.
-4. **Orden fijo:** prelanzamiento → lote de 71 → encuadre (4) → exploratorios si hay margen.
+4. **Enmienda del 13 sep, tarde: al menos 3 modelos en total, no uno solo.** `PREREGISTRO.md` tenía
+   congelado "Modelo: `glm-5.3-flash`, único" (`ESTADO.md` §2); esto es una enmienda declarada a ese
+   punto, no un ajuste silencioso, y hay que anotarla en `PREREGISTRO.md` §7 con fecha y motivo.
+   - **El confirmatorio (H1, N=80) se queda exactamente como está, con `glm-5.3-flash`.** No hay
+     presupuesto de tokens ni de tiempo para repetir el factorial completo en 3 modelos (triplicaría
+     el gasto a ~30M, muy por encima del techo de 20M) y cambiar el N a mitad de sprint invalidaría el
+     cálculo de potencia ya hecho.
+   - **Lo que se agrega es un brazo de generalización exploratorio, sin hipótesis ni potencia
+     declarada:** la misma escena factorial-base (autosuficiente, precio 5 vs 20), **6 corridas por
+     modelo adicional** (3 por precio, la misma escala que la sonda 4 original), en **2 modelos más**
+     además del primario, para un total de **3 modelos**.
+   - **Candidatos:** `deepseek-v4.1-flash` ya tiene tool calling verificado de punta a punta en este
+     arnés (`harness/README-inspect.md`, `harness/smoke_test.py`); es el segundo modelo natural, sin
+     trabajo de verificación adicional. **El tercer modelo queda por decidir** (candidato de
+     `plan.md` histórico: `qwen3.8-max`, pero no está verificado en este arnés) — antes de gastar un
+     token del factorial en él hay que correr `harness/smoke_test.py` con ese modelo y confirmar tool
+     calling de punta a punta, igual que se hizo con los otros dos.
+   - **Costo:** ~150k tokens/corrida × 6 corridas × 2 modelos ≈ **1,8M de tokens adicionales**, que se
+     suman a los ~16,2M ya comprometidos (factorial + encuadre reforzado a 8) → **~18,0M de 20M**.
+     Esto reduce el margen para los exploratorios ya planeados (oculta, sin confederado) a ~2M; si el
+     margen no alcanza, esos exploratorios se recortan primero, nunca la generalización de modelos ni
+     el encuadre.
+   - **Requisito de arnés, ya resuelto hoy:** `harness/bucle.py` no guardaba qué modelo corrió cada
+     corrida en `resumen.json` — se corrigió (campo `"modelo"`), y `harness/analisis.py` ya separa el
+     H1 confirmatorio (solo `glm-5.3-flash`) de la tabla de generalización por modelo (los tres).
+     `instrumento.json` fue regenerado con `prueba_solvente.py` tras el cambio: apto.
+   - **En el reporte:** esto va como generalización exploratoria en Discussion/Limitations, nunca
+     como si tuviera el mismo estatus que H1. Declarar la diferencia de N (80 contra 6) explícitamente
+     junto a cualquier número que se compare entre modelos.
+5. **Orden fijo:** prelanzamiento → lote de 71 (`glm-5.3-flash`) → encuadre (8) → smoke test del tercer
+   modelo → generalización de modelos (6+6) → exploratorios si hay margen.
+6. **Checkpoint de ritmo, no de resultado:** David reporta a Andrew el conteo de `salidas/*/resumen.json`
+   y el gasto acumulado de `lote80.log` cada ~2 h (13:00, 15:00, 17:00). No es parada opcional — nadie
+   mira tasas ni decide nada con esos números — es una alarma temprana de reloj y tokens: si a las
+   15:00 el ritmo dice que el lote no cierra antes de las 19:00, se avisa ya y se recorta la cola de
+   exploratorios en vez de descubrirlo a las 20:00 sin margen de reacción.
 
 ---
 
@@ -49,7 +88,7 @@ pueda reportar.
 
 | Frente | Quién | Por qué |
 |---|---|---|
-| Lote, encuadre | **David** | Tiene las credenciales del gateway y el `.venv-inspect` |
+| Lote, encuadre, smoke test del tercer modelo, generalización de modelos | **David** | Tiene las credenciales del gateway y el `.venv-inspect` |
 | `analisis.py` (bootstrap, figuras, tablas) y `deposito_clave` en `agregar.py` | **Andrew** | No necesita credenciales; corre sobre `reportes/factorial.json` y `salidas/` (esta última se genera al correr el lote; hoy no existe) |
 | Escena de encuadre + validador | **Andrew escribe, David valida y corre** | Andrew no puede correr el validador contra puertos vivos |
 | Codificación de depósitos (H6, H7) | **Andrew** | Regla del preregistro §4 |
@@ -97,7 +136,7 @@ pueda reportar.
 - [ ] `escenas-guardadas/escena-encuadre.json`: copia de `escena.json` con `brazo: "encuadre"`,
       mismos precios, y **un solo cambio de redacción** en `textos.entorno` (por ejemplo, el precio
       expresado como "descuento de tu presupuesto" en lugar de "cuesta N pasos"). Pasar el grep de
-      canarios. David valida con `validador.py` y lo corre tras el lote (4 corridas, ~0,7M).
+      canarios. David valida con `validador.py` y lo corre tras el lote (8 corridas, ~1,4M).
 - [ ] `scripts/codificar_depositos.py extraer`: vuelca todos los textos de `depositos` de todas las
       corridas a un CSV **sin precio ni agente** (solo id opaco).
 
@@ -118,14 +157,25 @@ Se escribe en este orden, de lo que ya está a lo que depende del lote:
 3. **Related Work** (16:15). De `papers.md`: 2402.12327, 2602.15198, 2506.23276, 2608.28182. **Pendiente
    del preregistro:** confirmar la banda humana de 2608.28182 con la fuente primaria antes de
    citarla en H1b. Media página.
-4. **Limitations & Dual-Use** (17:00). Un solo modelo flash; N=80 detecta ~13 puntos; H3 diferida;
-   H4 corrida dos veces (decir las dos cifras); constructo de "costo" en un agente; los agentes no
-   ven el precio ajeno. Dual-use: no hay recetas del incidente, el corpus `recon/` no se publica,
-   ningún contenido manipulativo se inyecta.
+4. **Limitations & Dual-Use** (17:00). El confirmatorio (H1, N=80) corre en un solo modelo flash
+   (`glm-5.3-flash`); la generalización a `deepseek-v4.1-flash` y a un tercero es exploratoria y con
+   N=6 por modelo, sin potencia — declarar la diferencia de N explícitamente si se compara entre
+   modelos. **El desenlace primario es binario (depositó o no) por diseño de precio fijo por brazo
+   (razón en `PREREGISTRO.md` §2), no una magnitud continua de sacrificio; la fracción secundaria da
+   el tamaño pero hereda la misma limitación — ninguno de los dos mide "cuánto" en una escala libre,
+   eso queda para precio continuo en un seguimiento.** N=80 detecta ~13 puntos; H3 diferida; H4
+   corrida dos veces (decir las dos cifras); constructo de "costo" en un agente; los agentes no ven
+   el precio ajeno. Dual-use: no hay recetas del incidente, el corpus `recon/` no se publica, ningún
+   contenido manipulativo se inyecta.
 5. **Results** (19:00, con el lote terminado o casi): tablas y figuras de `analisis.py`, con la
-   lectura preregistrada. Si el IC de H1 incluye el cero: *no distinguible de cero con este N*.
-6. **Discussion** (20:00). Qué establece y qué no. H8 como observación con números. Qué haría un mes:
-   celda 2 para H3, más modelos, precio continuo.
+   lectura preregistrada. **La fracción del presupuesto (secundario) se reporta en la misma tabla y
+   el mismo panel de figura que la tasa (primario), nunca relegada a una frase suelta** — es la
+   respuesta directa al "cuánto" de la pregunta, aunque la tasa sea el desenlace confirmatorio. Si
+   el IC de H1 incluye el cero: *no distinguible de cero con este N*. La tabla de generalización por
+   modelo va aparte, marcada exploratoria.
+6. **Discussion** (20:00). Qué establece y qué no. H8 como observación con números. La generalización
+   por modelo (si el patrón se repite o no en los otros dos) como observación, no como confirmación.
+   Qué haría un mes: celda 2 para H3, réplica de modelos con potencia completa, precio continuo.
 7. **Abstract** ≤ 150 palabras y **título que enuncie el hallazgo**, al final, cuando el número exista.
 
 ### 18:30 a 19:30 — cierre del lote (David)
@@ -134,8 +184,18 @@ Se escribe en este orden, de lo que ya está a lo que depende del lote:
       `reportes/factorial.json`, push. Avisar a Andrew.
 - [ ] Corridas interrumpidas por fallo técnico: se repiten y **reemplazan**, no se suman (§8).
       Anotar cuántas.
-- [ ] Correr encuadre: `lote.py --escena escenas-guardadas/escena-encuadre.resuelta.json --corridas 4
-      --tope 800000 --etiqueta encuadre`. Volver a agregar y hacer push.
+- [ ] Correr encuadre: `lote.py --escena escenas-guardadas/escena-encuadre.resuelta.json --corridas 8
+      --tope 1600000 --etiqueta encuadre`. Volver a agregar y hacer push.
+- [ ] **Generalización de modelos (enmienda §2.4):** `lote.py` no tiene flag de modelo; se controla
+      con la variable de entorno `OPENCODE_GO_MODELO` que lee `bucle.py`. Por cada modelo adicional:
+      1. `OPENCODE_GO_MODELO=openai-api/opencode-go/<modelo> python3 harness/smoke_test.py` — confirmar
+         tool calling de punta a punta **antes** de gastar tokens del factorial en ese modelo.
+      2. `OPENCODE_GO_MODELO=openai-api/opencode-go/<modelo> python3 harness/lote.py --escena
+         escena.resuelta.json --corridas 6 --tope 1000000 --etiqueta modelo-<modelo>`.
+      3. Repetir para `deepseek-v4.1-flash` (ya verificado, puede ir primero) y para el tercer modelo
+         (verificar antes). `python3 harness/agregar.py` no distingue modelos — no hace falta tocarlo;
+         `python3 harness/analisis.py` ya separa el H1 confirmatorio (`glm-5.3-flash`) de la tabla de
+         generalización por modelo.
 - [ ] Si son menos de las 20:00 y quedan tokens: exploratorio "oculta", ≤ 4 corridas. Si no, no.
 
 ### 20:00 a 23:30 — resultados, discusión, revisión cruzada
@@ -175,8 +235,10 @@ sí es motivo. Si a las 21:00 COT el lote no ha llegado a 80:
 - Se reporta con las corridas válidas que haya, **declarando el N alcanzado, el motivo y la
   precisión resultante** (con 40 corridas, d_z ≈ 0,45, ~20 a 25 puntos de tasa). Es exactamente lo
   que `PREREGISTRO.md` §2 dice hacer.
-- El encuadre (H5) tiene prioridad sobre las últimas corridas del lote, porque es criterio de
-  abandono: sin él no se puede afirmar que el constructo mide costo.
+- El encuadre (H5, 8 corridas) tiene prioridad sobre las últimas corridas del lote, porque es
+  criterio de abandono: sin él no se puede afirmar que el constructo mide costo. Si incluso 8
+  corridas de encuadre no caben en el reloj, se corren las 4 mínimas antes que sacrificar el brazo
+  entero, y se declara la N reducida y su precisión, igual que con el lote.
 
 ---
 
@@ -185,8 +247,9 @@ sí es motivo. Si a las 21:00 COT el lote no ha llegado a 80:
 | Riesgo | Señal | Respuesta |
 |---|---|---|
 | 429 o caída del gateway a mitad del lote | `lote.py` se detiene; corridas sin `resumen.json` | Relanzar con `--corridas` = las que faltan; `agregar.py` excluye las interrumpidas; se reemplazan, no se suman |
-| Techo de tokens | Acumulado > 15,5M antes del encuadre | Cortar exploratorios; nunca cortar el encuadre |
+| Techo de tokens | Acumulado > 16,2M antes del encuadre | Cortar exploratorios; nunca cortar el encuadre reforzado (8) |
 | Andrew sin datos | El lote de David no ha empezado a generar `salidas/` | Bloqueante hasta que el lote arranque; mientras tanto, trabajar sobre `reportes/factorial.json` |
+| Lote más lento de lo previsto y nadie lo nota hasta tarde | Checkpoints de 13:00/15:00/17:00 (§2.6) muestran ritmo por debajo de lo esperado | Recortar exploratorios de inmediato, no esperar a las 20:00; nunca recortar encuadre ni generalización de modelos |
 | H5 mueve más que el precio | Diferencia por encuadre > diferencia por precio | Criterio de abandono preregistrado: titular cambia, se reporta igual |
 | Reporte "se lee generado" | Texto sin trazas de lo que se hizo, sin enlaces | Cada sección cita archivos del repo y números de corridas concretas |
 | Tiempo de redacción | A las 22:00 sin Results | Recortar Discussion a media página; nunca recortar Limitations |

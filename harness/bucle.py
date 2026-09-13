@@ -581,6 +581,7 @@ async def correr(ruta_escena: str, rondas: int | None, n_agentes: int | None,
     resumen = {
         "escena": escena["escena"], "hash_escena": escena["hash_escena"],
         "hash_textos": escena["hash_textos"], "rondas": escena["temporal"]["rondas"],
+        "modelo": MODELO,
         "agentes": res, "depositos": c.depositos, "tokens_totales": c.tokens,
         "eventos": len(c.eventos), "ultimo_hash": c.prev_hash,
         "log": os.path.join(salida, "eventos.jsonl"),
