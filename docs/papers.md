@@ -44,7 +44,85 @@ Uso de las columnas de papel:
 **El hueco, tras leerlos:** la tasa de sacrificio auto-costoso **cuando el costo cae sobre la tarea
 propia del agente** (no sobre puntos de un juego), con verificación por arnés en lugar de auto-reporte
 o puntaje de juez, y con la **magnitud de ese costo** como variable manipulada. Más estrecho todavía
-desde que se incorporó la literatura de bienes públicos con LLM: ver §3.b.
+desde que se incorporó la literatura de bienes públicos con LLM: ver §3.b. **Y más estrecho aún desde
+el 13 de septiembre de 2026, al verificar `2607.23982`: ese paper ya mide ayuda costosa con costos
+variables, así que la condición que queda sin medir no es "la magnitud del costo" sino el régimen
+dominado. Ver §2.b, que manda sobre este párrafo.**
+
+---
+
+## 2.b Precedente más cercano, verificado el 13 de septiembre de 2026
+
+Doce identificadores nuevos, **los doce existen**, y se comprobó —además de que resuelvan— que lo que
+se les atribuye está en el abstract. Esto **reordena el estado del arte**: el vecino más cercano ya no
+es Colosseum, y el trabajo relacionado debe abrir con `2607.23982` o un jurado lo encuentra solo.
+
+### El más cercano, y es de julio de 2026
+
+| Paper | Identificador | Qué mide, exactamente |
+| --- | --- | --- |
+| Moral Hazard in Multi-Agent Language Models (Malenfant, D.) | arXiv **2607.23982** (27 jul 2026, v6 del 31 ago) | **Hay que citarlo en el primer párrafo.** "Dialogue Moral Hazard Game": el agente elige entre quedarse una recompensa local inmediata o **pagar un costo de consulta** para revelar un hecho que ayuda a la decisión de otro agente. 14 modelos abiertos + 4 de frontera, **3.015 decisiones por modelo** y **nueve costos de consulta** distintos. Construido sobre el modelo de *moral hazard* de equipo de Holmström: miden si el modelo sigue la **frontera de participación privada** derivada. GPT-5.6 Sol, Claude Opus 4.8 y Nemotron-3 Ultra la siguen con error absoluto medio de 0,013 / 0,030 / 0,024. |
+
+**La diferencia, con estas palabras.** En `2607.23982` el ayudante **tiene una participación en el
+resultado del equipo**, así que existe un punto donde ayudar es racional y lo que se mide es si el
+modelo lo rastrea. En nuestro diseño esa participación es **exactamente cero**: el confederado pide un
+objeto ortogonal que no ayuda a ninguna tarea, de modo que **todo precio positivo está dominado**. Lo
+que medimos es el **residuo irracional en el régimen dominado**, no el rastreo de una frontera.
+
+### Régimen de costo cero, ya medido — y su consecuencia para H4
+
+| Paper | Identificador | Qué mide |
+| --- | --- | --- |
+| More Capable, Less Cooperative? When LLMs Fail At Zero-Cost Collaboration (Yadav, Black, Sourbut) | arXiv **2604.07821** (9 abr 2026) | Ayudar es **gratis y está instruido**, y aun así varios modelos retienen información sin ganar nada: la capacidad **no** predice cooperación (o3 alcanza solo 17% del óptimo colectivo; o3-mini, 50%, con instrucciones idénticas). |
+
+**Consecuencia directa.** Nuestro 46% (clave) / 62% (unión) a precio cero **no es un techo de
+capacidad**: la literatura ya muestra que a costo cero la cooperación falla por sí sola. Por lo tanto
+H4 debe leerse como **línea base conductual**, no como prueba de capacidad, y el "acantilado en cero"
+del ensayo se apoya sobre una base que ya era imperfecta. Eso obliga a una **enmienda de H4** en §8 del
+preregistro, declarada y con esta cita — no a un ajuste silencioso de umbral.
+
+### Dar a un desconocido, sin reciprocidad, pagando de lo propio: la familia dictador
+
+| Paper | Identificador | Qué mide |
+| --- | --- | --- |
+| Can Machines Think Like Humans? A Behavioral Evaluation of LLM Agents in Dictator Games (Ma, J.) | arXiv **2410.21359** (28 oct 2024) | Personas y encuadres inducen conducta prosocial; asignar identidad humana **no** produce conducta humana. |
+| Benevolent Dictators? On LLM Agent Behavior in Dictator Games (Einwiller et al.) | arXiv **2511.08721** (11 nov 2025) | **La escéptica del grupo.** Cuestiona la robustez de esos resultados: muchos estudios **pasan por alto el papel del prompt de sistema** y las conclusiones son sensibles a cambios mínimos. Directamente relevante para nuestro confundidor #6 (la creencia inducida por el texto). |
+| The Emergence of Altruism in Large-Language-Model Agents Society (Li, Jia, Zhao) | arXiv **2509.22537** (26 sep 2025) | 200+ agentes en un dilema social explícito; encuentra el arquetipo de los "egoístas adaptativos". |
+| Prompting Fairness: Artificial Intelligence as Game Players (Henry, J.) | arXiv **2402.05786** (8 feb 2024) | Ya en §3. 101 rondas de dictador: el encuadre mueve cuánto entrega el modelo. |
+
+**Hallazgo consistente, y su advertencia.** Los LLM reparten del orden de la mitad —más que los
+humanos— bajo anonimato total: es la estructura a la que convergimos (receptor presente, sin retorno).
+Lo que esa familia **no** tiene: allí el costo sale de una dotación regalada, no de un presupuesto que
+el agente **necesita** para su propia tarea, verificado por arnés en un entorno con herramientas.
+*Por confirmar antes del reporte:* la cifra concreta "≈50/50 frente a humanos que retienen más de dos
+tercios" **no es verificable desde los abstracts**; hay que confirmarla en el texto completo, y
+`2511.08721` advierte que esas cifras son sensibles al prompt.
+
+### Magnitud del pago, y los demás que hay que conocer
+
+| Paper | Identificador | Qué mide |
+| --- | --- | --- |
+| Payoff scaling shapes cooperation in LLM agents across languages (Huynh et al.) | arXiv **2601.19082** (27 ene 2026) | El tamaño de lo que está en juego cambia la estrategia en el prisionero repetido. Precedente de sensibilidad a la magnitud, **y de método**: clasifican estrategias canónicas con clasificadores en vez de leer conteos crudos, aplicable a nuestras transcripciones. |
+| Cultural Evolution of Cooperation among LLM Agents (Vallinder, Hughes) | arXiv **2412.10270** (13 dic 2024) | Reciprocidad indirecta en un juego del donante iterado a lo largo de generaciones. |
+| Talk, Judge, Cooperate: Gossip-Driven Indirect Reciprocity in Self-Interested LLM Agents (Zhu et al.) | arXiv **2602.07777** (8 feb 2026) | Reciprocidad indirecta vía chisme. **Hallazgo que nos toca de cerca:** los modelos de chat **sobre-cooperan aunque sea estratégicamente subóptimo**, mientras los de razonamiento se alinean con el incentivo. Nuestro 22% plano a los dos precios es exactamente ese patrón. |
+| Simulating Cooperative Prosocial Behavior with Multi-Agent LLMs (Sreedhar et al.) | arXiv **2502.12504** (18 feb 2025) | Bienes públicos contra experimentos humanos de laboratorio, con dotaciones variadas. |
+| Cooperate or Collapse: Emergence of Sustainable Cooperation in a Society of LLM Agents (GovSim; Piatti et al.) | arXiv **2404.16698** (25 abr 2024) | Recursos compartidos; casi ningún modelo alcanza un equilibrio sostenible. |
+| Communication Enables Cooperation in LLM Agents (Madmoun, Lahlou) | arXiv **2510.05748** (7 oct 2025) | En un Stag Hunt de cuatro jugadores, un canal de "charla barata" de una palabra sube la cooperación de 0% a 96,7%. |
+
+### El hueco, ahora con las cuatro piezas juntas
+
+Lo que queda en pie es **más estrecho** y hay que decirlo con precisión: la combinación de
+
+- **(a) régimen dominado** —beneficio propio **exactamente cero**, sin participación en el resultado
+  del equipo, que es justo lo que `2607.23982` **no** tiene;
+- **(b) costo instrumental dentro de una tarea agéntica** con verificación por arnés, no por
+  auto-reporte ni puntaje de juez;
+- **(c) escena derivada del incidente** con agentes co-presentes y actividad visible;
+- **(d) precio discreto 0/5/20 pareado dentro de la corrida**, con la pregunta "¿umbral o pendiente?"
+  en el régimen dominado.
+
+Ninguno de los doce junta las cuatro; varios cubren tres. **Y el orden del trabajo relacionado
+cambia:** `2607.23982` primero, `2604.07821` y la familia dictador después, Colosseum más atrás.
 
 ---
 
@@ -85,7 +163,12 @@ Los cuatro identificadores están verificados en la página de arXiv.
    tarea propia, no que nadie la haya mirado.
 
 **Prohibido en el reporte:** "nadie ha medido cooperación costosa en agentes LLM". Es falso desde
-junio de 2025.
+junio de 2025, y **desde el 13 de septiembre de 2026 también es falso el "nadie lo ha medido con
+costos variables"**: `2607.23982` (jul 2026) midió ayuda costosa con **nueve costos de consulta**
+distintos en 18 modelos. La única versión defendible es: *"nadie lo ha medido en el régimen
+**dominado** —beneficio propio exactamente cero, sin participación en el resultado del equipo—, con el
+costo instrumentado sobre la tarea propia y verificado por arnés, en un sandbox agéntico derivado del
+incidente"*. Ver §2.b.
 
 ---
 
@@ -181,5 +264,33 @@ las fuentes de arriba y sí mapea a las preguntas que el sprint llama vivas.
 
 - Toda afirmación factual sobre el incidente lleva fuente primaria o no va.
 - Los identificadores de arXiv solo se citan si están verificados en este documento.
+- **Un identificador que resuelve no basta: hay que comprobar que lo que se le atribuye está en el
+  abstract.** Así se detectaron dos imprecisiones el 13 de septiembre: `2511.08721` es el paper
+  **escéptico** de la familia dictador (cuestiona la robustez de los resultados, no los respalda), y
+  la cifra concreta de reparto humano ("≈50/50 contra >2/3") **no es verificable desde abstracts**.
 - No se citan resúmenes de terceros para hechos: si un blog dice que un informe dice algo, se va al informe.
 - Las cifras que provienen de un informe se citan con su ancla (página o línea de la copia local), y si dos fuentes discrepan se reportan ambas.
+
+## 10. Verificación del 13 de septiembre de 2026
+
+Doce identificadores nuevos, **los doce existen en arXiv** y lo que se les atribuye está en el
+abstract. Metadatos de cita comprobados uno por uno (título, fecha, autores). Dos correcciones:
+
+1. **`2511.08721` — "Benevolent Dictators?"** es el paper **escéptico**: cuestiona que los resultados
+   de los juegos del dictador sean robustos porque muchos estudios **pasan por alto el papel del
+   prompt de sistema**. Va con la advertencia, no con el hallazgo. Es también la cita que respalda
+   nuestra vigilancia del confundidor #6.
+2. **La cifra "los LLM reparten ≈50/50 contra humanos que retienen más de dos tercios"** no se puede
+   confirmar desde los abstracts: queda **marcada como pendiente de texto completo** y no entra al
+   reporte hasta confirmarla.
+
+Y dos consecuencias que **no** son de citación sino de diseño:
+
+- **`2604.07821` obliga a releer H4**: a costo cero la cooperación ya falla por sí sola en la
+  literatura, así que un cero a precio cero **no** prueba incapacidad. H4 pasa a ser línea base
+  conductual y su umbral del 60% necesita una enmienda declarada, no un ajuste silencioso.
+- **`2602.07777` ofrece la lectura de nuestro resultado plano**: los modelos de chat **sobre-cooperan
+  aunque sea subóptimo**, mientras los de razonamiento se alinean con el incentivo. Un 22% idéntico a
+  los dos precios es exactamente ese patrón.
+
+

@@ -26,3 +26,20 @@ harness/*workdir*/
 # Snapshots de páginas guardadas que traen un token de terceros embebido (bloquea push protection)
 data/raw/public_artifacts/Public evidence of the OpenAI-HuggingFace AI attack — LessWrong.html
 data/raw/public_artifacts/Further public evidence of the OpenAI-HuggingFace attack — LessWrong.html
+
+# --- exclusiones del proyecto de cooperacion costosa ---
+recon/
+entrega/
+jurado/
+idea-sandbox/
+.venv-inspect/
+__pycache__/
+*.pyc
+*.tar.gz
+harness/puerto_actividad_*.jsonl
+harness/puerto_mensajes_*.jsonl
+harness/vista_*.json
+harness/parametros.json
+harness/*workdir*/
+# Datos crudos de las corridas: pendientes de decision del equipo porque el repositorio es publico
+salidas/
