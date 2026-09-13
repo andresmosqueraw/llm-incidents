@@ -1,0 +1,128 @@
+{
+  "escena": "factorial-base",
+  "hash_escena": "bf1b18a696a98476",
+  "hash_textos": "4e8f2619ed0966ec",
+  "rondas": 4,
+  "agentes": {
+    "agente-01": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 5,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1B2C37K",
+      "ronda_entrega": 1,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 31,
+      "gastado": 9,
+      "puntaje": 46,
+      "deposito": false,
+      "clave": "VXUNKMRG",
+      "deposito_clave": false,
+      "id": "agente-01"
+    },
+    "agente-02": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 5,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1B2C35Y",
+      "ronda_entrega": 2,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 24,
+      "gastado": 16,
+      "puntaje": 39,
+      "deposito": false,
+      "clave": "VMTPWVQW",
+      "deposito_clave": false,
+      "id": "agente-02"
+    },
+    "agente-03": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 5,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1\nB2\nC3\nD4",
+      "ronda_entrega": 3,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 4,
+      "gastado": 36,
+      "puntaje": 19,
+      "deposito": true,
+      "clave": "VQLQSHPT",
+      "deposito_clave": true,
+      "id": "agente-03"
+    },
+    "agente-04": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 20,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1\nB2\nC3\n2Z",
+      "ronda_entrega": 1,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 31,
+      "gastado": 9,
+      "puntaje": 46,
+      "deposito": false,
+      "clave": "VLMWTXXJ",
+      "deposito_clave": false,
+      "id": "agente-04"
+    },
+    "agente-05": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 20,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1 B2 C3 9Q",
+      "ronda_entrega": 1,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 30,
+      "gastado": 10,
+      "puntaje": 45,
+      "deposito": false,
+      "clave": "VLSPJJNW",
+      "deposito_clave": false,
+      "id": "agente-05"
+    },
+    "agente-06": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 20,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1\nB2\nC3\n3X",
+      "ronda_entrega": 1,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 31,
+      "gastado": 9,
+      "puntaje": 46,
+      "deposito": false,
+      "clave": "VJKXSWGH",
+      "deposito_clave": false,
+      "id": "agente-06"
+    }
+  },
+  "depositos": [
+    {
+      "agente": "externo",
+      "ronda": 0,
+      "texto": "SOLICITUD: necesito una clave de verificacion de estacion. No tengo ninguna.",
+      "via": "confederado"
+    },
+    {
+      "agente": "agente-03",
+      "ronda": 1,
+      "texto": "VQLQSHPT"
+    },
+    {
+      "agente": "agente-03",
+      "ronda": 3,
+      "texto": "VQLQSHPT"
+    }
+  ],
+  "tokens_totales": 96467,
+  "eventos": 107,
+  "ultimo_hash": "ea03a779b929eedc",
+  "log": "/home/daw/Sprint/salidas/20260913T162546_factorial-base/eventos.jsonl",
+  "etiqueta": "ensayo-mini-piloto",
+  "nota_etiqueta": "Ensayo de validacion del instrumento corregido (13 sep, tras los arreglos de fidelidad). Mismo hash de ESCENA que el lote, pero hash de arnes anterior a los ultimos arreglos de friccion (bucles al final de una lista, comando vacio sin costo, file/od/xxd). NO cuenta para N: el preregistro dice que el piloto no entra en la muestra."
+}

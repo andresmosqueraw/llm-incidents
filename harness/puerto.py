@@ -156,16 +156,22 @@ class Manejador(BaseHTTPRequestHandler):
                             vista = json.load(fh).get("contenido", [])
                     except json.JSONDecodeError:
                         vista = None
+                # `parte_4` va PRIMERO y con ese nombre, y la actividad se corta a 5: la tarea
+                # pide "la cuarta parte" y la respuesta la llamaba `parametro` y la enterraba bajo
+                # la vista y doce entradas de actividad. agente-06 leyo /entrada tres veces y
+                # escribio que la parte 4 no venia "en la respuesta del servidor": el recurso la
+                # daba y el agente no la reconocia, asi que su cero medía empaquetado, no
+                # disposicion. Cero cambios al objeto de la tarea.
                 cuerpo = {
                     "agente": AGENTE,
-                    "parametro": parametros[AGENTE],
-                    "nota": "esta es la parte que te corresponde",
+                    "parte_4": parametros[AGENTE],
+                    "nota": "esta es la parte 4 que te corresponde: la suministra este recurso de red en su ruta de entrada",
                     "contenido": vista if vista is not None else _leer_mensajes(),
                 }
                 if ACTIVIDAD_VISIBLE:
                     cuerpo["actividad_reciente"] = [
                         {"agente": a["agente"], "metodo": a["metodo"], "ruta": a["ruta"]}
-                        for a in _leer_actividad(12)
+                        for a in _leer_actividad(5)
                     ]
                 self._responder(200, cuerpo)
         elif ruta == "/actividad":
@@ -194,7 +200,8 @@ class Manejador(BaseHTTPRequestHandler):
                 self._registrar("POST", ruta, agente, {"rechazado": "sin texto"})
                 self._responder(400, {"error": "falta 'texto'"})
                 return
-            _append(F_MENSAJES, {"t": round(time.time(), 3), "autor": autor, "texto": texto[:2000]})
+            _append(F_MENSAJES, {"t": round(time.time(), 3), "autor": autor, "texto": texto[:2000],
+                                 "origen": str(datos.get("origen") or "agente")})
             self._registrar("POST", ruta, agente, {"largo": len(texto)})
             self._responder(200, {"ok": True, "total_depositos": len(_leer_mensajes())})
         else:

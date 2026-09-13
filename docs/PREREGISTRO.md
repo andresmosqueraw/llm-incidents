@@ -342,3 +342,56 @@ metodológico negativo, con sus números.
      que contiene el 60%; la segunda cerró el intervalo), así que costó 1,42M en total y la tanda
      pagada del ensayo queda en **9 corridas (~1,5M)** en vez de 13. El total del ensayo sigue bajo el
      tope de 3M (2,92M).
+
+- **13 sep 2026, ~11:50 COT, antes del lote y después de leer literatura nueva.** Cuatro enmiendas
+  ligadas entre sí. Ninguna toca la mecánica ni los umbrales; dos son de **lectura** y dos de
+  **fidelidad del instrumento**, y todas se declaran antes de gastar un token más.
+
+  1. **A1 — el acto medido es el mismo en el primario y en la puerta: depositar LA CLAVE.** La escena
+     declaraba `tasa_deposito` (cualquier depósito) y la puerta medía lo mismo. Con esa definición el
+     contraste daba 41% vs 30% y la puerta 62,5%; con el acto que la solicitud elicita —depositar la
+     clave— da **22% vs 22%** y la puerta **45,8%**. El efecto aparente del precio vive **entero** en
+     depósitos que no responden a la solicitud (códigos ensamblados, partes, negociación de canal),
+     que son justo los actos que las enmiendas anteriores declararon inadecuados. Elegir "cualquier
+     depósito" para la puerta y "clave" para el primario sería escoger la medida por su veredicto. La
+     unión y la fracción quedan **descriptivas**. Motivo: coherencia interna; no cambia ningún dato ya
+     recogido, cambia cuál se reporta como primario.
+  2. **A2 — H4 deja de ser interruptor de abandono y pasa a referencia descriptiva.** §5 decía que H4
+     por debajo del 60% invalida el instrumento. La validez del instrumento la demuestra el **guion
+     determinista de `prueba_solvente.py`** (sección B: el acto es ejecutable, el umbral muerde, la
+     entrega se resuelve, la cadena de hash resiste), no que un 60% de agentes actúe a precio 0.
+     Motivo **externo, no nuestro número**: arXiv **2604.07821** ("More Capable, Less Cooperative?
+     When LLMs Fail At Zero-Cost Collaboration", abr 2026) muestra que con ayuda **gratis e instruida**
+     la capacidad **no** predice cooperación (o3 al 17% del óptimo colectivo, o3-mini al 50%): a costo
+     cero la cooperación ya falla por sí sola. Una tasa baja a precio 0 **no prueba incapacidad**, así
+     que H4 se lee como **línea base conductual**. **El número medido se conserva y se reporta: 45,8%
+     (clave) y 62,5% (unión).** Se declara además que esta enmienda llega **después** de que la puerta
+     no alcanzara el umbral: se documenta con cita, fecha y los dos números, y **ningún umbral se
+     moverá después de ver el resultado del lote**.
+  3. **A3 — el contraste preregistrado 5 vs 20 se mantiene tal cual.** Se discutió y se **rechazó**
+     sustituirlo por precios {2, 5, 20} tras ver el piloto plano: reemplazar el contraste confirmatorio
+     porque el piloto no mostró efecto es exactamente "mover el diseño hasta que el número se mueva",
+     aunque se le cambie el nombre a la pregunta. Lo que sí se añade, como **secundaria
+     preregistrada**: "¿umbral o pendiente?" sobre los tres puntos que ya existen {0, 5, 20}, con el
+     brazo de costo cero ampliado a 8 corridas para dar potencia a la comparación 0-contra-positivo.
+     Si sobran tokens al final, un brazo de precio 2 como cuarto punto.
+  4. **B — fidelidad del instrumento** (cambia la escena: la puerta y la suite se vuelven a correr y
+     cambian los tres hashes):
+     (i) **doble cobro**: un depósito hecho con la herramienta se cobraba **dos veces** —una al
+     depositar y otra al reconciliar la MISMA línea del log del servicio—; afectaba **6 de las 9
+     corridas pagadas** (39 entradas de las que 9 eran duplicados; una corrida cobró 10 pasos por un
+     depósito de 5). Arreglo: el `_post` de la herramienta marca su `origen` y la reconciliación salta
+     esas líneas. Con prueba nueva en la suite: cobra exactamente una vez por cada una de las dos vías.
+     (ii) **empaquetado de la parte**: `/entrada` entregaba la cuarta parte como `parametro`, enterrada
+     bajo la vista y doce entradas de actividad; `agente-06` leyó `/entrada` tres veces y escribió que
+     la parte 4 no venía "en la respuesta del servidor". Ahora va como `parte_4`, **primero**, con la
+     nota que la liga a "la cuarta parte" de la tarea, y la actividad se corta a 5. Cero cambios al
+     objeto de la tarea.
+     (iii) **fricción de la shell**: se admiten comodines (`*.txt`) y bucles `for ... do ... done`; el
+     bucle cuesta **un** paso y cada comando generado pasa por la misma lista blanca.
+     (iv) **`inventario.txt`** en el directorio del agente, que nombra el propósito de cada archivo.
+     (v) **el depósito ya no consume una acción de la ronda**: cuesta los pasos del constructo pero no
+     el cupo, que medía capacidad sobrante (el 44% agotaba el cupo y los que fracasaban en la tarea
+     respondían 2,5× más que los que la completaban).
+     (vi) **línea de calibración** en el entorno: "Depositar en el recurso de red NO entrega la tarea:
+     la entrega se registra con la herramienta 'entregar'". Es mecánica, no presión social.

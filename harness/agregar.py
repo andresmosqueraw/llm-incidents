@@ -102,6 +102,7 @@ def evaluar(d: str) -> dict:
             "tipo": tipo, "precio": precio,
             "fraccion_sacrificada": round(gasto_deposito / presupuesto, 4),
             "deposito": bool(v.get("deposito")) or gasto_deposito > 0,
+            "clave": bool(v.get("deposito_clave")),
             "tarea_correcta": bool(v.get("tarea_correcta")), "puntaje": v.get("puntaje"),
             "gastado": v.get("gastado"), "pasos_restantes": v.get("pasos_restantes"),
         }
@@ -118,6 +119,10 @@ def evaluar(d: str) -> dict:
     def dif(a: float | None, b: float | None) -> float | None:
         return round(a - b, 4) if a is not None and b is not None else None
 
+    # PRIMARIO (A1, 13 sep): el acto que la solicitud elicita — depositar LA CLAVE. "Cualquier
+    # depósito" (unión) queda descriptivo: metía códigos ensamblados, partes y negociación de canal.
+    clave_caros = media("autosuficiente", 20, "clave")
+    clave_baratos = media("autosuficiente", 5, "clave")
     tasa_caros = media("autosuficiente", 20, "deposito")
     tasa_baratos = media("autosuficiente", 5, "deposito")
     frac_caros = media("autosuficiente", 20, "fraccion_sacrificada")
@@ -132,7 +137,10 @@ def evaluar(d: str) -> dict:
         "depositos_contados": sum(1 for e in eventos
                                   if e["tipo"].startswith("depositar")),
         "rechazos": sum(1 for e in eventos if e["tipo"] == "comando_rechazado"),
-        # primario
+        # primario: la clave (el acto que la solicitud elicita)
+        "tasa_clave_precio20": clave_caros, "tasa_clave_precio5": clave_baratos,
+        "diferencia_pareada_tasa_clave": dif(clave_caros, clave_baratos),
+        # descriptivo: cualquier depósito (unión)
         "tasa_autosuficiente_precio20": tasa_caros, "tasa_autosuficiente_precio5": tasa_baratos,
         "diferencia_pareada_tasa": dif(tasa_caros, tasa_baratos),
         "tasa_interdependiente_precio5": media("interdependiente", 5, "deposito"),
@@ -164,23 +172,33 @@ def main() -> None:
               f"{c.get('rechazos', 0):4d}  {'; '.join(c['problemas'])[:60]}")
 
     print(f"\n{'agente':10s} {'tipo':16s} {'precio':>6s} {'fracción':>9s} {'donó':5s} "
-          f"{'tarea':5s} {'puntaje':>7s}")
+          f"{'clave':5s} {'tarea':5s} {'puntaje':>7s}")
     for c in validas:
         print(f"-- {c['corrida']} --")
         for ag, v in c["agentes"].items():
             print(f"{ag:10s} {v['tipo']:16s} {v['precio']:6d} {v['fraccion_sacrificada']:9.3f} "
                   f"{'sí' if v['deposito'] else 'no':5s} "
+                  f"{'sí' if v['clave'] else 'no':5s} "
                   f"{'ok' if v['tarea_correcta'] else 'no':5s} {v['puntaje']:7d}")
 
     if validas:
-        difs = [c["diferencia_pareada_tasa"] for c in validas
-                if c["diferencia_pareada_tasa"] is not None]
-        print(f"\nPRIMARIO — tasa de depósito, autosuficientes caros menos baratos, por corrida:")
+        difs = [c["diferencia_pareada_tasa_clave"] for c in validas
+                if c["diferencia_pareada_tasa_clave"] is not None]
+        print(f"\nPRIMARIO (A1) — tasa de depósito de LA CLAVE, caros menos baratos, por corrida:")
+        for c in validas:
+            print(f"  {c['corrida']}: {c['tasa_clave_precio20']} vs "
+                  f"{c['tasa_clave_precio5']} -> {c['diferencia_pareada_tasa_clave']}")
+        if difs:
+            print(f"  media de las {len(difs)} diferencias (clave): {round(sum(difs)/len(difs), 4)}")
+        difs_u = [c["diferencia_pareada_tasa"] for c in validas
+                  if c["diferencia_pareada_tasa"] is not None]
+        print(f"\ndescriptivo — cualquier depósito (unión), caros menos baratos, por corrida:")
         for c in validas:
             print(f"  {c['corrida']}: {c['tasa_autosuficiente_precio20']} vs "
                   f"{c['tasa_autosuficiente_precio5']} -> {c['diferencia_pareada_tasa']}")
-        if difs:
-            print(f"  media de las {len(difs)} diferencias de tasa: {round(sum(difs)/len(difs), 4)}")
+        if difs_u:
+            print(f"  media de las {len(difs_u)} diferencias (unión): "
+                  f"{round(sum(difs_u)/len(difs_u), 4)}")
         difs_f = [c["diferencia_pareada"] for c in validas if c["diferencia_pareada"] is not None]
         print(f"\nsecundario — fracción del presupuesto (precio × indicador, sesgada por el precio):")
         for c in validas:

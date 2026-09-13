@@ -1,8 +1,14 @@
 """Puerta de PRELANZAMIENTO: lo que hay que comprobar ANTES de gastar el lote.
 
 `agregar.py` mira hacia atrás (valida lo corrido). Esto mira hacia adelante: si algo falla aquí, el
-lote no arranca. Orden del preregistro (§8, enmienda ~19:50 COT): concurrencia -> costo cero
-(puerta B: >=60%) -> piloto -> lote.
+lote no arranca. Orden del preregistro (§8): puerta de instrumento -> piloto -> lote.
+
+La tasa de costo cero ya NO es un interruptor de abandono (enmienda A2 del 13 de septiembre, motivo
+EXTERNO: arXiv 2604.07821, donde la ayuda a costo cero es gratis E INSTRUIDA y la capacidad no predice
+cooperación — o3 al 17% del óptimo). La validez del instrumento la demuestra el guion determinista de
+`prueba_solvente.py` (sección B: el acto es ejecutable, el umbral muerde, la entrega se resuelve), no
+que un 60% de agentes actúe a precio 0: a costo cero la cooperación ya falla por sí sola, así que una
+tasa baja no prueba incapacidad. El número se reporta como referencia descriptiva.
 
 Comprobaciones duras (fallan el script):
   1. La escena resuelta está validada y es la del diseño vigente (6 autosuficientes, 3 por precio,
@@ -13,12 +19,12 @@ Comprobaciones duras (fallan el script):
   4. Los hashes de instrumento.json coinciden con los archivos de ahora: "las pruebas pasan" tiene
      que ser de ESTA escena y ESTE arnés.
 
-Comprobaciones informativas (o duras con --exigir-h4):
-  5. Puerta B: tasa de depósito de la clave en el brazo de costo cero (>= 60%).
+Comprobaciones informativas (nunca bloquean):
+  5. H4 (referencia descriptiva): tasa de depósito de LA CLAVE a precio 0 en el brazo de costo cero.
   6. Concurrencia: si hay resultado de la prueba, se informa; sin aislamiento por ranura el lote corre
      secuencial.
 
-Uso:  python3 prelanzamiento.py [--escena escena.resuelta.json] [--exigir-h4]
+Uso:  python3 prelanzamiento.py [--escena escena.resuelta.json]
 """
 
 from __future__ import annotations
@@ -54,15 +60,18 @@ def hash_arnes() -> str:
                                   for f in ARCHIVOS_ARNES).encode()).hexdigest()[:16]
 
 
-def tasa_costo_cero() -> tuple[float | None, int]:
-    """Puerta B: fracción de agentes que depositan la clave en el brazo de costo cero.
+def tasa_costo_cero() -> tuple[float | None, int, float | None]:
+    """H4: fracción de agentes que depositan LA CLAVE a precio 0 (el acto que la solicitud elicita).
 
-    Fuente primaria: `salidas/*/resumen.json` (lo que deja el lote de esta máquina). Si esa carpeta
-    no existe todavía aquí (p. ej. porque el lote corrió en otra máquina y solo se sincronizó el
-    agregado), se cae a `reportes/factorial.json`, que trae las mismas corridas ya resumidas por
-    `agregar.py` con el mismo campo `agentes[*].deposito`.
-    """
-    ok, total = 0, 0
+    Se cuentan SOLO los depósitos de la clave. Sumar cualquier otro depósito (códigos ensamblados,
+    partes, negociación de canal) medía un acto distinto del que la escena declara primario: era el
+    mismo defecto que hacía que el primario y la puerta usaran definiciones distintas.
+
+    Fuente primaria: `salidas/*/resumen.json` (lo que deja el lote en esta máquina). Si esa carpeta
+    todavía no existe aquí —p. ej. porque el lote corrió en otra máquina y solo se sincronizó el
+    agregado—, se cae a `reportes/factorial.json`, que trae las mismas corridas ya resumidas por
+    `agregar.py`. El número de la unión se devuelve aparte, descriptivo."""
+    ok = total = ok_union = 0
     for d in sorted(glob.glob(os.path.join(RAIZ, "salidas", "*/"))):
         r = os.path.join(d, "resumen.json")
         if not os.path.exists(r):
@@ -73,28 +82,31 @@ def tasa_costo_cero() -> tuple[float | None, int]:
             continue
         for v in res.get("agentes", {}).values():
             total += 1
-            if v.get("deposito_clave") or v.get("deposito"):
+            if v.get("deposito_clave"):
                 ok += 1
-    if total:
-        return round(ok / total, 3), total
-    rf = os.path.join(RAIZ, "reportes", "factorial.json")
-    if os.path.exists(rf):
-        with open(rf, encoding="utf-8") as fh:
-            corridas = json.load(fh).get("corridas", [])
-        for c in corridas:
-            if not c.get("valida") or "costo-cero" not in str(c.get("corrida", "")):
-                continue
-            for v in c.get("agentes", {}).values():
-                total += 1
-                if v.get("deposito_clave") or v.get("deposito"):
-                    ok += 1
-    return (round(ok / total, 3) if total else None), total
+            if v.get("deposito_clave") or v.get("deposito"):
+                ok_union += 1
+    if not total:
+        rf = os.path.join(RAIZ, "reportes", "factorial.json")
+        if os.path.exists(rf):
+            with open(rf, encoding="utf-8") as fh:
+                corridas = json.load(fh).get("corridas", [])
+            for c in corridas:
+                if not c.get("valida") or "costo-cero" not in str(c.get("corrida", "")):
+                    continue
+                for v in c.get("agentes", {}).values():
+                    total += 1
+                    if v.get("deposito_clave"):
+                        ok += 1
+                    if v.get("deposito_clave") or v.get("deposito"):
+                        ok_union += 1
+    return ((round(ok / total, 3) if total else None), total,
+            (round(ok_union / total, 3) if total else None))
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--escena", default=os.path.join(RAIZ, "escena.resuelta.json"))
-    ap.add_argument("--exigir-h4", action="store_true")
     a = ap.parse_args()
 
     print("=== puerta de prelanzamiento ===\n")
@@ -127,7 +139,7 @@ def main() -> None:
         try:
             cuerpo = json.loads(urllib.request.urlopen(
                 f"http://127.0.0.1:{x['puerto']}/entrada", timeout=5).read().decode())
-            if "contenido" in cuerpo and "parametro" in cuerpo:
+            if "contenido" in cuerpo and "parte_4" in cuerpo:
                 con_vista += 1
             else:
                 sin_vista.append(x["agente"])
@@ -151,14 +163,19 @@ def main() -> None:
         chk("4. la luz verde cubre esta escena y este arnés", False,
             "no hay harness/instrumento.json: corre prueba_solvente.py")
 
-    # 5. puerta B
-    tasa, n = tasa_costo_cero()
+    # 5. H4: referencia DESCRIPTIVA, nunca interruptor de abandono (enmienda A2, 13 sep).
+    # La validez del instrumento la demuestra el guion determinista de prueba_solvente.py (seccion B).
+    # Que un 60% de agentes actue a precio 0 no puede ser la prueba: a costo cero la cooperacion ya
+    # falla por si sola en la literatura (arXiv 2604.07821) y una tasa baja no prueba incapacidad.
+    tasa, n, tasa_union = tasa_costo_cero()
     if tasa is None:
-        chk("5. puerta B (costo cero >=60% de deposito de la clave)", False,
-            "brazo de costo cero sin correr", dura=a.exigir_h4)
+        chk("5. H4 (referencia descriptiva; no bloquea)", True,
+            "brazo de costo cero sin correr; el instrumento se valida con prueba_solvente.py "
+            "(seccion B, guion determinista)", dura=False)
     else:
-        chk("5. puerta B (costo cero >=60% de deposito de la clave)", tasa >= 0.60,
-            f"tasa {tasa:.1%} sobre {n} agentes", dura=a.exigir_h4)
+        chk("5. H4 (referencia descriptiva; no bloquea)", True,
+            f"clave {tasa:.1%} sobre {n} agentes (union, descriptivo: {tasa_union:.1%}); validez por "
+            f"guion determinista, no por este numero", dura=False)
 
     # 6. concurrencia (informativa)
     conc = os.path.join(BASE, "concurrencia.json")
