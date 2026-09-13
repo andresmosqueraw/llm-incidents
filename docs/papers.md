@@ -78,7 +78,7 @@ que medimos es el **residuo irracional en el régimen dominado**, no el rastreo 
 **Consecuencia directa.** Nuestro 46% (clave) / 62% (unión) a precio cero **no es un techo de
 capacidad**: la literatura ya muestra que a costo cero la cooperación falla por sí sola. Por lo tanto
 H4 debe leerse como **línea base conductual**, no como prueba de capacidad, y el "acantilado en cero"
-del ensayo se apoya sobre una base que ya era imperfecta. Eso obliga a una **enmienda de H4** en §7 del
+del ensayo se apoya sobre una base que ya era imperfecta. Eso obliga a una **enmienda de H4** en §8 del
 preregistro, declarada y con esta cita — no a un ajuste silencioso de umbral.
 
 ### Dar a un desconocido, sin reciprocidad, pagando de lo propio: la familia dictador
@@ -97,10 +97,6 @@ el agente **necesita** para su propia tarea, verificado por arnés en un entorno
 *Por confirmar antes del reporte:* la cifra concreta "≈50/50 frente a humanos que retienen más de dos
 tercios" **no es verificable desde los abstracts**; hay que confirmarla en el texto completo, y
 `2511.08721` advierte que esas cifras son sensibles al prompt.
-
-*Dueño y hora (asignado el 13 sep, 14:00 COT, ver `PLAN-CIERRE.md` §4):* Andrew, 15:45 COT, antes de
-escribir Related Work. Si a esa hora no se confirma desde el texto completo, H1b se reporta sin banda
-numérica en el paper — comparación cualitativa, no un número sin fuente verificada.
 
 ### Magnitud del pago, y los demás que hay que conocer
 

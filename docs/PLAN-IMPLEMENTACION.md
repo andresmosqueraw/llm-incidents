@@ -6,7 +6,7 @@ Documento hermano de `propuesta-cooperacion-costosa.md` (el qué) — este es el
 
 > **Aviso (12 sep, 17:16 COT).** La escena de §1 (créditos y donación con umbral) fue reemplazada
 > por la de partes y almacén con precio, y el eje de reciprocidad por el de interdependencia, tras
-> las sondas. La fuente de verdad del diseño es ahora `PREREGISTRO.md` §1 (enmienda en su §7) y
+> las sondas. La fuente de verdad del diseño es ahora `PREREGISTRO.md` §1 (enmienda en su §8) y
 > `ESTADO.md` §2-3. Los bloques, puertas y riesgos de este documento siguen vigentes; la escena y
 > las celdas, no. Se corrigen abajo solo las líneas que contradicen el preregistro.
 >
@@ -15,7 +15,7 @@ Documento hermano de `propuesta-cooperacion-costosa.md` (el qué) — este es el
 > autosuficiente nunca está ante la decisión y el 0 vs 0 de la calibración no era dato; (2) el
 > **primario es la tasa de depósito**, no la fracción (con precio fijo la fracción es precio ×
 > indicador); (3) **rondas = 4 por criterio**. La puerta C se lee ahora sobre tasas y solo sobre
-> corridas con estímulo. Detalle y motivos en `PREREGISTRO.md` §7.
+> corridas con estímulo. Detalle y motivos en `PREREGISTRO.md` §8.
 
 ## 1. La escena, antes de escribir código
 

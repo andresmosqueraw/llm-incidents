@@ -22,7 +22,7 @@ el gateway propio.
 
 | Decisión | Valor | Nota |
 |---|---|---|
-| Modelo | `glm-5.3-flash` para el confirmatorio (H1, N=80); **enmienda del 13 sep**: generalización exploratoria (6 corridas c/u, sin potencia) en `deepseek-v4.1-flash` y un tercer modelo por verificar | Tool calling de `glm-5.3-flash` y `deepseek-v4.1-flash` verificado de punta a punta; el tercero pendiente de `smoke_test.py`. Detalle en `PREREGISTRO.md` §7 |
+| Modelo | `glm-5.3-flash`, único | Tool calling verificado de punta a punta |
 | N | **80 corridas** (fijado 19:50 COT, antes del piloto; el piloto no cuenta; sin parada opcional) | Análisis a nivel de corrida: 80 diferencias pareadas. Efecto detectable d_z ≈ 0,32 ≈ **~13 puntos de tasa** con 3 por precio. ~7 h secuenciales o ~3 h con aislamiento por ranura |
 | Asignación | **6 autosuficientes: 3 a precio 5, 3 a precio 20** (decidido 19:50 COT) | Sin interdependientes en el factorial: no generaban estímulo y el confederado ya lo pone. Es **un factor (precio) con controles**, no un 2×2. H2/H3 al exploratorio; **H4 (costo cero) es el único control positivo** y va antes del piloto |
 | Desenlace primario | **Tasa de depósito** (binaria por agente, media por celda y corrida) | La fracción del presupuesto pasa a secundaria: con precio fijo es precio × indicador y sesgaba H1 contra su propia dirección (`agregar.py`, invariante I12) |
@@ -57,16 +57,17 @@ el abstract—; detalle, abstracts y correcciones en `papers.md` §2.b y §10. L
   cooperación ya falla por sí sola** (o3 al 17% del óptimo; o3-mini al 50%, con ayuda gratis e
   instruida). Por lo tanto nuestro 46% (clave) / 62% (unión) **no es un techo de capacidad**: H4 pasa a
   leerse como **línea base conductual**, y su umbral del 60% deja de ser una prueba de capacidad. Va al
-  §7 del preregistro con la cita.
+  §8 del preregistro con la cita.
 - **La tasa plana tiene lectura publicada.** `2602.07777`: los modelos de chat **sobre-cooperan aunque
   sea estratégicamente subóptimo**, mientras los de razonamiento se alinean con el incentivo. Un 22%
   idéntico a los dos precios es exactamente ese patrón.
 - **Método prestado:** `2601.19082` clasifica estrategias canónicas con clasificadores en lugar de leer
   conteos crudos de acciones; aplicable a nuestras transcripciones.
 
-## 3. Adoptado en el preregistro
+## 3. Adoptado en el preregistro, pendiente de firma
 
-`PREREGISTRO.md` ya está reescrito al eje de interdependencia (enmienda del 12 sep en su §7).
+`PREREGISTRO.md` ya está reescrito al eje de interdependencia (enmienda del 12 sep en su §8). Lo que
+falta es que dos personas lo firmen; hasta entonces cualquiera de estos puntos se puede revertir.
 
 1. **Entorno por rondas**: decisiones simultáneas dentro de la ronda, revelación al cerrar la ronda.
    Da atribución causal exacta, evita que esperar cueste, y hace que la reciprocidad sea estructural
@@ -231,7 +232,7 @@ observación.
    media) y la figura "tasa contra precio".
 4. **Brazo de costo cero** en `escena-costo-cero.json` (precios [0,0,0,0] + [0,0], `brazo:
    "costo_cero"`; el validador ya lo trata como control).
-7. **Reporte**: 8 horas de trabajo.
+7. **Reporte**: 8 horas de persona. La política del sprint prohíbe delegarlo al modelo.
 
 ## 8. Presupuesto
 
@@ -291,8 +292,8 @@ escena. El reloj sigue siendo el límite duro. Medir concurrencia y 429 del gate
 ## 11. Próximos pasos, en orden
 
 1. Leer `PREREGISTRO.md` reescrito (eje de interdependencia, asignación 4+2, escena con
-   descubrimiento garantizado y saldo con valor anunciado). Revertir lo que no se comparta y
-   **congelar**. Nada de código de la escena antes de congelar: un preregistro que se acomoda al
+   descubrimiento garantizado y saldo con valor anunciado). Revertir lo que no se comparta, **firmar
+   y congelar**. Nada de código de la escena antes de la firma: un preregistro que se acomoda al
    piloto no es preregistro.
 2. `python3 harness/validador.py` (ya pasa, 13 invariantes) y **una corrida de humo con la solicitud
    de confederado**: ¿la ven los seis? ¿deposita alguno? ¿cierra la cadena?

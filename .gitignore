@@ -27,21 +27,6 @@ harness/*workdir*/
 data/raw/public_artifacts/Public evidence of the OpenAI-HuggingFace AI attack — LessWrong.html
 data/raw/public_artifacts/Further public evidence of the OpenAI-HuggingFace attack — LessWrong.html
 
-# --- exclusiones del proyecto de cooperacion costosa ---
-recon/
-entrega/
-jurado/
-idea-sandbox/
-.venv-inspect/
-__pycache__/
-*.pyc
-*.tar.gz
-harness/puerto_actividad_*.jsonl
-harness/puerto_mensajes_*.jsonl
-harness/vista_*.json
-harness/parametros.json
-harness/*workdir*/
-
 # --- añadidos el 13 sep al sincronizar la carpeta de trabajo (no se quita nada de lo de arriba) ---
 .env.*
 *.key

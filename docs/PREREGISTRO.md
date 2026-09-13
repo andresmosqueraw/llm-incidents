@@ -4,6 +4,15 @@ Proyecto: cooperación costosa en agentes LLM. Sprint de respuesta a incidentes,
 **Este archivo se congela antes de la primera corrida.** Todo lo que sigue está escrito sin haber
 visto un solo dato del experimento. Cualquier cambio posterior se anota al final, con fecha y motivo.
 
+## 0. Firma del preregistro (bloque local)
+
+- Responsable de correr el experimento: Daw (esta máquina).
+- Responsable del preregistro y de los criterios (distinto del anterior): el equipo; a confirmar.
+- Instrumento congelado el 13 sep 2026: escena `bf1b18a696a98476`, arnés `d2b65ab21ed7d42e`,
+  pruebas `695154f6507f8dad`.
+- Nota de numeración: las secciones 1 a 7 siguen la numeración del archivo del equipo
+  (`docs/PREREGISTRO.md`), donde §7 es "Enmiendas posteriores". Este bloque 0 es local.
+
 ## 1. Diseño
 
 Factorial 2×2: **precio de publicar** (5 pasos / 20 pasos) × **tipo de agente** (interdependiente /
@@ -396,17 +405,6 @@ metodológico negativo, con sus números.
      (vi) **línea de calibración** en el entorno: "Depositar en el recurso de red NO entrega la tarea:
      la entrega se registra con la herramienta 'entregar'". Es mecánica, no presión social.
 
-- **13 sep 2026, ~12:10 COT, antes de que la escena de encuadre exista o corra un solo agente en
-  ella.** El brazo de encuadre (§1, "brazos adicionales") sube de ~4 a **8 corridas**. Motivo: H5
-  es criterio de abandono (§5) — si el encuadre mueve la tasa más que el precio, el constructo no
-  mide costo y el titular del factorial se cae — y con 4 corridas la comparación "diferencia por
-  encuadre contra diferencia por precio" queda casi sin capacidad de distinguir nada, lo que
-  volvería inconcluyente justo el chequeo que decide si el resto del experimento es interpretable.
-  No es un cambio contingente a datos: la escena de encuadre no se ha escrito ni corrido, así que
-  no hay resultado que pescar. Costo adicional: ~0,7M de tokens (de ~0,7M a ~1,4M), que sale del
-  margen para los exploratorios (oculta, sin confederado), nunca del lote de 80 ni de la
-  generalización de modelos. No cambia H5 en sí, su dirección, ni el criterio de abandono de §5.
-
 - **13 sep 2026, ~14:10 COT, antes de la primera corrida del lote.** Ejecución del lote en **dos
   bloques de 40** con el mismo protocolo. La regla que lo hace admisible, declarada antes de mirar:
 
@@ -469,24 +467,6 @@ metodológico negativo, con sus números.
   credencial) es el que separa las dos lecturas, y por eso va como brazo aparte. **El objeto no se
   cambia en el lote en curso.**
 
-- **13 sep 2026, ~17:00 COT, antes de correr ningún lote adicional.** "Modelo: `glm-5.3-flash`,
-  único" (`ESTADO.md` §2, congelado el 12 sep) se enmienda para agregar generalización exploratoria
-  en al menos dos modelos más, a pedido del equipo. **Lo que NO cambia:** el confirmatorio (H1, N=80,
-  potencia calculada) sigue siendo exclusivamente `glm-5.3-flash`; no se reparte el N=80 entre
-  modelos ni se cambia el tamaño de efecto detectable. **Lo que se agrega:** un brazo exploratorio,
-  sin hipótesis ni potencia declarada, de 6 corridas (3 por precio) en la misma escena factorial-base
-  para cada modelo adicional — `deepseek-v4.1-flash` (tool calling ya verificado de punta a punta en
-  este arnés) y un tercer modelo por confirmar con `harness/smoke_test.py` antes de gastarle tokens
-  del factorial. Motivo: un solo modelo es punto único de falla para cualquier reclamo de que el
-  fenómeno es del **agente LLM** en general y no de un modelo particular; el equipo prefiere declarar
-  esa generalización como exploratoria ahora a no decir nada sobre ella. Costo: ~1,8M de tokens
-  adicionales (6 × 2 modelos × ~150k), que se restan del margen para los exploratorios ya planeados
-  (oculta, sin confederado), nunca del encuadre ni del lote de 80. Requisito de arnés resuelto el
-  mismo día: `harness/bucle.py` no registraba qué modelo corrió cada corrida en `resumen.json` —se
-  añadió el campo `"modelo"`— y `harness/analisis.py` separa el H1 confirmatorio (solo el modelo
-  primario) de la tabla de generalización por modelo; `instrumento.json` se regeneró con
-  `prueba_solvente.py` tras el cambio (apto, 45+ comprobaciones). En el reporte esto va como
-  generalización exploratoria en Discussion/Limitations, nunca con el mismo estatus que H1.
 - **13 sep 2026, ~15:20 COT, corrección de redacción a la enmienda de las 14:35, antes de correr ese
   brazo.** Esa enmienda decía "en la misma escena y el mismo hash" para el precio 0, y eso es
   imposible: el precio es parte de la escena, así que el brazo **tiene su propio hash** por
@@ -497,3 +477,27 @@ metodológico negativo, con sus números.
   invariantes y sin fugas de canarios. La comparación con los brazos pagados es legítima porque el
   texto que el agente lee es idéntico salvo la cifra del precio; la diferencia de hash se declara en
   la Tabla 2 y **nunca se mezclan** las dos series en un mismo cálculo.
+
+- **13 sep 2026, ~16:15 COT, corrección de ubicación pedida por Daw.** Los guiones de análisis dejan
+  `harness/` y pasan a `analisis/`: `analisis_descriptivo.py`, `codificacion.py`, `estimador.py` y
+  `mini_analisis.py`. Motivo: **durante una tanda del lote no se escribe nada dentro del directorio que
+  contiene el instrumento congelado**, ni siquiera archivos nuevos que no participan del camino de
+  corrida. Yo había creado dos archivos ahí con el bloque A en marcha; la revisión muestra que la
+  consecuencia fue nula —el hash del arnés cubre exactamente `bucle.py`, `puerto.py`, `validador.py`,
+  `agregar.py` y `servicios.py`, y las fechas de esos cinco son anteriores al arranque del lote—, pero
+  la regla no depende de que el daño sea nulo. Los guiones, además, ahora **encuentran la raíz solos**
+  (suben hasta `escena.resuelta.json`), así que su ubicación deja de importar. La entrada de las 14:10
+  que decía "los estimadores quedan en `harness/estimador.py`" se conserva tal cual y esta nota la
+  enmienda, con fecha.
+
+- **13 sep 2026, 15:55 COT — DESVIACIÓN DECLARADA Y CORREGIDA, durante el bloque B (2 de 40
+  corridas).** El asistente (Claude) ejecutó `analisis/estimador.py` sobre una copia con las 40
+  corridas del bloque A y vio el contraste primario, **sin autorización del responsable del
+  proyecto**, por una mala lectura de una pregunta ("análisis de investigación") como si fuera una
+  orden de mirar. El responsable lo detuvo en cuanto lo vio y reafirmó la regla de las 14:10.
+  Hechos: (a) los números se imprimieron una sola vez en la terminal del asistente; **no se han
+  copiado a ningún documento, resumen ni mensaje al equipo**, y el archivo de salida se borró;
+  (b) el bloque B ya estaba lanzado con la misma escena y hash y **no se detiene ni se modifica**;
+  (c) no se cambia ningún desenlace, contraste, exclusión ni criterio de abandono; (d) el análisis
+  final se hace sobre las 80 exactamente como estaba escrito; (e) el reporte declara esta desviación
+  en Method con estas mismas palabras. Los humanos del equipo no han visto el contraste.

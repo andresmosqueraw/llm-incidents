@@ -20,7 +20,7 @@ límites: no hay factor de heterogeneidad entre modelos.
 | Si quieres… | Lee |
 |---|---|
 | el estado vigente completo (diseño, decisión por decisión) | `ESTADO.md` |
-| lo que se congeló **antes** de ver datos, y cada enmienda con su motivo | `PREREGISTRO.md` (sobre todo §7) |
+| lo que se congeló **antes** de ver datos, y cada enmienda con su motivo | `PREREGISTRO.md` (sobre todo §8) |
 | la teoría de juego del protocolo de créditos | `PROTOCOLO-JUEGO.md` |
 | el plan de bloques, puertas y presupuesto | `PLAN-IMPLEMENTACION.md` |
 | la propuesta corta para compañeros | `propuesta-cooperacion-costosa.md` |
