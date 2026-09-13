@@ -15,9 +15,9 @@ Reglas que respeta:
   - La cadena de hashes del registro se verifica de verdad: cada evento encadena con el anterior.
 
 Uso:
-    python3 harness/analisis_descriptivo.py  -> todo, sobre la escena vigente
-    python3 harness/analisis_descriptivo.py --json además escribe reportes/analisis.json
-    python3 harness/analisis_descriptivo.py --prueba autoprueba con datos sintéticos de efecto conocido
+    python3 analisis/analisis_descriptivo.py  -> todo, sobre la escena vigente
+    python3 analisis/analisis_descriptivo.py --json además escribe reportes/analisis.json
+    python3 analisis/analisis_descriptivo.py --prueba autoprueba con datos sintéticos de efecto conocido
 """
 from __future__ import annotations
 
@@ -27,7 +27,18 @@ import glob
 import json
 import os
 
-RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+def _raiz_del_proyecto() -> str:
+    """Sube desde este archivo hasta encontrar el proyecto (escena.resuelta.json).
+
+    Asi el guion funciona igual desde analisis/ que desde cualquier otro directorio.
+    """
+    d = os.path.dirname(os.path.abspath(__file__))
+    while d != os.path.dirname(d) and not os.path.exists(os.path.join(d, "escena.resuelta.json")):
+        d = os.path.dirname(d)
+    return d
+
+
+RAIZ = _raiz_del_proyecto()
 ETIQUETAS_DE_ENSAYO = ("ensayo", "prueba-de-instrumento", "pre-migracion")
 
 

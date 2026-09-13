@@ -27,7 +27,7 @@ No redacto prosa del reporte: reviso, verifico, preparo datos y figuras.
       doce papers verificados).
 
 ## Coordinación
-- [ ] (14:57: NO están todavía; borrador listo en `enmiendas-lote-borrador.md`) Confirmar con el otro agente que escribió **él** las tres enmiendas del lote en curso en
+- [x] (15:25: sí están — enmiendas de 14:10, 14:35 y 14:40 en §8; `enmiendas-lote-borrador.md` queda redundante) Confirmar con el otro agente que escribió **él** las tres enmiendas del lote en curso en
       `PREREGISTRO.md` §8 (un solo autor). Si a las 16:00 no están, las escribo yo y le aviso.
 - [ ] No editar `PREREGISTRO.md`, `ESTADO.md` ni `harness/` mientras él tenga cambios abiertos.
 
@@ -53,3 +53,10 @@ de la línea base a precio 0 frente a 2604.07821.
 - `figuras/fig1-regime-map.png` (EN) y `fig1-mapa-regimenes.png` (ES) a 300 dpi; `figuras/fig2.py` +
   `fig2-datos.json` (placeholder) → `fig2-rate-vs-price.png`.
 - `enmiendas-lote-borrador.md`: las tres enmiendas del lote listas para pegar.
+- `checklist-entrega.md`: requisitos exactos de Guidelines/FAQ (cierre 11:59 PM AoE = 06:59 COT; reenvío con el
+  mismo título reemplaza archivos → enviar borrador a las 02:00 y final antes de las 06:00).
+- `plan.md`: anclas de METR corregidas (1025, 1027, 1041, 1050).
+- `plan-repo.md`: escaneo de secretos (cero hallazgos reales; 116 rutas absolutas a relativizar), qué entra y
+  qué no, `.gitignore`, revisión de uso dual.
+- `revision-analisis.md`: cuatro correcciones al código de análisis antes de las 17:00 — la más grave: el
+  preregistro dice tres cosas distintas sobre el primario (§2 unión; A1 clave; 14:10 "pendiente").

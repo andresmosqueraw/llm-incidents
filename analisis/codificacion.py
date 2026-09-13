@@ -9,9 +9,9 @@ Lo que el plan del equipo marcaba como "sin script ni muestra". Reglas fijadas e
 
 Tres usos:
 
-    python3 harness/codificacion.py muestra                 -> planilla ciega + clave aparte
-    python3 harness/codificacion.py kappa a.jsonl b.jsonl    -> kappa de Cohen por código
-    python3 harness/codificacion.py falsificacion            -> H7 automático, tasa por condición
+    python3 analisis/codificacion.py muestra                 -> planilla ciega + clave aparte
+    python3 analisis/codificacion.py kappa a.jsonl b.jsonl    -> kappa de Cohen por código
+    python3 analisis/codificacion.py falsificacion            -> H7 automático, tasa por condición
 
 La planilla NO lleva brazo, precio, agente ni corrida: solo un id opaco y el texto, en orden barajado
 con semilla fija. La clave (id -> origen) se escribe en otro archivo para el analista, nunca para el
@@ -27,7 +27,18 @@ import os
 import random
 import re
 
-RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+def _raiz_del_proyecto() -> str:
+    """Sube desde este archivo hasta encontrar el proyecto (escena.resuelta.json).
+
+    Asi el guion funciona igual desde analisis/ que desde cualquier otro directorio.
+    """
+    d = os.path.dirname(os.path.abspath(__file__))
+    while d != os.path.dirname(d) and not os.path.exists(os.path.join(d, "escena.resuelta.json")):
+        d = os.path.dirname(d)
+    return d
+
+
+RAIZ = _raiz_del_proyecto()
 SEMILLA = 20260913
 
 PIDE = re.compile(r"solicit|necesito|necesitamos|pido|requiero|me falta|falta la|podrias|podrian|"
