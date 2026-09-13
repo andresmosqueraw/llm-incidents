@@ -44,7 +44,7 @@ audiencia**, a precio propio. Ese régimen dominado es el hueco.
 - Escena del lote: **`bf1b18a696a98476`**; arnés **`d2b65ab21ed7d42e`**; pruebas
   **`695154f6507f8dad`**, 75 comprobaciones verdes.
 - Corridas del lote (bloque A): **37/37 con la cadena de hashes íntegra** (cada evento encadena con el
-  anterior; se verifica con `harness/analisis_descriptivo.py`, no por confianza).
+  anterior; se verifica con `analisis/analisis_descriptivo.py`, no por confianza).
 - **0 corridas sin estímulo, 0 truncadas**, 0 corridas con problema en el bloque A.
 - **Cobro de depósito: exacto.** En los 222 agentes del bloque A, lo cobrado por depósitos es
   exactamente `precio × número de depósitos` (0 discrepancias). Es el invariante que reemplaza al
@@ -53,7 +53,7 @@ audiencia**, a precio propio. Ese régimen dominado es el hueco.
 - Rechazos de comando: **8,3 por corrida**, clasificados: túnel/salida de red 154, `curl` no permitido
   53, tubería/filtro 19, bucle 17, otro 63.
 
-Comando para reproducir todo: `python3 harness/analisis_descriptivo.py` (no gasta tokens, no toca los puertos).
+Comando para reproducir todo: `python3 analisis/analisis_descriptivo.py` (no gasta tokens, no toca los puertos).
 
 ---
 
@@ -126,9 +126,9 @@ Comando para reproducir todo: `python3 harness/analisis_descriptivo.py` (no gast
 
 | Pieza | Comando | Archivo |
 |---|---|---|
-| Tabla 1: tasa de la clave por precio, IC por bootstrap, diferencia pareada | `python3 harness/estimador.py` | `reportes/factorial.json` |
-| Figura 2: tasa contra precio 0/5/20 con intervalos | `harness/estimador.py` sobre las series de 0, 5 y 20 | — |
-| Tabla 2: validez (corridas, cadenas, estímulo, rechazos, tareas) | `python3 harness/analisis_descriptivo.py` | `reportes/analisis.json` |
-| Supervivencia, contagio, cadena ITT, mediación | `python3 harness/analisis_descriptivo.py` | `reportes/analisis.json` |
-| Codificación H6/H6b (directivo, acatamiento) | `python3 harness/codificacion.py muestra` → dos anotadores ciegos → `kappa` | `reportes/planilla-codificacion.jsonl` |
-| H7 falsificación (automático) | `python3 harness/codificacion.py falsificacion` | — |
+| Tabla 1: tasa de la clave por precio, IC por bootstrap, diferencia pareada | `python3 analisis/estimador.py` | `reportes/factorial.json` |
+| Figura 2: tasa contra precio 0/5/20 con intervalos | `analisis/estimador.py` sobre las series de 0, 5 y 20 | — |
+| Tabla 2: validez (corridas, cadenas, estímulo, rechazos, tareas) | `python3 analisis/analisis_descriptivo.py` | `reportes/analisis.json` |
+| Supervivencia, contagio, cadena ITT, mediación | `python3 analisis/analisis_descriptivo.py` | `reportes/analisis.json` |
+| Codificación H6/H6b (directivo, acatamiento) | `python3 analisis/codificacion.py muestra` → dos anotadores ciegos → `kappa` | `reportes/planilla-codificacion.jsonl` |
+| H7 falsificación (automático) | `python3 analisis/codificacion.py falsificacion` | — |
