@@ -81,6 +81,18 @@ pueda reportar.
    mira tasas ni decide nada con esos números — es una alarma temprana de reloj y tokens: si a las
    15:00 el ritmo dice que el lote no cierra antes de las 19:00, se avisa ya y se recorta la cola de
    exploratorios en vez de descubrirlo a las 20:00 sin margen de reacción.
+7. **Ningún script de análisis toca datos reales sin haber pasado primero por datos sintéticos.**
+   `agregar.py` (campo `deposito_clave` y tasas), el bootstrap y `analisis.py` se prueban antes de
+   las 12:30 contra un `resumen.json` sintético construido a mano (mezcla conocida: algunos depósitos
+   con clave, algunos sin, algunos vacíos, un IC calculable de cabeza) y **solo se corren contra
+   `salidas/` o `reportes/factorial.json` reales después de que esa prueba pase**. Esto evita
+   descubrir un bug de agregación a las 20:00 con el lote ya cerrado, que sería el escenario que más
+   tokens y horas desperdicia de todo el plan.
+8. **Revisión cruzada del análisis antes de fijar los números del Results.** Antes de las 19:30,
+   David recalcula a mano (o con una consulta independiente de una línea, sin reusar el código de
+   Andrew) al menos dos cifras que van a citarse en el reporte: la tasa de depósito de la celda de
+   precio 20 y una diferencia pareada cualquiera de H1. Si no coinciden con la salida de
+   `analisis.py`, se para y se corrige antes de escribir Results — no después de publicar.
 
 ---
 
@@ -120,6 +132,11 @@ pueda reportar.
       `agregar.py`; David debe regenerar `instrumento.json` con `prueba_solvente.py` tras el cambio,
       o se deja el cambio en un archivo nuevo `harness/analisis.py` para no invalidar el hash).
       **Decisión: todo en `analisis.py`, sin tocar `agregar.py`.**
+- [ ] **Antes de 12:30, construir `salidas_sintetico/resumen.json` de prueba** (mezcla conocida a
+      mano: N pequeño, algunos depósitos con clave, algunos sin, algunos vacíos) y correr `agregar.py`
+      + bootstrap + `analisis.py` contra eso primero. Las cifras de salida se calculan aparte a mano
+      y deben coincidir exactamente. **No correr estos scripts contra `salidas/` o
+      `reportes/factorial.json` reales hasta que esta prueba pase** (regla §2.7).
 - [ ] `harness/analisis.py`, sin tokens, lee `reportes/factorial.json` y `salidas/`:
       1. Tabla 1: por precio, tasa de depósito, tasa de depósito de clave, fracción, tarea completa,
          con IC95 bootstrap por corrida.
@@ -144,6 +161,11 @@ pueda reportar.
 
 - [ ] Codificar el CSV completo con las reglas de `PREREGISTRO.md` §4: `directivo` (sí/no),
       `tipo` (clave / parte / código / negociación / vacío / negativa / otro).
+- [ ] **Andrew, 15:45 (antes de Related Work a las 16:15):** confirmar la banda de contribución
+      humana de primera ronda de `2608.28182` leyendo el **texto completo**, no el abstract (regla
+      de `papers.md` §9: "un identificador que resuelve no basta"). Anotar la cifra exacta con su
+      página/sección en `papers.md` §2.b, junto a la fecha de hoy. Sin esa cifra confirmada, H1b no
+      se cita con número en el reporte — se reporta como comparación cualitativa, sin banda.
 
 ### 14:30 a 20:00 — reporte, primera versión
 
@@ -163,10 +185,15 @@ Se escribe en este orden, de lo que ya está a lo que depende del lote:
    modelos. **El desenlace primario es binario (depositó o no) por diseño de precio fijo por brazo
    (razón en `PREREGISTRO.md` §2), no una magnitud continua de sacrificio; la fracción secundaria da
    el tamaño pero hereda la misma limitación — ninguno de los dos mide "cuánto" en una escala libre,
-   eso queda para precio continuo en un seguimiento.** N=80 detecta ~13 puntos; H3 diferida; H4
-   corrida dos veces (decir las dos cifras); constructo de "costo" en un agente; los agentes no ven
-   el precio ajeno. Dual-use: no hay recetas del incidente, el corpus `recon/` no se publica, ningún
-   contenido manipulativo se inyecta.
+   eso queda para precio continuo en un seguimiento.** Con solo dos precios (5 y 20) lo que sí se
+   puede afirmar es una **curva dosis-respuesta de dos puntos**: la diferencia en tasa/fracción entre
+   esos dos precios, con su IC, es una cota — no una pendiente estimada — de cuánto responde el
+   sacrificio al costo; se declara explícitamente como eso y no se extrapola a precios intermedios.
+   N=80 detecta ~13 puntos; H3 diferida; H4 corrida dos veces (decir las dos cifras); constructo de
+   "costo" en un agente; los agentes no ven el precio ajeno. **Codificación manual (dos anotadores,
+   kappa de Cohen), no el clasificador de `2601.19082`** — declarado como elección de tiempo, no de
+   método, con la adopción del clasificador como trabajo futuro. Dual-use: no hay recetas del
+   incidente, el corpus `recon/` no se publica, ningún contenido manipulativo se inyecta.
 5. **Results** (19:00, con el lote terminado o casi): tablas y figuras de `analisis.py`, con la
    lectura preregistrada. **La fracción del presupuesto (secundario) se reporta en la misma tabla y
    el mismo panel de figura que la tasa (primario), nunca relegada a una frase suelta** — es la
@@ -202,6 +229,9 @@ Se escribe en este orden, de lo que ya está a lo que depende del lote:
 
 - [ ] Andrew corre `analisis.py` sobre las 80 + encuadre, pega tablas y figuras, escribe Results y
       Discussion.
+- [ ] **Revisión cruzada (regla §2.8), antes de 19:30:** David recalcula a mano/independiente al
+      menos la tasa de depósito de precio 20 y una diferencia pareada de H1. Si no coincide con
+      `analisis.py`, se detiene y se corrige antes de escribir Results.
 - [ ] David lee el borrador completo y marca todo lo que no coincide con lo que vio correr.
 - [ ] Aplicar los criterios de abandono de `PREREGISTRO.md` §5 **por escrito** en el reporte: H4 ≥ 60%
       (sí, 62,5%), encuadre < precio (pendiente de H5). Si H5 falla, el titular cambia y el factorial
@@ -253,6 +283,7 @@ sí es motivo. Si a las 21:00 COT el lote no ha llegado a 80:
 | H5 mueve más que el precio | Diferencia por encuadre > diferencia por precio | Criterio de abandono preregistrado: titular cambia, se reporta igual |
 | Reporte "se lee generado" | Texto sin trazas de lo que se hizo, sin enlaces | Cada sección cita archivos del repo y números de corridas concretas |
 | Tiempo de redacción | A las 22:00 sin Results | Recortar Discussion a media página; nunca recortar Limitations |
+| Bug de agregación descubierto tarde | Números de `analisis.py` no coinciden con el recálculo manual de David (§2.8) o con la prueba sintética (§2.7) | Se para, se corrige y se re-verifica contra sintético antes de tocar los datos reales de nuevo; nunca se publica un número sin que pase la prueba sintética primero |
 
 ---
 
@@ -262,3 +293,10 @@ sí es motivo. Si a las 21:00 COT el lote no ha llegado a 80:
 - No implementa aislamiento por ranura ni ningún cambio en `bucle.py`, `puerto.py`, `validador.py`
   o `agregar.py` (archivos cubiertos por el hash del instrumento).
 - No corre coerción, evento de frontera ni divulgación del monitoreo: siguen aparcados.
+- **No implementa el clasificador de estrategias de `2601.19082`** para leer `depositos`/`eventos.jsonl`.
+  Decisión tomada hoy, no un olvido: la codificación manual con dos anotadores ciegos y kappa de Cohen
+  (`scripts/codificar_depositos.py`) ya está asignada, corriendo con reglas fijadas antes de leer logs
+  (`PREREGISTRO.md` §4), y es más barata de validar con el reloj que queda. Construir y validar un
+  clasificador nuevo hoy añadiría una fuente de error sin verificar, no rigor. Se declara en
+  Limitations como trabajo futuro, citando `2601.19082` como el método a adoptar en un seguimiento con
+  más N y más tiempo.

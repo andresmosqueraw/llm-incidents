@@ -98,6 +98,10 @@ el agente **necesita** para su propia tarea, verificado por arnés en un entorno
 tercios" **no es verificable desde los abstracts**; hay que confirmarla en el texto completo, y
 `2511.08721` advierte que esas cifras son sensibles al prompt.
 
+*Dueño y hora (asignado el 13 sep, 14:00 COT, ver `PLAN-CIERRE.md` §4):* Andrew, 15:45 COT, antes de
+escribir Related Work. Si a esa hora no se confirma desde el texto completo, H1b se reporta sin banda
+numérica en el paper — comparación cualitativa, no un número sin fuente verificada.
+
 ### Magnitud del pago, y los demás que hay que conocer
 
 | Paper | Identificador | Qué mide |
