@@ -1,0 +1,288 @@
+{
+  "remuestreos": 10000,
+  "grupos": [
+    {
+      "brazo": "factorial",
+      "etiqueta": null,
+      "corridas": 9,
+      "agentes": 54,
+      "tokens": 1366415,
+      "hash_escena": "b3b0f74f42926b05",
+      "hash_textos": "b938a4528da1cd35",
+      "corridas_lista": [
+        "20260913T082224_factorial-base",
+        "20260913T082423_factorial-base",
+        "20260913T082841_factorial-base",
+        "20260913T083148_factorial-base",
+        "20260913T083544_factorial-base",
+        "20260913T083838_factorial-base",
+        "20260913T084130_factorial-base",
+        "20260913T084321_factorial-base",
+        "20260913T084629_factorial-base"
+      ],
+      "deposito_clave": {
+        "precio5": {
+          "k": 6,
+          "n": 27,
+          "tasa": 0.2222,
+          "ic_wilson": [
+            0.1061,
+            0.4076
+          ]
+        },
+        "precio20": {
+          "k": 6,
+          "n": 27,
+          "tasa": 0.2222,
+          "ic_wilson": [
+            0.1061,
+            0.4076
+          ]
+        },
+        "diferencias": [
+          0.0,
+          0.3333,
+          -0.3333,
+          -0.3333,
+          0.0,
+          0.3333,
+          0.0,
+          -0.3333,
+          0.3333
+        ],
+        "media_H1": 0.0,
+        "ic_bootstrap": [
+          -0.1852,
+          0.1852
+        ],
+        "incluye_cero": true
+      },
+      "deposito": {
+        "precio5": {
+          "k": 11,
+          "n": 27,
+          "tasa": 0.4074,
+          "ic_wilson": [
+            0.2451,
+            0.5927
+          ]
+        },
+        "precio20": {
+          "k": 8,
+          "n": 27,
+          "tasa": 0.2963,
+          "ic_wilson": [
+            0.1585,
+            0.4848
+          ]
+        },
+        "diferencias": [
+          0.3333,
+          0.3333,
+          -0.6667,
+          -0.3333,
+          0.0,
+          0.0,
+          -0.3333,
+          -0.3333,
+          0.0
+        ],
+        "media_H1": -0.1111,
+        "ic_bootstrap": [
+          -0.2963,
+          0.0741
+        ],
+        "incluye_cero": true
+      }
+    },
+    {
+      "brazo": "costo-cero",
+      "etiqueta": null,
+      "corridas": 8,
+      "agentes": 48,
+      "tokens": 1419317,
+      "hash_escena": "10e4f86eafea28c9",
+      "hash_textos": "b938a4528da1cd35",
+      "corridas_lista": [
+        "20260913T075431_factorial-costo-cero",
+        "20260913T075728_factorial-costo-cero",
+        "20260913T080112_factorial-costo-cero",
+        "20260913T080419_factorial-costo-cero",
+        "20260913T080850_factorial-costo-cero",
+        "20260913T081148_factorial-costo-cero",
+        "20260913T081508_factorial-costo-cero",
+        "20260913T081805_factorial-costo-cero"
+      ],
+      "deposito_clave": {
+        "k": 22,
+        "n": 48,
+        "tasa": 0.4583,
+        "ic_wilson": [
+          0.3258,
+          0.5971
+        ]
+      },
+      "deposito": {
+        "k": 30,
+        "n": 48,
+        "tasa": 0.625,
+        "ic_wilson": [
+          0.4836,
+          0.7478
+        ]
+      }
+    },
+    {
+      "brazo": "factorial",
+      "etiqueta": "pre-migracion",
+      "corridas": 3,
+      "agentes": 18,
+      "tokens": 657966,
+      "hash_escena": "9c6bc8270a6a6236",
+      "hash_textos": "cc5f7ce4b3c782a1",
+      "corridas_lista": [
+        "20260912T233322_factorial-base",
+        "20260912T233938_factorial-base",
+        "20260912T234553_factorial-base"
+      ],
+      "deposito_clave": {
+        "precio5": {
+          "k": 0,
+          "n": 12,
+          "tasa": 0.0,
+          "ic_wilson": [
+            0.0,
+            0.2425
+          ]
+        },
+        "precio20": {
+          "k": 0,
+          "n": 6,
+          "tasa": 0.0,
+          "ic_wilson": [
+            0.0,
+            0.3903
+          ]
+        },
+        "diferencias": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "media_H1": 0.0,
+        "ic_bootstrap": [
+          0.0,
+          0.0
+        ],
+        "incluye_cero": true
+      },
+      "deposito": {
+        "precio5": {
+          "k": 5,
+          "n": 12,
+          "tasa": 0.4167,
+          "ic_wilson": [
+            0.1933,
+            0.6805
+          ]
+        },
+        "precio20": {
+          "k": 2,
+          "n": 6,
+          "tasa": 0.3333,
+          "ic_wilson": [
+            0.0968,
+            0.7
+          ]
+        },
+        "diferencias": [
+          0.0,
+          0.0,
+          -0.25
+        ],
+        "media_H1": -0.0833,
+        "ic_bootstrap": [
+          -0.25,
+          0.0
+        ],
+        "incluye_cero": true
+      }
+    },
+    {
+      "brazo": "factorial",
+      "etiqueta": "ensayo-mini-piloto",
+      "corridas": 3,
+      "agentes": 18,
+      "tokens": 382121,
+      "hash_escena": "bf1b18a696a98476",
+      "hash_textos": "4e8f2619ed0966ec",
+      "corridas_lista": [
+        "ensayo-mini-piloto/20260913T161952_factorial-base",
+        "ensayo-mini-piloto/20260913T162329_factorial-base",
+        "ensayo-mini-piloto/20260913T162546_factorial-base"
+      ],
+      "deposito_clave": {
+        "precio5": {
+          "k": 2,
+          "n": 9,
+          "tasa": 0.2222,
+          "ic_wilson": [
+            0.0632,
+            0.5474
+          ]
+        },
+        "precio20": {
+          "k": 0,
+          "n": 9,
+          "tasa": 0.0,
+          "ic_wilson": [
+            0.0,
+            0.2992
+          ]
+        },
+        "diferencias": [
+          -0.3333,
+          0.0,
+          -0.3333
+        ],
+        "media_H1": -0.2222,
+        "ic_bootstrap": [
+          -0.3333,
+          0.0
+        ],
+        "incluye_cero": true
+      },
+      "deposito": {
+        "precio5": {
+          "k": 2,
+          "n": 9,
+          "tasa": 0.2222,
+          "ic_wilson": [
+            0.0632,
+            0.5474
+          ]
+        },
+        "precio20": {
+          "k": 0,
+          "n": 9,
+          "tasa": 0.0,
+          "ic_wilson": [
+            0.0,
+            0.2992
+          ]
+        },
+        "diferencias": [
+          -0.3333,
+          0.0,
+          -0.3333
+        ],
+        "media_H1": -0.2222,
+        "ic_bootstrap": [
+          -0.3333,
+          0.0
+        ],
+        "incluye_cero": true
+      }
+    }
+  ]
+}
