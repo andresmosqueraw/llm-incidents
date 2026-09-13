@@ -78,7 +78,7 @@ que medimos es el **residuo irracional en el régimen dominado**, no el rastreo 
 **Consecuencia directa.** Nuestro 46% (clave) / 62% (unión) a precio cero **no es un techo de
 capacidad**: la literatura ya muestra que a costo cero la cooperación falla por sí sola. Por lo tanto
 H4 debe leerse como **línea base conductual**, no como prueba de capacidad, y el "acantilado en cero"
-del ensayo se apoya sobre una base que ya era imperfecta. Eso obliga a una **enmienda de H4** en §8 del
+del ensayo se apoya sobre una base que ya era imperfecta. Eso obliga a una **enmienda de H4** en §7 del
 preregistro, declarada y con esta cita — no a un ajuste silencioso de umbral.
 
 ### Dar a un desconocido, sin reciprocidad, pagando de lo propio: la familia dictador

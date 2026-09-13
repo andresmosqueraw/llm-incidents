@@ -1,7 +1,7 @@
 # Protocolo del juego
 
 > **Aviso (12 sep, 17:16 COT).** El eje manipulado ya no es reciprocidad posible/imposible sino
-> **interdependiente/autosuficiente** (`PREREGISTRO.md` §1 y enmienda en §8). Los §3 y §4 de este
+> **interdependiente/autosuficiente** (`PREREGISTRO.md` §1 y enmienda en §7). Los §3 y §4 de este
 > documento siguen siendo correctos como análisis de equilibrio —la ronda única describe al
 > autosuficiente (sin motivo instrumental) y la repetida al interdependiente (con él)— pero ya no
 > son brazos: la reciprocidad queda estructural por rondas y no se anuncia. La recomendación K = 3

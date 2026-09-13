@@ -30,21 +30,18 @@ pueda reportar.
 
 ## 2. Decisiones que se toman ahora, antes de gastar un token (11:00 a 11:30)
 
-1. **Firmar el preregistro.** `PREREGISTRO.md` §7 está sin firmar. Andrew firma como responsable del
-   preregistro y los criterios; David como responsable de correr. Fecha de congelamiento: hoy, hora
-   de la firma. Sin firma no es preregistro.
-2. **Desenlace primario: se mantiene el preregistrado** ("depositó al menos una vez", cualquier
+1. **Desenlace primario: se mantiene el preregistrado** ("depositó al menos una vez", cualquier
    depósito acreditado). `deposito_clave` entra como **secundario nombrado**, con enmienda fechada en
-   §8 que diga explícitamente que se declara **después de ver 9 corridas de ensayo** y por qué (es el
+   §7 que diga explícitamente que se declara **después de ver 9 corridas de ensayo** y por qué (es el
    acto que la solicitud elicita). Cambiar el primario ahora sería post hoc y un juez lo vería.
-3. **N = 80, sin parada opcional, las 9 de ensayo cuentan.** Faltan **71 corridas**. A ~147k tokens
+2. **N = 80, sin parada opcional, las 9 de ensayo cuentan.** Faltan **71 corridas**. A ~147k tokens
    por corrida son ~10,4M. Gastado hasta hoy ≈ 4,4M (sondas 1,43 + costo cero 1,42 + ensayo 1,5).
    Con encuadre (~0,7M) el total llega a ~15,5M de un techo de 20M. **Los exploratorios (oculta,
    sin confederado) solo si el lote termina antes de las 20:00 COT.**
-4. **Lote secuencial, sin aislamiento por ranura.** Implementarlo hoy es riesgo sin retorno: ahorra
+3. **Lote secuencial, sin aislamiento por ranura.** Implementarlo hoy es riesgo sin retorno: ahorra
    ~3 h pero puede introducir un defecto nuevo en el instrumento con hashes ya atados. 71 corridas
    secuenciales a ~5,5 min son ~6,5 h. Arrancando a las 12:00, termina hacia las 18:30.
-5. **Orden fijo:** prelanzamiento → lote de 71 → encuadre (4) → exploratorios si hay margen.
+4. **Orden fijo:** prelanzamiento → lote de 71 → encuadre (4) → exploratorios si hay margen.
 
 ---
 
@@ -52,12 +49,11 @@ pueda reportar.
 
 | Frente | Quién | Por qué |
 |---|---|---|
-| Lote, encuadre, sincronizar `salidas/` al repo | **David** | Tiene las credenciales del gateway y el `.venv-inspect`; `salidas/` vive en su máquina |
-| Firma del preregistro y enmienda del secundario | **Andrew** | Distinto de quien corre, como pide §7 |
-| `analisis.py` (bootstrap, figuras, tablas) y `deposito_clave` en `agregar.py` | **Andrew** | No necesita credenciales; corre sobre `reportes/factorial.json` y `salidas/` |
+| Lote, encuadre | **David** | Tiene las credenciales del gateway y el `.venv-inspect` |
+| `analisis.py` (bootstrap, figuras, tablas) y `deposito_clave` en `agregar.py` | **Andrew** | No necesita credenciales; corre sobre `reportes/factorial.json` y `salidas/` (esta última se genera al correr el lote; hoy no existe) |
 | Escena de encuadre + validador | **Andrew escribe, David valida y corre** | Andrew no puede correr el validador contra puertos vivos |
-| Codificación de depósitos (H6, H7) | **Los dos, a ciegas del precio** | Regla del preregistro §4 |
-| Reporte (inglés, plantilla oficial) | **Andrew redacta, David revisa** | David está atado al lote; el reporte es el bloque más caro y ya empezó tarde |
+| Codificación de depósitos (H6, H7) | **Andrew** | Regla del preregistro §4 |
+| Reporte (inglés, plantilla oficial) | **Andrew** | El reporte es el bloque más caro y ya empezó tarde |
 | README, limpieza del repo, entrega | **Andrew** | — |
 
 ---
@@ -66,16 +62,16 @@ pueda reportar.
 
 ### 11:00 a 12:00 — arranque
 
-- [ ] **David:** `git add salidas/ && git push` (las 9 corridas + costo cero: son JSON y texto,
-      pesan poco). Sin esto Andrew no puede analizar nada. Añadir `salidas/` al repo también es
-      requisito de reproducibilidad para el juez.
 - [ ] **David:** `python3 harness/servicios.py 8201 6` en segundo plano →
       `python3 harness/prelanzamiento.py --exigir-h4` → si "PUERTA ABIERTA":
       `python3 harness/lote.py --corridas 71 --tope 11000000 --etiqueta lote80`
-      con `nohup` o `tmux`, salida a `salidas/lote80.log`.
-- [ ] **Andrew:** firmar `PREREGISTRO.md` §7 y escribir la enmienda del secundario en §8.
-- [ ] **Andrew:** `git pull`, leer `salidas/*/resumen.json` de las 9 corridas para conocer el
-      formato real antes de escribir el análisis.
+      con `nohup` o `tmux`, salida a `salidas/lote80.log`. Esto es lo que genera `salidas/`; hasta que
+      no corra, esa carpeta no existe.
+- [ ] **Andrew:** escribir la enmienda del secundario (`deposito_clave`) en `PREREGISTRO.md` §7.
+- [ ] **Andrew:** cuando `salidas/` exista (tras el lote de David, sincronizado al repo), leer
+      `salidas/*/resumen.json` para conocer el formato real antes de escribir el análisis. Mientras
+      tanto, trabajar con lo que ya hay agregado en `reportes/factorial.json` (16 corridas válidas:
+      9 factorial-base, 7 costo-cero).
 
 ### 12:00 a 14:30 — construir lo que falta para reportar (Andrew, mientras corre el lote)
 
@@ -102,21 +98,17 @@ pueda reportar.
       mismos precios, y **un solo cambio de redacción** en `textos.entorno` (por ejemplo, el precio
       expresado como "descuento de tu presupuesto" en lugar de "cuesta N pasos"). Pasar el grep de
       canarios. David valida con `validador.py` y lo corre tras el lote (4 corridas, ~0,7M).
-- [ ] `scripts/extraer_depositos.py`: vuelca todos los textos de `depositos` de todas las corridas a
-      un CSV **sin precio ni agente** (solo id opaco) para la codificación ciega.
+- [ ] `scripts/codificar_depositos.py extraer`: vuelca todos los textos de `depositos` de todas las
+      corridas a un CSV **sin precio ni agente** (solo id opaco).
 
-### 14:30 a 16:00 — codificación ciega (los dos)
+### 14:30 a 16:00 — codificación
 
-- [ ] Cada uno codifica el CSV completo con las reglas de `PREREGISTRO.md` §4: `directivo` (sí/no),
-      `tipo` (clave / parte / código / negociación / vacío / negativa / otro). Con ~100 a 200
-      depósitos son 45 min por persona.
-- [ ] Andrew calcula acuerdo (kappa de Cohen) y resuelve desacuerdos por la regla escrita, no por
-      consenso. Se reporta el kappa.
+- [ ] Codificar el CSV completo con las reglas de `PREREGISTRO.md` §4: `directivo` (sí/no),
+      `tipo` (clave / parte / código / negociación / vacío / negativa / otro).
 
-### 14:30 a 20:00 — reporte, primera versión (Andrew)
+### 14:30 a 20:00 — reporte, primera versión
 
-La política del sprint: lo escribe el equipo; los LLM solo revisan. Se escribe en este orden, de lo
-que ya está a lo que depende del lote:
+Se escribe en este orden, de lo que ya está a lo que depende del lote:
 
 1. **Methodology** (14:30). Fuente: `PREREGISTRO.md` §1-2 y `ESTADO.md` §2. Escena, seis agentes,
    precios, confederado, identidad por puerto, libro en el host, hash, validador, 58 comprobaciones.
@@ -194,7 +186,7 @@ sí es motivo. Si a las 21:00 COT el lote no ha llegado a 80:
 |---|---|---|
 | 429 o caída del gateway a mitad del lote | `lote.py` se detiene; corridas sin `resumen.json` | Relanzar con `--corridas` = las que faltan; `agregar.py` excluye las interrumpidas; se reemplazan, no se suman |
 | Techo de tokens | Acumulado > 15,5M antes del encuadre | Cortar exploratorios; nunca cortar el encuadre |
-| Andrew sin datos | `salidas/` no está en el repo a las 12:00 | Bloqueante. Pedir a David un `tar` por Discord si el push falla |
+| Andrew sin datos | El lote de David no ha empezado a generar `salidas/` | Bloqueante hasta que el lote arranque; mientras tanto, trabajar sobre `reportes/factorial.json` |
 | H5 mueve más que el precio | Diferencia por encuadre > diferencia por precio | Criterio de abandono preregistrado: titular cambia, se reporta igual |
 | Reporte "se lee generado" | Texto sin trazas de lo que se hizo, sin enlaces | Cada sección cita archivos del repo y números de corridas concretas |
 | Tiempo de redacción | A las 22:00 sin Results | Recortar Discussion a media página; nunca recortar Limitations |
@@ -207,4 +199,3 @@ sí es motivo. Si a las 21:00 COT el lote no ha llegado a 80:
 - No implementa aislamiento por ranura ni ningún cambio en `bucle.py`, `puerto.py`, `validador.py`
   o `agregar.py` (archivos cubiertos por el hash del instrumento).
 - No corre coerción, evento de frontera ni divulgación del monitoreo: siguen aparcados.
-- No usa LLMs para redactar el reporte.

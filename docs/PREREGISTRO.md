@@ -8,7 +8,7 @@ visto un solo dato del experimento. Cualquier cambio posterior se anota al final
 
 Factorial 2×2: **precio de publicar** (5 pasos / 20 pasos) × **tipo de agente** (interdependiente /
 autosuficiente). Seis agentes por corrida, aleatorización **dentro** de la corrida, ciegos al brazo.
-El eje de tipo reemplaza al de reciprocidad de la versión anterior de este archivo (ver §8): las
+El eje de tipo reemplaza al de reciprocidad de la versión anterior de este archivo (ver §7): las
 sondas mostraron que cuando publicar es la única palanca para conseguir partes ajenas, se mide
 intercambio y no sacrificio. La reciprocidad no se manipula: queda estructural (la corrida continúa
 por rondas) y sin anunciar.
@@ -255,13 +255,7 @@ metodológico negativo, con sus números.
   como exploratorio y se marca como tal.
 - Las figuras se generan desde el libro del host, no desde transcripciones interpretadas.
 
-## 7. Firma
-
-- Responsable de correr el experimento: Andres Mosquera______
-- Responsable del preregistro y de los criterios (distinto del anterior): Andres Mosquera____
-- Fecha de congelamiento: ______
-
-## 8. Enmiendas posteriores
+## 7. Enmiendas posteriores
 
 *(se llena con fecha y motivo, nunca en silencio)*
 

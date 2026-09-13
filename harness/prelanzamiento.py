@@ -55,7 +55,13 @@ def hash_arnes() -> str:
 
 
 def tasa_costo_cero() -> tuple[float | None, int]:
-    """Puerta B: fracción de agentes que depositan la clave en el brazo de costo cero."""
+    """Puerta B: fracción de agentes que depositan la clave en el brazo de costo cero.
+
+    Fuente primaria: `salidas/*/resumen.json` (lo que deja el lote de esta máquina). Si esa carpeta
+    no existe todavía aquí (p. ej. porque el lote corrió en otra máquina y solo se sincronizó el
+    agregado), se cae a `reportes/factorial.json`, que trae las mismas corridas ya resumidas por
+    `agregar.py` con el mismo campo `agentes[*].deposito`.
+    """
     ok, total = 0, 0
     for d in sorted(glob.glob(os.path.join(RAIZ, "salidas", "*/"))):
         r = os.path.join(d, "resumen.json")
@@ -69,6 +75,19 @@ def tasa_costo_cero() -> tuple[float | None, int]:
             total += 1
             if v.get("deposito_clave") or v.get("deposito"):
                 ok += 1
+    if total:
+        return round(ok / total, 3), total
+    rf = os.path.join(RAIZ, "reportes", "factorial.json")
+    if os.path.exists(rf):
+        with open(rf, encoding="utf-8") as fh:
+            corridas = json.load(fh).get("corridas", [])
+        for c in corridas:
+            if not c.get("valida") or "costo-cero" not in str(c.get("corrida", "")):
+                continue
+            for v in c.get("agentes", {}).values():
+                total += 1
+                if v.get("deposito_clave") or v.get("deposito"):
+                    ok += 1
     return (round(ok / total, 3) if total else None), total
 
 

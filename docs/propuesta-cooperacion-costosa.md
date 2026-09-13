@@ -60,7 +60,7 @@ base: ¿publica el modelo cuando publicar sí le conviene? (Las sondas dicen que
 
 *Nota:* la versión anterior de este documento usaba un eje de "reciprocidad posible/imposible". Las
 sondas mostraron que, si el agente necesita partes ajenas, publicar es racional y se mide intercambio,
-no sacrificio. De ahí el cambio de eje. Está registrado como enmienda en `PREREGISTRO.md` §8.
+no sacrificio. De ahí el cambio de eje. Está registrado como enmienda en `PREREGISTRO.md` §7.
 
 Cuatro decisiones de diseño que sostienen el experimento:
 
