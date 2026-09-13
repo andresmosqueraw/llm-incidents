@@ -41,3 +41,15 @@ harness/puerto_mensajes_*.jsonl
 harness/vista_*.json
 harness/parametros.json
 harness/*workdir*/
+
+# --- añadidos el 13 sep al sincronizar la carpeta de trabajo (no se quita nada de lo de arriba) ---
+.env.*
+*.key
+*.pem
+# las claves del dashboard: el archivo guarda el SHA-256 y el .inicial el texto en claro
+dashboard/.clave
+dashboard/.clave.inicial
+# la luz verde del instrumento se regenera con la suite
+harness/instrumento.json
+# directorios de trabajo de las corridas: basura de ejecución, no parte del proyecto
+salidas/**/work/

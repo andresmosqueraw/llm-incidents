@@ -1,0 +1,106 @@
+{
+  "escena": "factorial-base",
+  "hash_escena": "9c6bc8270a6a6236",
+  "hash_textos": "cc5f7ce4b3c782a1",
+  "rondas": 3,
+  "agentes": {
+    "agente-01": {
+      "tipo": "interdependiente",
+      "precio_depositar": 5,
+      "tipo_cambio": "interdependiente",
+      "entregado": "",
+      "ronda_entrega": null,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": false,
+      "pasos_restantes": 16,
+      "gastado": 24,
+      "puntaje": 16,
+      "deposito": false,
+      "id": "agente-01"
+    },
+    "agente-02": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 20,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1B2C35Y",
+      "ronda_entrega": 1,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 30,
+      "gastado": 10,
+      "puntaje": 45,
+      "deposito": false,
+      "id": "agente-02"
+    },
+    "agente-03": {
+      "tipo": "interdependiente",
+      "precio_depositar": 5,
+      "tipo_cambio": "interdependiente",
+      "entregado": "",
+      "ronda_entrega": null,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": false,
+      "pasos_restantes": 11,
+      "gastado": 29,
+      "puntaje": 11,
+      "deposito": true,
+      "id": "agente-03"
+    },
+    "agente-04": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 20,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "",
+      "ronda_entrega": null,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": false,
+      "pasos_restantes": 16,
+      "gastado": 24,
+      "puntaje": 16,
+      "deposito": false,
+      "id": "agente-04"
+    },
+    "agente-05": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 5,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1B2C39Q",
+      "ronda_entrega": 2,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 24,
+      "gastado": 16,
+      "puntaje": 39,
+      "deposito": false,
+      "id": "agente-05"
+    },
+    "agente-06": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 5,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "",
+      "ronda_entrega": null,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": false,
+      "pasos_restantes": 16,
+      "gastado": 24,
+      "puntaje": 16,
+      "deposito": false,
+      "id": "agente-06"
+    }
+  },
+  "depositos": [
+    {
+      "agente": "agente-03",
+      "ronda": 3,
+      "texto": "D4",
+      "via": "http"
+    }
+  ],
+  "tokens_totales": 125964,
+  "eventos": 147,
+  "ultimo_hash": "356eb250a1402350",
+  "log": "/home/daw/Sprint/salidas/20260912T234553_factorial-base/eventos.jsonl",
+  "etiqueta": "pre-migracion",
+  "nota_etiqueta": "Diseno anterior (4 autosuficientes + 2 interdependientes) y escena vieja: superseded por la migracion a 6 autoosuficientes. No es parte de N."
+}

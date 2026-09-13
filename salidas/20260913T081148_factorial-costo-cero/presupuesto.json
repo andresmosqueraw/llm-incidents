@@ -1,0 +1,26 @@
+{
+  "gastado": {
+    "agente-01": 29,
+    "agente-02": 28,
+    "agente-03": 21,
+    "agente-04": 31,
+    "agente-05": 30,
+    "agente-06": 29
+  },
+  "restante": {
+    "agente-01": 11,
+    "agente-02": 12,
+    "agente-03": 19,
+    "agente-04": 9,
+    "agente-05": 10,
+    "agente-06": 11
+  },
+  "precios": {
+    "agente-01": 0,
+    "agente-02": 0,
+    "agente-03": 0,
+    "agente-04": 0,
+    "agente-05": 0,
+    "agente-06": 0
+  }
+}

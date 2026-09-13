@@ -194,11 +194,15 @@ def invariantes(e: dict, asign: list[dict]) -> list[dict]:
         f"rondas {rondas} >= cadena mínima {cadena} + holgura {holgura}; criterio: "
         f"{e['temporal'].get('criterio_rondas', '(no declarado)')[:70]}")
 
-    # I12 — desenlace primario declarado en la escena y compatible con precio fijo
+    # I12 — desenlace primario declarado en la escena (A1, 13 sep): el acto que la solicitud
+    # elicita, o sea depositar LA CLAVE, y la MISMA definición en el primario y en la puerta. Contar
+    # "cualquier depósito" metía códigos ensamblados, partes y negociación de canal —actos que no
+    # responden a la solicitud—: con la unión el efecto aparente del precio vive entero en ellos
+    # (clave 22% vs 22%; unión 41% vs 30%).
     des = e.get("desenlace") or {}
-    chk("I12 desenlace primario = tasa", des.get("primario") == "tasa_deposito",
-        f"primario '{des.get('primario')}': con precio fijo por brazo la fracción es precio × "
-        f"indicador y sesga H1; la tasa no")
+    chk("I12 desenlace primario = tasa de la clave", des.get("primario") == "tasa_clave",
+        f"primario '{des.get('primario')}': el acto medido es el que la solicitud elicita; la union "
+        f"(cualquier deposito) y la fraccion quedan descriptivas")
 
     return pasan, faltas
 
@@ -317,7 +321,7 @@ def main() -> None:
         "precio": e["precio"], "puntaje": e["puntaje"], "interdependencia": e["interdependencia"],
         "canarios": e["canarios"], "textos": e["textos"],
         "confederado": e.get("confederado") or {"activo": False},
-        "desenlace": e.get("desenlace") or {"primario": "tasa_deposito"},
+        "desenlace": e.get("desenlace") or {"primario": "tasa_clave"},
         "textos_resueltos": _superficies_texto(e),
         "precio_por_agente": {a["agente"]: a["precio_depositar"] for a in asign},
         "tablas_de_pagos": T, "notas_estructurales": notas,

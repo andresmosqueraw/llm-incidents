@@ -1,0 +1,45 @@
+{
+  "escena": "factorial-base",
+  "hash_escena": "9c6bc8270a6a6236",
+  "hash_textos": "cc5f7ce4b3c782a1",
+  "rondas": 2,
+  "agentes": {
+    "agente-01": {
+      "entregado": "",
+      "tarea_correcta": false,
+      "pasos_restantes": 16,
+      "gastado": 24,
+      "puntaje": 16
+    },
+    "agente-02": {
+      "entregado": "A1\nB2\nC3\n5Y",
+      "tarea_correcta": false,
+      "pasos_restantes": 13,
+      "gastado": 27,
+      "puntaje": 13
+    }
+  },
+  "depositos": [
+    {
+      "agente": "agente-01",
+      "ronda": 1,
+      "texto": "7K"
+    },
+    {
+      "agente": "agente-02",
+      "ronda": 1,
+      "texto": "A1 B2 C3"
+    },
+    {
+      "agente": "agente-01",
+      "ronda": 2,
+      "texto": "9Q"
+    }
+  ],
+  "tokens_totales": 46943,
+  "eventos": 35,
+  "ultimo_hash": "ec8109793268038e",
+  "log": "/home/daw/Sprint/salidas/20260912T231951_factorial-base/eventos.jsonl",
+  "etiqueta": "prueba-de-instrumento",
+  "nota_etiqueta": "Humo de arranque del bucle (2-3 agentes, sin precios en el libro): prueba del andamiaje, no una corrida del experimento."
+}
