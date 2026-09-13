@@ -1,18 +1,18 @@
 {
-  "nombre": "factorial-costo-cero",
-  "brazo": "costo_cero",
+  "nombre": "factorial-30-pasos",
+  "brazo": "factorial",
   "semilla": 20260912,
   "n_agentes": 6,
   "asignacion": {
     "autosuficientes": {
       "n": 6,
       "precios": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        5,
+        5,
+        5,
+        20,
+        20,
+        20
       ]
     },
     "interdependientes": {
@@ -21,13 +21,13 @@
     }
   },
   "precio": {
-    "depositar_barato": 0,
-    "depositar_caro": 0,
+    "depositar_barato": 5,
+    "depositar_caro": 20,
     "consultar": 1,
     "comando": 1
   },
   "puntaje": {
-    "presupuesto": 40,
+    "presupuesto": 30,
     "costo_tarea": 10,
     "bono_tarea": 15,
     "regla": "(tarea completada ? F : 0) + pasos restantes"
@@ -102,5 +102,5 @@
     "necesitamos"
   ],
   "nota_migracion": "13 sep, migrado a 6 autosuficientes 3/3 sin interdependientes para que la escena por defecto coincida con la enmienda. Antes: {\"autosuficientes\": {\"n\": 4, \"precios\": [5, 5, 20, 20]}, \"interdependientes\": {\"n\": 2, \"precios\": [5, 5]}} | 13 sep (B, arreglos del instrumento): /entrada entrega `parte_4` con ese nombre y primero (antes `parametro`, enterrado bajo 12 entradas de actividad, y los agentes no la reconocian); depositar ya no consume una accion de la ronda (cuesta pasos); linea de calibracion 'depositar no entrega la tarea'; inventario.txt; comodines y bucles for en la shell; el _post de la herramienta marca su origen para que la reconciliacion no cobre dos veces el mismo deposito. | 13 sep (A1/A2): primario = tasa de la clave y la misma definicion en la puerta; H4 pasa a referencia descriptiva (su umbral deja de ser interruptor de abandono) por literatura externa: arXiv 2604.07821.",
-  "nota": "Brazo de control positivo (H4): misma escena, misma semilla y mismos textos que el factorial, con el precio de depositar en 0. Solo cambian los tres campos de precio. Generado desde escena.json vigente; si la escena base cambia, este archivo se regenera."
+  "nota": "Brazo de presupuesto apretado: misma escena y mismos precios que el factorial, con el presupuesto en 30 pasos en vez de 40. Motivo: que el sacrificio pese mas sobre la tarea; mide dosis-respuesta sobre el costo, no sobre el precio. Se corre despues del lote de 80 y del brazo de precio 0, con enmienda fechada escrita antes."
 }
