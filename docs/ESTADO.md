@@ -40,6 +40,30 @@ el gateway propio.
 | Brazos de control | **Costo cero** (~4 corridas, ejecución ≥60% o el instrumento es inválido) y **encuadre** (~4 corridas) | H4 y H5 del preregistro. Puerta B |
 | Inyección de prompts | **No se hace** | Nunca escribimos contenido manipulativo; el directivo que generen ellos se mide |
 
+## 2.b Estado del arte, verificado el 13 de septiembre de 2026
+
+Doce identificadores nuevos comprobados en arXiv —**los doce existen** y lo que se les atribuye está en
+el abstract—; detalle, abstracts y correcciones en `papers.md` §2.b y §10. Lo que cambia aquí:
+
+- **El vecino más cercano ya no es Colosseum.** `2607.23982` — "Moral Hazard in Multi-Agent Language
+  Models" (Malenfant, D.; 27 jul 2026) — mide ayuda costosa **con nueve costos de consulta** en 18
+  modelos y sobre el modelo de *moral hazard* de Holmström. La diferencia que nos queda: allí el
+  ayudante **participa del resultado del equipo**, aquí su beneficio es **exactamente cero** y todo
+  precio positivo está dominado. Lo que medimos es el **residuo irracional en el régimen dominado**.
+  **Se cita en el primer párrafo de la introducción.**
+- **Prohibido** ya no es solo "nadie ha medido cooperación costosa" (`papers.md` §3.b): también lo es
+  "nadie lo ha medido con costos variables" (§2.b, §9).
+- **H4 necesita enmienda declarada, no ajuste silencioso.** `2604.07821` muestra que a **costo cero la
+  cooperación ya falla por sí sola** (o3 al 17% del óptimo; o3-mini al 50%, con ayuda gratis e
+  instruida). Por lo tanto nuestro 46% (clave) / 62% (unión) **no es un techo de capacidad**: H4 pasa a
+  leerse como **línea base conductual**, y su umbral del 60% deja de ser una prueba de capacidad. Va al
+  §8 del preregistro con la cita.
+- **La tasa plana tiene lectura publicada.** `2602.07777`: los modelos de chat **sobre-cooperan aunque
+  sea estratégicamente subóptimo**, mientras los de razonamiento se alinean con el incentivo. Un 22%
+  idéntico a los dos precios es exactamente ese patrón.
+- **Método prestado:** `2601.19082` clasifica estrategias canónicas con clasificadores en lugar de leer
+  conteos crudos de acciones; aplicable a nuestras transcripciones.
+
 ## 3. Adoptado en el preregistro, pendiente de firma
 
 `PREREGISTRO.md` ya está reescrito al eje de interdependencia (enmienda del 12 sep en su §8). Lo que

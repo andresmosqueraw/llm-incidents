@@ -61,7 +61,7 @@ Fuente: METR con Redwood, 26 ago 2026 (`/home/daw/.hermes/cache/web/metr.org-8e3
 
 | Paper | ID | Por qué importa aquí |
 |---|---|---|
-| Shall We Team Up: Exploring Spontaneous Cooperation of Competing LLM Agents | arXiv **2402.12327** (feb 2024, Findings EMNLP 2024) | **Ya mide cooperación espontánea costosa entre agentes LLM que compiten.** Es el trabajo que más estrecha nuestra novedad. |
+| Shall We Team Up: Exploring Spontaneous Cooperation of Competing LLM Agents | arXiv **2402.12327** (feb 2024, Findings EMNLP 2024) | **Ya mide cooperación espontánea costosa entre agentes LLM que compiten.** Estrecha nuestra novedad, pero **ya no es el que más**: desde el 13 de septiembre de 2026 ese lugar lo ocupa `2607.23982` (ayuda costosa con nueve costos de consulta en 18 modelos, con el ayudante participando del resultado del equipo). Ver `papers.md` §2.b. |
 | Colosseum: Auditing Collusion in Cooperative Multi-Agent Systems | arXiv **2602.15198** (feb 2026) | **Ya varía objetivos de coalición, tácticas de persuasión y topologías, e incluye sonda de canal secreto.** Nuestro diseño debe citarlo y diferenciarse explícitamente. |
 | Detecting Multi-Agent Collusion Through Multi-Agent Interpretability | arXiv **2604.01151** (abr 2026) | Detección por sondas lineales sobre activaciones; línea complementaria. |
 | Mapping Human Anti-collusion Mechanisms to Multi-agent AI Systems | arXiv 2601.00360 | Marco normativo comparado. |
