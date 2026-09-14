@@ -37,8 +37,12 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 RAIZ = os.path.dirname(BASE)
 REPORTES = os.path.join(RAIZ, "reportes")
 SALIDAS = os.path.join(RAIZ, "salidas")
-DOCS = ["docs/ESTADO-Y-PLAN.md", "docs/PREREGISTRO.md", "docs/PROTOCOLO-JUEGO.md", "docs/papers.md",
-        "docs/abstencion.md", "docs/MATERIAL-PARA-EL-REPORTE.md", "docs/ESCENARIOS.md"]
+DOCS = ["docs/ESTADO.md", "docs/PREREGISTRO.md", "docs/PROTOCOLO-JUEGO.md", "docs/papers.md",
+        "docs/abstencion.md", "docs/MATERIAL-PARA-EL-REPORTE.md", "docs/ESCENARIOS.md",
+        "docs/NUMEROS-CONGELADOS.md",
+        # analisis de revision (14 sep)
+        "docs/revision/validez-instrumento.md", "docs/revision/reclutador-analisis.md",
+        "docs/revision/HALLAZGOS.md"]
 PRESUPUESTO_TOTAL = 20_000_000          # techo asumido por el equipo
 N_PREREGISTRADO = 72                    # lote: 72 corridas pagadas (antes 80)
 

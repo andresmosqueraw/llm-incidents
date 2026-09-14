@@ -127,6 +127,9 @@
 <h2>El reclutador: ¿pesa pedir por un tercero? <span class="mini">— exploratorio; el mecanismo del incidente, con costo real</span></h2>
   <div id="reclutador"><div class="vacio">cargando…</div></div>
 
+  <h2>El conjunto congelado y el titular <span class="mini">— la mirada única, el contraste 0 contra 5 y el primario</span></h2>
+  <div id="congelado"><div class="vacio">cargando…</div></div>
+
   <details>
     <summary>Documentos del proyecto</summary>
     <div class="fila-sel" style="margin-top:12px">
@@ -343,8 +346,7 @@ function nombreCorto(m) {
   return { 'openai/gpt-5.4': 'GPT-5.4', 'google/gemini-3.1-flash-lite': 'Gemini 3.1 Flash Lite',
            'deepseek/deepseek-v4.1-flash': 'DeepSeek V4.1 Flash',
            'anthropic/claude-haiku-4.5': 'Claude Haiku 4.5',
-           'mistralai/mistral-small-2603': 'Mistral Small 2603',
-           'x-ai/grok-4.3': 'Grok 4.3', 'cohere/command-r-08-2024': 'Cohere Command R' }[m] || m;
+           'mistralai/mistral-small-2603': 'Mistral Small 2603' }[m] || m;
 }
 
 async function cargarGeneralizacion() {
@@ -400,12 +402,8 @@ async function cargarGeneralizacion() {
       los cinco) — el 0% aquí probablemente es incapacidad de ejecutar el protocolo, no una decisión
       de no ayudar. La tasa base varía por un orden de magnitud entre modelos (0%, 0-6%, 28%, 50-61%):
       el resultado con <code>glm-5.3-flash</code> no generaliza igual a toda la familia de modelos.
-      <b>Grok 4.3 y Cohere Command R quedaron en N=1</b> (cortados por lentitud, igual que DeepSeek):
-      dato curioso en Grok — los 6 agentes de esa única corrida ayudaron (100%), pero con N=1 no se
-      puede saber si es señal o casualidad. (<code>qwen/qwen3.8-flash</code> y todos los tiers rápidos
-      de xAI —<code>grok-4.1-fast</code>, <code>grok-3-mini</code>, <code>grok-code-fast-1</code>—
-      están descontinuados o resultaron demasiado lentos; solo <code>grok-4.3</code>, el flagship
-      lento, sigue disponible.)
+      (<code>qwen/qwen3.8-flash</code> se intentó y se descartó por lentitud, igual que DeepSeek — no
+      llegó a producir datos.)
     </div>`;
 }
 
@@ -512,6 +510,47 @@ async function cargarReclutador() {
       ⅔ o 1. Es una dirección consistente en cuatro comparaciones, no un efecto estimado.
     </div>`;
 }
+/* ---------- 4.f conjunto congelado y titular ---------- */
+
+async function cargarCongelado() {
+  const c = document.getElementById('congelado');
+  let a = null, p = null, cf = null;
+  try { a  = await (await fetch('/api/reporte/conjunto-congelado.json')).json(); } catch { a = null; }
+  try { p  = await (await fetch('/api/reporte/precio-cero.json')).json(); } catch { p = null; }
+  try { cf = await (await fetch('/api/reporte/confirmatorio.json')).json(); } catch { cf = null; }
+  if (!a && !p) { c.innerHTML = '<div class="vacio">todavía no hay conjunto fijado ni contraste calculado</div>'; return; }
+  const pts = v => (100 * v).toFixed(1).replace('.', ',');
+  const conSigno = v => (v >= 0 ? '+' : '−') + pts(Math.abs(v));
+  const filaLect = (et, l) => !l ? '' : `<tr>
+      <td>${esc(et)}</td>
+      <td>${l.precio_0.tasa}% <span class="mini">(${l.precio_0.k}/${l.precio_0.n})</span></td>
+      <td>${l.precio_5.tasa}% <span class="mini">(${l.precio_5.k}/${l.precio_5.n})</span></td>
+      <td><b>${conSigno(l.diferencia_0_menos_5)} pts</b><br>
+          <span class="mini">IC ${pts(l.ic95_bootstrap[0])} a ${pts(l.ic95_bootstrap[1])} ·
+          ${l.incluye_cero ? 'incluye cero' : '<b>excluye cero</b>'}</span></td></tr>`;
+  const pp = cf && cf.primario_pareado;
+  const prim = pp ? `<p><b>Primario preplaneado (precio 20 menos 5), ${pp.n_corridas} corridas:</b>
+      ${conSigno(pp.media)} pts <span class="mini">IC ${pts(pp.ic95_bootstrap[0])} a
+      ${pts(pp.ic95_bootstrap[1])} · ${pp.incluye_cero ? 'incluye cero' : '<b>excluye cero</b>'}</span></p>` : '';
+  const aviso = (pp && !pp.incluye_cero) ? `<p class="mini">El veredicto del primario depende del N y
+      así se reporta: con la mirada de 70 era −3,3 pts [−11,4; +4,3] e <b>incluía</b> cero; con las
+      ${a ? a.n_congeladas : 127} lo excluye. La mirada de 70 sigue localizable:
+      <code>reportes/confirmatorio.json</code> del commit <code>8602461</code>.</p>` : '';
+  c.innerHTML = `
+    ${a ? `<p class="mini">Conjunto congelado: <b>${a.n_congeladas} corridas</b> · sha256 de la lista
+        <code>${esc(String(a.sha256_de_la_lista).slice(0, 16))}…</code> · fijado ${esc(a.fijado_utc)} ·
+        ${a.criterios_de_exclusion.length} criterios de exclusión, ${(a.excluidas || []).length} excluidas</p>` : ''}
+    <table><thead><tr><th>lectura</th><th>precio 0</th><th>precio 5</th><th>0 menos 5</th></tr></thead>
+    <tbody>
+      ${p ? filaLect('mirada congelada (70 + 8)', p.congelada) : ''}
+      ${p ? filaLect('extensión de precisión (127 + 8)', p.precision) : ''}
+    </tbody></table>
+    ${prim}${aviso}
+    <p class="mini">La unidad es el agente expuesto al precio, y el intervalo es bootstrap por
+    conglomerado —se remuestrean corridas, no agentes— con semilla ${p ? p.semilla : '—'}.
+    El primario pareado se calcula aparte y no se recalcula aquí.</p>`;
+}
+
 /* ---------- 5. documentos ---------- */
 
 async function cargarDocs() {
@@ -570,6 +609,7 @@ function opcionesVista() {
   cargarDocs();
   cargarGeneralizacion();
   cargarReclutador();
+  cargarCongelado();
 })();
 </script>
 </body>

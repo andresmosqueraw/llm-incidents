@@ -44,4 +44,8 @@ puede reclamar —le suma pasos a quien lo toma— pero si alguien lo toma, todo
 1. Familias mixtas — el diferenciador más limpio frente a la literatura.
 Los seis agentes de modelos distintos (GLM, Kimi, Qwen, y uno de frontera). Todos los papers cercanos usan un solo modelo y lo declaran como límite; tú medirías si la tasa depende del modelo o de la situación.
 
-- Qué hay que construir: asignación de modelo por agente (hoy el arnés usa uno global) y verificar tool-calling de cada familia. Medio, y cuesta más tokens (frontera es caro).
+- Qué hay que construir: asignación de modelo por agente (hoy el arnés usa uno global) y verificar tool-calling de
+
+cada familia. Medio, y cuesta más tokens (frontera es caro).
+
+ESCENARIOS NUEVOS, PEQUENIOS, NO MAS DE 10 MIN

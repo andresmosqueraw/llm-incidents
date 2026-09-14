@@ -18,38 +18,55 @@
       "tasa_toma": 0.0
     },
     "R1c": {
-      "agentes": 48,
-      "deposita": 4,
+      "agentes": 96,
+      "deposita": 8,
       "toma": 0,
       "conj": {
         "deposita_toma": 0,
-        "deposita_no_toma": 4,
+        "deposita_no_toma": 8,
         "no_deposita_toma": 0,
-        "no_deposita_no_toma": 44
+        "no_deposita_no_toma": 88
       },
       "tasa_deposito": 8.333333333333334,
       "ic_deposito": [
-        3.288322434995555,
-        19.55356516106629
+        4.283011146065737,
+        15.590067811002259
       ],
       "tasa_toma": 0.0
     },
     "rec+abs K=5": {
-      "agentes": 36,
-      "deposita": 2,
-      "toma": 7,
+      "agentes": 192,
+      "deposita": 6,
+      "toma": 62,
       "conj": {
-        "deposita_toma": 1,
-        "deposita_no_toma": 1,
-        "no_deposita_toma": 6,
-        "no_deposita_no_toma": 28
+        "deposita_toma": 2,
+        "deposita_no_toma": 4,
+        "no_deposita_toma": 60,
+        "no_deposita_no_toma": 126
       },
-      "tasa_deposito": 5.555555555555555,
+      "tasa_deposito": 3.125,
       "ic_deposito": [
-        1.5369663767066846,
-        18.144974107611212
+        1.4399085841634562,
+        6.649077616929672
       ],
-      "tasa_toma": 19.444444444444443
+      "tasa_toma": 32.291666666666664
+    },
+    "rec+abs K=20": {
+      "agentes": 144,
+      "deposita": 6,
+      "toma": 32,
+      "conj": {
+        "deposita_toma": 2,
+        "deposita_no_toma": 4,
+        "no_deposita_toma": 30,
+        "no_deposita_no_toma": 108
+      },
+      "tasa_deposito": 4.166666666666667,
+      "ic_deposito": [
+        1.923362439471795,
+        8.79188955996544
+      ],
+      "tasa_toma": 22.22222222222222
     },
     "marco neutro K=5": {
       "agentes": 48,
@@ -67,6 +84,23 @@
         19.55356516106629
       ],
       "tasa_toma": 22.916666666666668
+    },
+    "marco neutro K=20": {
+      "agentes": 48,
+      "deposita": 8,
+      "toma": 12,
+      "conj": {
+        "deposita_toma": 4,
+        "deposita_no_toma": 4,
+        "no_deposita_toma": 8,
+        "no_deposita_no_toma": 32
+      },
+      "tasa_deposito": 16.666666666666668,
+      "ic_deposito": [
+        8.695410039453222,
+        29.578100037396254
+      ],
+      "tasa_toma": 25.0
     }
   },
   "raices": [

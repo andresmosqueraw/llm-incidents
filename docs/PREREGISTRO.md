@@ -682,3 +682,180 @@ pareado y su intervalo es más ancho; nunca se reporta junto con las diferencias
   sesión condicional del gateway), y su hash se escribe cuando la suite corra en el árbol 1 tras cerrar la
   extensión. La diferencia es **inerte para la escena del lote** —ninguna de las dos cosas toca el camino
   que esa escena ejecuta— y así se anota donde se reclame el congelamiento.
+
+  **Dos notas operativas del reinicio del PC (14 sep ~23:05 COT).**
+  (a) El reinicio cayó en un hueco entre corridas y **no truncó ninguna**: las 94 de la escena del lote
+  están íntegras, y los cinco directorios incompletos son de interrupciones deliberadas de la sesión.
+  Al volver, la suite del instrumento se corrió de nuevo sobre el arnés vigente del árbol 1 y dio APTO
+  con `hash_arnes 85d028b45e869344` — el mismo que ya estaba declarado para la extensión, así que esas
+  corridas quedan cubiertas por una suite que pasó sobre su propio arnés, no sobre uno anterior.
+  (b) **La puerta de prelanzamiento reescribe `escena.resuelta.json` al validar.** Es idempotente para la
+  misma escena, pero correrla con OTRA escena mientras hay una cadena viva le cambiaría la escena a las
+  corridas que faltan. Por eso la extensión del 2×2 arranca sin una puerta propia: sus escenas ya se
+  validaron con el validador y corrieron su primer pase con este mismo arnés, y su contenido no cambió.
+  La excepción se declara aquí en lugar de forzar una puerta que rompería algo peor.
+
+  **Corrección a la nota del instrumento (14 sep ~23:10 COT).** Esa nota anticipaba que el arnés de la
+  extensión se pondría al día con el del repositorio "cuando la suite corra en el árbol 1". No se hizo
+  así, y es deliberado: el arnés de la extensión (`85d028b45e869344`) es el que pasó la suite completa
+  —75 comprobaciones— y quedó atado a la escena del lote, así que tocarlo habría invalidado la luz verde
+  justo cuando la extensión está en vuelo. Quedan entonces dos variantes declaradas:
+    · árbol 1 (el que produce las corridas): `hash_arnes 85d028b45e869344`, suite APTO, escena
+      `bf1b18a696a98476`. Es el instrumento de la extensión y de su reemplazo.
+    · repositorio (canónico): lleva además la cabecera de sesión condicional del gateway y la extensión
+      del validador para los brazos nuevos. Su hash se escribe cuando se corra la suite sobre él, ya con
+      la extensión cerrada. Ninguno de esos dos cambios toca el camino que la escena del lote ejecuta.
+
+  **Segundo reemplazo declarado (14 sep ~23:30 COT).** La corrida `20260914T024943` de la extensión se
+  truncó al agotar el tope por corrida del lote (333.000 tokens), que es un tope de seguridad del arnés y
+  no una regla de la escena: la escena tiene su propio presupuesto de pasos, y el tope de tokens es el
+  cinturón que evita que una corrida se vaya. Es, por tanto, un fallo técnico del instrumento y aplica la
+  misma regla que a la corrida contaminada: **se repone con una corrida de reemplazo**. El analizador la
+  excluye por su cuenta, así que el N final se calcula solo. Van **dos reemplazos declarados**: uno por la
+  contaminación de la suite, uno por este truncamiento. El tope del lote en curso (333k por corrida) no
+  se toca: matar una cadena viva para reencuadrar un tope cuesta más —una corrida truncada más y su
+  reemplazo— que dejar que cierre y reponer.
+
+## 12. Extensión de reclutador × abstención a 16 por celda (14 sep ~23:45 COT, escrito antes de correr)
+
+**Qué se extiende.** Las dos celdas de la familia del reclutador que cruzan el acto dañino con la
+restricción costosa: `factorial-reclutador-abstencion-arbol2` (K=5) y `...-caro-arbol2` (K=20), hoy con 8
+corridas cada una, pasan a **16**. Ocho corridas más por celda, 16 en total.
+
+**Por qué, y con qué límite.** No es por el resultado: la primera mirada a esta familia ya ocurrió y su
+lectura fue **nula y frágil** —el empuje del reclutador no separaba, y el signo cambió al pasar de 5 a 8
+corridas—, y con 8 por celda el intervalo es demasiado ancho para sostener esa nulidad. Se extiende para
+**estrechar el intervalo, no para buscar otro veredicto**. Si el nulo se mantiene, se reporta como nulo
+preciso; si el signo vuelve a cambiar, eso también se reporta, y es precisamente la razón de extenderlo.
+
+**Las dos miradas, declaradas.** El diseño no admite una mirada sola aquí porque ya hubo una: se reportan
+**las dos** —la de n=8, que está en `reportes/incidente.json`, y la de n=16, que se calculará una sola vez
+al cerrar— con el mismo criterio que la enmienda del N=160 del factorial.
+
+**Qué no cambia.** Las escenas son las mismas, con sus hashes (`dd9086e2d38f3740` para K=5 y
+`580e8ae01e1b0ff9` para K=20) y su bono ya declarado (5 y 20). Mismo arnés, mismos puertos (8401-8406, el
+árbol 2), misma codificación. Las 8 corridas nuevas se apilan con las 8 existentes de cada celda.
+
+**Costo declarado.** En reloj: unos 45 minutos del árbol 2, que queda ocioso al cerrar precio1, y **cero
+en la ruta crítica** del congelamiento (no comparte puertos con el árbol 1). En escritura: un contraste
+más con su intervalo, para el equipo. Ese es el costo real y por eso la decisión fue del equipo.
+
+**Servicios en la base equivocada: 8 corridas de los brazos de escena (14 sep ~00:10 COT).** Las tres
+escenas de escena barata declaran `puertos.egreso_base = 8501`, y tras el reinicio del PC se levantaron
+los servicios en 8401-8406 (la base de los brazos de reclutador), que es distinta. Durante ~1 hora los
+agentes de #1 y de #4 llamaron a `localhost:8501..8506` y **nadie escuchaba**: 8 corridas (7 de
+externo-p5 y 1 de precio1) registran entre 3 y 11 llamadas fallidas cada una. Efecto sobre la medida: no
+impide la tarea ni el depósito —el material de la tarea va en el directorio y el depósito va por la
+herramienta—, pero **quema pasos del presupuesto en llamadas muertas**, y los pasos son la moneda del
+juego. Así que es un fallo técnico del instrumento y aplica la regla de siempre: **esas 8 corridas se
+excluyen y se reponen**. Criterio decidible: la corrida contiene `Failed to connect` / `Connection
+refused` en sus eventos. Corregido a las 00:05 (servicios en 8501-8506, verificados con `/entrada`).
+Lección para el recetario de escenas: **cada escena declara su propia base de puertos, y hay que
+comprobar que tiene seis servicios vivos antes de lanzar**, no reusar la de otro brazo.
+
+**Reposición de las 8 corridas de los brazos de escena (14 sep ~00:00 COT).** Se reponen así: 7 de
+`externo-p5` y 1 de `precio1`, contra las mismas escenas resueltas y con los mismos argumentos, en el
+árbol 2, cuando su cadena actual cierre. **No es una extensión**: el N declarado de cada brazo no cambia
+(8 para #1, 6 para #4); son los reemplazos de las corridas que el fallo de puertos invalidó.
+Corren en paralelo con la extensión de reclutador × abstención porque usan bases distintas (8501-8506
+contra 8401-8406) y no comparten servicios ni puertos: la única interferencia posible es el caudal del
+gateway, que ya se reparte entre dos árboles desde el arranque de la noche.
+
+**Corrección al plan de reposición (14 sep ~00:10 COT).** Al pasar la lista de validez por los datos, dos
+ajustes sobre lo que decía la nota anterior: las corridas de precio 1 afectadas son **dos** (`034756` y
+`035259`), no una; y las de `externo-p5` son **siete**, que reponen exactamente las siete caídas contra las
+ocho lanzadas de ese brazo. Con eso, cada brazo vuelve a su N declarado sin sumar de más:
+  · externo-p5: 8 lanzadas, 7 invalidadas por puertos -> 7 reposiciones -> 8 válidas
+  · precio-uno: 8 lanzadas (2 del piloto + 6 de la cadena), 2 invalidadas -> 2 reposiciones -> 8 válidas
+El criterio de exclusión, ahora ejecutable, es `analisis/validez.py`: cuatro criterios duros (resumen,
+cadena, estímulo sembrado antes de la ronda 1, cero llamadas fallidas) y uno de revisión (herencia por
+efecto). El guion se probó contra los datos reales: marca las 7 de externo-p5 y las 2 de precio-uno, y no
+marca ninguna de las 6 de `par-p5` ni las del lote.
+
+**Instrumento del árbol 2, declarado (14 sep ~00:40 COT).** Las corridas del árbol 2 —las celdas del 2×2
+de abstención, la familia del reclutador (R1a, R1c, reclutador × abstención) y los brazos #1 y #4— las
+produjo un arnés cuyo `bucle.py` tiene hash `c3cdeff324ad`, **distinto** del que está en el repositorio
+(`b188e104964a`). La diferencia es la cabecera de sesión condicional del gateway que el equipo añadió para
+su brazo de generalización de modelos: inerte para nuestras corridas, que van por opencode-go. Los otros
+archivos del arnés (`validador.py`, `puerto.py`) sí coinciden con los del repositorio. Se declara igual que
+la variante del árbol 1, y por la misma razón: que nadie tenga que deducir de qué instrumento salió qué.
+
+**Tercer reemplazo declarado, y el conteo reconciliado (14 sep ~00:45 COT).** La corrida `043130` de la
+extensión se truncó por el tope por corrida (354.811 tokens, el tope del lote es 333k). Es el mismo caso
+que `024943`: fallo técnico del instrumento, se repone. Van **tres reemplazos** declarados en total: uno
+por la contaminación de la suite, uno por `024943` y uno por `043130`. El paso de reemplazo que ya está
+en la cola de la cadena cubre el primero (`--corridas 1`); los otros dos se corren al cerrar la cadena,
+antes del congelamiento, y son cinco minutos.
+
+Sobre el conteo, para que nadie discuta una cifra que se mueve: el analizador da **123 corridas válidas**
+a las 00:43, sobre 128 en disco menos las 5 exclusiones. A las 00:42 daba 122, y cierran una cada 1,6 a
+2,7 minutos (media ~2,1). Las cifras de 121 que circulan son correctas para su hora: el conteo cambia cada
+dos minutos, así que cualquier número es válido con su marca de tiempo y falso sin ella.
+
+## 13. Parada de la extensión en N=124 por reloj de entrega (14 sep ~00:47 COT, antes de mirar)
+
+**Qué se para.** La extensión del factorial, en el punto donde cerraba su corrida en vuelo: **124 corridas
+válidas** de la escena `bf1b18a696a98476`. No se corre el resto de la cola: quedan sin correr la extensión
+del 2×2 (32 corridas) y las dos últimas reposiciones declaradas.
+
+**Por qué, y por qué no es conveniencia.** Se para **por reloj de entrega**, no por resultado: el
+congelamiento es lo que bloquea la sección de Results del reporte, y cada hora que la extensión sigue
+corriendo es una hora que el equipo no puede escribir. La decisión se toma **antes** de calcular el
+desenlace a N=124 —el analizador se ha corrido siempre con `--solo-validez`, que se detiene antes del
+contraste— así que la parada no puede estar inducida por lo que salga.
+
+**Por qué no rompe la regla del N.** El N preregistrado es **80**. Los 160 fueron una **enmienda de
+precisión** declarada a las 19:05, no un mínimo. Parar en 124 está **por encima** del preregistro y la
+regla que escribí ("si el reloj aprieta, lo que cede es la hora del congelamiento, no el tamaño de la
+muestra") aplica a no bajar del N declarado, que aquí no ocurre.
+
+**Qué queda incompleto, y cómo se reporta.** La extensión de precisión, que pasa a declararse así: las
+corridas entre 80 y 124 entran como **seguimiento de precisión** que estrecha el semiancho del intervalo
+de ±7,4 a ±6,0 puntos. El titular sigue siendo el contraste preregistrado. Se reportan **todas las
+miradas**: la de N=70 congelada, la de N=80 del relleno, y la final a N=124 más sus reemplazos.
+
+**El K=20 de reclutador × abstención, cuello de botella declarado (14 sep ~00:55 COT).** La extensión de
+esa familia se repartió mal por causas del diseño, no del conteo: el K=5 recibió sus 8 corridas y quedó en
+16 cerradas (16 válidas), mientras el **K=20 sigue corto** — 9 cerradas, 6 válidas y 3 truncadas por tope,
+que son las que ya venían de antes. El paso que corre ahora apunta al K=20 (`escena-reclutador-abstencion-
+caro`, 8 corridas, tope 500k por corrida en vez del que truncaba), así que el sesgo se corrige solo; pero
+al terminar quedará en ~14 válidas de las 16 de la enmienda 12. **Se declaran 3 corridas extra sobre el
+K=20** para cerrar en 16, con el tope alto y la guarda de puertos de la casa.
+
+**Conteo del factorial: 124 o 125, según una exclusión (14 sep ~00:55 COT).** Mi analizador da **124
+válidas** (cinco exclusiones: cuatro truncadas por tope y la contaminada por la suite). El conteo de 125
+que circula es el mismo conjunto **sin** excluir la corrida contaminada. Con los tres reemplazos en curso,
+el N queda en **127** según mi criterio y en 128 según el otro. Recomiendo mantener la exclusión —esa
+corrida contabilizó un acto que ningún sujeto hizo— y reportar **127**; si el equipo prefiere 128, la
+decisión es no excluirla y hay que escribirla con ese motivo.
+
+**Nota metodológica que llega de la familia del reclutador (14 sep ~00:55 COT).** Al ganar precisión en
+K=5 apareció una interacción que excluía cero sobre **todas las rondas** (+21,5 [+2,5; +40,4]) y que
+**cambia de signo y vuelve a incluir cero al restringirse a la ronda 1** (−7,5 [−24,6; +9,2]). La lectura
+es que el agotamiento del fondo fabrica el efecto y la ronda 1 lo desarma: medir sobre todas las rondas
+mezcla la decisión con el colapso del fondo. Esto **no es una anécdota de un brazo**: cualquier medida que
+agregue rondas —incluida la tasa de la clave del confirmatorio— está expuesta a lo mismo. Se declara aquí
+para que la prueba restringida a la ronda 1 entre al análisis como **robustez exploratoria declarada**, no
+como resultado principal, y para que las limitaciones lo digan.
+
+## 14. El veredicto del primario depende de la N, y así se reporta (14 sep ~01:15 COT)
+
+El congelamiento corrió el confirmatorio sobre las **127** corridas del conjunto fijado, y el contraste
+pareado 20 contra 5 —el primario preplaneado— **dejó de ser nulo**: −0,0735 [−0,1312, −0,0157], que
+excluye cero. La mirada anterior, sobre 70 corridas, daba −0,0333 [−0,1143, +0,0429], que lo incluía.
+Las dos cifras se reportan juntas y ninguna se borra.
+
+La ampliación a más N se declaró **antes** de calcular esta última, así que no hay selección por
+resultado; pero un intervalo que cambia de veredicto con el tamaño de muestra **obliga a decirlo en
+estos términos**, no a elegir la N que conviene: el efecto de pagar 5 contra 20 es pequeño y negativo,
+y el N decide si el intervalo lo distingue de cero. El contraste 0 contra 5 se mantiene como el más
+grande y robusto (+0,254 [+0,087, +0,428] en la mirada de 70; +0,183 [+0,019, +0,355] sobre las 127).
+
+Los dos archivos quedan localizables: la mirada de 70 es `reportes/confirmatorio.json` del commit
+`8602461` (sha256 corto `7972c708088544c6`); el congelamiento la sobrescribió en disco con su corrida
+sobre las 127 (sha256 corto `2da2f5596817cf0f`).
+
+**K=20 de reclutador × abstención: cerrado en 17 válidas, sin las 3 extra.** El tope alto de la
+extensión evitó truncamientos en las 8 corridas que corrieron, y la celda quedó por encima de las 16 de
+la enmienda 12. Las 3 corridas extra declaradas en el apartado anterior **no se corren**: no hacen
+falta. Se reportan 17 y el motivo.
