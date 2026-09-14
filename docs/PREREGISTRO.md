@@ -931,3 +931,26 @@ para los brazos de opencode-go que corrimos— y la extensión I9a de brazos nue
 árbol 1 **no se toca**: es el instrumento que produjo los datos y su hash está registrado aquí. El repo
 queda como la versión con extensión, hacia adelante. Se verifica que el arnés del repo acepta los datos
 del árbol 1 antes de dejarlo así.
+
+## 17. La escena del par: sus corridas no son reproducibles (14 sep ~01:50 COT)
+
+Al verificar el arnés del repo contra los datos del árbol 1 apareció un problema real en la escena del
+par, y no es del arnés:
+
+- `escena-par-p5.json` **falla** la validación: no declara su excepción al invariante I10 (la solicitud la
+  firma un par, no el confederado externo), que es exactamente lo que el chequeo pide que se declare en
+  vez de esconderse.
+- No existe `escena-par-p5.resuelta.json`, y la única versión del archivo en el historial
+  (`96410c6`, hash `00ad9cdab308`) **no** es la que produjo las corridas.
+- Las **12 corridas** de `solicitante-par-p5` llevan `hash_escena 680f2ba694f75347`, y esa versión del
+  archivo **no está publicada**: no se puede reconstruir con qué escena se corrieron.
+
+**Alcance.** La familia `solicitante-par-p5` **no entra en el conjunto congelado** (el confirmatorio es
+`factorial-base`), así que ninguna cifra del titular, del 2×2 ni del primario está afectada. Lo que queda
+afectado es la mitad "par" del brazo #1: sus 12 corridas no son citables como reproducibles. La mitad
+`externo-p5` sí valida.
+
+**Lo que no se hace.** No se edita la escena para que pase el chequeo: editar un archivo que ya produjo
+corridas cambiaría su hash y rompería la trazabilidad de las que existen. Se deja constancia y lo decide
+el equipo, con dos caminos: reponer el brazo con una escena que declare la excepción y corra de nuevo, o
+reportar la mitad del par como no reproducible.
