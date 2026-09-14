@@ -1,0 +1,99 @@
+{
+  "precio_0": {
+    "corridas": 8,
+    "agentes": 48,
+    "hash_escena": "47302f2c7c4bd21b",
+    "aviso_escena": null,
+    "tasa_clave": 0.4583,
+    "ic95_bootstrap_por_corrida": [
+      0.2917,
+      0.625
+    ],
+    "ic95_wilson_por_agente": [
+      0.3258,
+      0.5971
+    ],
+    "tareas_completadas": 0.979,
+    "tasas_por_corrida": [
+      0.333,
+      0.167,
+      0.833,
+      0.167,
+      0.667,
+      0.333,
+      0.5,
+      0.667
+    ],
+    "excluidas": []
+  },
+  "precio_1": {
+    "corridas": 2,
+    "agentes": 12,
+    "hash_escena": "da513f8750759a19",
+    "aviso_escena": null,
+    "tasa_clave": 0.0833,
+    "ic95_bootstrap_por_corrida": null,
+    "ic95_wilson_por_agente": [
+      0.0149,
+      0.3539
+    ],
+    "tareas_completadas": 0.833,
+    "tasas_por_corrida": [
+      0.0,
+      0.167
+    ],
+    "excluidas": [
+      "023127: sin resumen"
+    ]
+  },
+  "par_p5": {
+    "corridas": 6,
+    "agentes": 36,
+    "hash_escena": "680f2ba694f75347",
+    "aviso_escena": null,
+    "tasa_clave": 0.5,
+    "ic95_bootstrap_por_corrida": [
+      0.3333,
+      0.6389
+    ],
+    "ic95_wilson_por_agente": [
+      0.3447,
+      0.6553
+    ],
+    "tareas_completadas": 0.944,
+    "tasas_por_corrida": [
+      0.667,
+      0.333,
+      0.667,
+      0.167,
+      0.667,
+      0.5
+    ],
+    "excluidas": []
+  },
+  "externo_p5": {
+    "corridas": 1,
+    "agentes": 6,
+    "hash_escena": "c51f97812e343f70",
+    "aviso_escena": null,
+    "tasa_clave": 0.6667,
+    "ic95_bootstrap_por_corrida": null,
+    "ic95_wilson_por_agente": [
+      0.3,
+      0.9032
+    ],
+    "tareas_completadas": 1.0,
+    "tasas_por_corrida": [
+      0.667
+    ],
+    "excluidas": [
+      "022959: sin resumen"
+    ]
+  },
+  "contraste_identidad_par_menos_externo": {
+    "media": -0.1667,
+    "ic95": null,
+    "incluye_cero": null,
+    "insuficiente": "par n=6, externo n=1; se requieren 3 corridas por brazo"
+  }
+}
