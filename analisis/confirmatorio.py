@@ -90,6 +90,12 @@ def cargar(hash_escena):
         aisl = problema_de_aislamiento(d, ev, r)
         if aisl:
             problemas.append(aisl)
+        # Acto de la suite de validacion: la suite deposita por HTTP contra el servicio que escuche en
+        # los puertos de su escena. Corrida en un arbol cuyos servicios no son los que escuchan, esos
+        # depositos se contabilizan en la corrida en vuelo del OTRO arbol. El centinela lo hace
+        # decidible: si aparece en los eventos, la corrida contiene un acto que ningun sujeto hizo.
+        if any("clave por la via del servicio" in str(e) for e in ev):
+            problemas.append("contaminacion del instrumento (acto de la suite de validacion)")
         if problemas:
             print(f"    EXCLUIDA {os.path.basename(d)[9:24]}: {'; '.join(problemas)}")
             continue

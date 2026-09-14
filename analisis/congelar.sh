@@ -13,8 +13,15 @@
 #   7. la tabla de numeros congelados y los hashes de los archivos que la sostienen
 #
 # No calcula nada por su cuenta: solo encadena los guiones ya probados y deja el rastro de hashes.
+#
+# Orden obligatorio antes de correrlo: el ultimo lote del factorial cerrado, la corrida de reemplazo
+# por la contaminacion de la suite ya corrida (si falta, el N queda uno corto), y ningun lote vivo
+# (lo comprueba el paso 0).
+#
+# set -e es deliberado: si un paso falla, el congelamiento se detiene en vez de dejar un archivo de
+# numeros a medias que se lea como si estuviera congelado. Un fallo aqui es preferible a un numero falso.
 
-set -u
+set -eu
 RAIZ="$(cd "$(dirname "$0")/.." && pwd)"
 ARBOL2="$(dirname "$RAIZ")/Sprint-2"
 PY="$RAIZ/.venv-inspect/bin/python"
@@ -45,7 +52,16 @@ echo "  corridas traidas del arbol 2: $traidas (las ya presentes no se tocan)"
 
 echo
 echo "=== 2. analisis confirmatorio (la mirada) ==="
+touch /tmp/.marca-congelamiento
 "$PY" analisis/confirmatorio.py
+# Compuerta: la mirada tiene que haber ocurrido AHORA. Un archivo viejo significa que el paso no corrio
+# como se cree, y entonces el congelamiento se detiene en vez de congelar numeros que no son de hoy.
+if [ reportes/confirmatorio.json -ot /tmp/.marca-congelamiento ]; then
+  echo "  FALLA: reportes/confirmatorio.json es anterior al arranque del congelamiento."
+  echo "         El paso 2 no produjo un archivo nuevo: se detiene y se revisa."
+  exit 1
+fi
+echo "  compuerta: la mirada quedo escrita ahora"
 
 echo
 echo "=== 3. abstencion: 2x2 ==="

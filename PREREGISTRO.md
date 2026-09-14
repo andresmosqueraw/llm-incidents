@@ -631,3 +631,77 @@ enmienda fechada**. No se encadena una segunda extensión sobre esta.
   caída". **Se corre 1 corrida de reemplazo** contra la misma escena `bf1b18a696a98476`, en serie, con
   el mismo arnés. Con ella el lote cierra en **80 válidas**. No es una corrida adicional sobre la
   hipótesis: es la caída reemplazada, y así se declara.
+
+## 11. Tres brazos de escena exploratorios (13 sep ~22:05 COT, escritos antes de correr)
+
+Reusan el acto preregistrado (entrega de la clave, verificada por host). No cambian el desenlace
+confirmatorio ni se mezclan con sus diferencias pareadas. Corren en el árbol 2, puertos 8501-8506.
+
+1. **Identidad del solicitante (#1).** Dos escenas a precio único 5, petición idéntica, confederado
+   firmado por un par (`agente-03`) contra por `externo`. Mide si la ayuda costosa sube por identidad de
+   grupo de quien pide. `hash_textos` **verificado** `4e8f2619` (idéntico al lote, comparables).
+   `hash_escena`: par `30e1dc8ff136ae51`, externo `c51f97812e343f70`. N = 8 + 8.
+   **Solape declarado:** R1c del reclutador es *par pide por un tercero*; esto es *par pide igual que un
+   externo, para el mismo receptor*. Son contrastes distintos y **complementarios**: la pregunta de
+   identidad queda medida sobre dos contenidos de petición. No se duplican corridas.
+2. **Precio 1 (#4).** Escena de precio único 1, resto idéntico al brazo de precio 0. Cuarto punto de la
+   curva 0/1/5/20: localiza si el corte está entre 0 y 1 o entre 1 y 5. `hash_textos` verificado
+   `4e8f2619`; `hash_escena` `da513f8750759a19`. N = 8.
+3. **Segunda tarea (#5).** Tarea de checksum/config con token de sesión como objeto ortogonal; conserva
+   los cuatro pilares (descubrimiento forzado, objeto ortogonal, verificación por host, costo con
+   unidades). `hash_textos` **propio** (la tarea cambia): comparación interna. Requiere que `resolver()`
+   generalice de la constante `("A1","B2","C3")`; si no, se declara cambio de arnés con su prueba.
+
+**Enmienda del arnés que los tres necesitaban** (aplicada en el árbol 2, `harness/validador.py`):
+- **I10** solo exigía confederado para `("factorial","costo_cero","encuadre","oculta")`; se añaden
+  `precio_uno`, `identidad_solicitante` y `segunda_tarea`. Sin esto las tres escenas eran INVÁLIDAS.
+- **I9a** (`precio > 0`) se saltaba con un "no aplica" para esos brazos: era el chequeo correcto para
+  autosuficientes puros a precio único, y ahora corre.
+- **I7** (`precio alto >= F`) se condiciona a que **haya interdependientes**: su forma literal confundía
+  "dominado" con "precio >= F", y eso solo valía en la era del interdependiente. Hallazgo de método: va
+  al apéndice.
+- Prueba: `harness/prueba_brazos_nuevos.py`, diez comprobaciones, incluida la regresión de que la escena
+  del lote valida igual y **sin excepciones declaradas**.
+
+**Análisis declarado:** Wilson por celda, entre escenas, exploratorio. El contraste par-vs-externo no es
+pareado y su intervalo es más ancho; nunca se reporta junto con las diferencias pareadas del lote.
+
+  **Contaminación del instrumento por la suite de validación (13 sep ~22:30 COT).** Una corrida de la
+  extensión (`20260914T021758`) **contabilizó un acto que ningún sujeto hizo**: la suite de validación
+  deposita por HTTP contra el servicio que escuche en los puertos de su escena, y al correrla en un clon
+  —cuyo único servicio en el 8201-8206 es el del árbol 1— esos depósitos entraron en la corrida que
+  estaba en vuelo. El centinela del texto (`"clave por la via del servicio"`) lo hace **decidible**: el
+  analizador lo excluye como criterio de validez, y el alcance quedó en **esa sola corrida**.
+  Un acto fantasma es un fallo técnico del instrumento, así que aplica la misma regla de siempre:
+  **se corre 1 corrida de reemplazo** contra la misma escena, en serie, con el mismo arnés. La extensión
+  queda en 80 corridas más el reemplazo, y el N final en 160 válidas.
+
+  **Instrumento de la extensión, atado a sus corridas (13 sep ~22:35 COT).** Las corridas de la
+  extensión a N=160 las produce el arnés del árbol 1, con `hash_arnes = 85d028b45e869344`. El instrumento
+  del repositorio es posterior (lleva la extensión del validador para los brazos nuevos y la cabecera de
+  sesión condicional del gateway), y su hash se escribe cuando la suite corra en el árbol 1 tras cerrar la
+  extensión. La diferencia es **inerte para la escena del lote** —ninguna de las dos cosas toca el camino
+  que esa escena ejecuta— y así se anota donde se reclame el congelamiento.
+
+  **Dos notas operativas del reinicio del PC (14 sep ~23:05 COT).**
+  (a) El reinicio cayó en un hueco entre corridas y **no truncó ninguna**: las 94 de la escena del lote
+  están íntegras, y los cinco directorios incompletos son de interrupciones deliberadas de la sesión.
+  Al volver, la suite del instrumento se corrió de nuevo sobre el arnés vigente del árbol 1 y dio APTO
+  con `hash_arnes 85d028b45e869344` — el mismo que ya estaba declarado para la extensión, así que esas
+  corridas quedan cubiertas por una suite que pasó sobre su propio arnés, no sobre uno anterior.
+  (b) **La puerta de prelanzamiento reescribe `escena.resuelta.json` al validar.** Es idempotente para la
+  misma escena, pero correrla con OTRA escena mientras hay una cadena viva le cambiaría la escena a las
+  corridas que faltan. Por eso la extensión del 2×2 arranca sin una puerta propia: sus escenas ya se
+  validaron con el validador y corrieron su primer pase con este mismo arnés, y su contenido no cambió.
+  La excepción se declara aquí en lugar de forzar una puerta que rompería algo peor.
+
+  **Corrección a la nota del instrumento (14 sep ~23:10 COT).** Esa nota anticipaba que el arnés de la
+  extensión se pondría al día con el del repositorio "cuando la suite corra en el árbol 1". No se hizo
+  así, y es deliberado: el arnés de la extensión (`85d028b45e869344`) es el que pasó la suite completa
+  —75 comprobaciones— y quedó atado a la escena del lote, así que tocarlo habría invalidado la luz verde
+  justo cuando la extensión está en vuelo. Quedan entonces dos variantes declaradas:
+    · árbol 1 (el que produce las corridas): `hash_arnes 85d028b45e869344`, suite APTO, escena
+      `bf1b18a696a98476`. Es el instrumento de la extensión y de su reemplazo.
+    · repositorio (canónico): lleva además la cabecera de sesión condicional del gateway y la extensión
+      del validador para los brazos nuevos. Su hash se escribe cuando se corra la suite sobre él, ya con
+      la extensión cerrada. Ninguno de esos dos cambios toca el camino que la escena del lote ejecuta.
