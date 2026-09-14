@@ -75,6 +75,7 @@
   .vacio{color:var(--dim);font-style:italic;padding:12px 0}
   a{color:var(--acc)}
   .mini{font-size:12.5px;color:var(--dim)}
+  .mono{font-family:var(--mono);font-size:12.5px}
 </style>
 </head>
 <body>
@@ -122,6 +123,9 @@
 
   <h2>¿Se repite con otros modelos? <span class="mini">— exploratorio, no reemplaza el número de arriba</span></h2>
   <div id="generalizacion"><div class="vacio">cargando…</div></div>
+
+<h2>El reclutador: ¿pesa pedir por un tercero? <span class="mini">— exploratorio; el mecanismo del incidente, con costo real</span></h2>
+  <div id="reclutador"><div class="vacio">cargando…</div></div>
 
   <details>
     <summary>Documentos del proyecto</summary>
@@ -400,6 +404,109 @@ async function cargarGeneralizacion() {
     </div>`;
 }
 
+/* ---------- 4.c el brazo del reclutador (exploratorio) ---------- */
+/* Dos fuentes: reportes/reclutador.json (tasas por precio, contrastes) y
+   reportes/reclutador-texto.json (codificación del razonamiento). La segunda es la que importa:
+   un nulo vale poco si la apelación pasó desapercibida, y bastante si el agente la nombró y dijo no. */
+async function cargarReclutador() {
+  const cont = document.getElementById('reclutador');
+  const falta = m => { cont.innerHTML = `<div class="vacio">${m}</div>`; };
+  let d, t = null;
+  try { d = await (await fetch('/api/reporte/reclutador.json')).json(); }
+  catch { return falta('sin datos todavía — corre analisis/reclutador.py'); }
+  if (d.error || !d.brazos) return falta('sin datos todavía — corre analisis/reclutador.py');
+  try { t = await (await fetch('/api/reporte/reclutador-texto.json')).json(); } catch { t = null; }
+  if (t && t.error) t = null;
+
+  const ETQ = { tercero: 'Pide por «la estación 4» <span class="mini">(tercero de fuera)</span>',
+                par: 'Pide por un par del grupo <span class="mini">(compañero nombrado)</span>' };
+  const ref = d.base_referencia || null;
+
+  const barra = (et, cel) => {
+    if (!cel || !cel.corridas) return `<div class="barra"><div class="et">${et}</div>
+      <div class="pista"></div><div class="val">—<span>sin corridas</span></div></div>`;
+    const ic = cel.ic95_por_corrida;
+    return `<div class="barra"><div class="et">${et}</div>
+      <div class="pista"><i style="width:${Math.round(100 * cel.tasa)}%"></i></div>
+      <div class="val">${pct(cel.tasa)}<span>${cel.entregaron} de ${cel.agentes}${
+        ic ? ` · IC ${Math.round(100 * ic[0])}–${Math.round(100 * ic[1])}` : ''}</span></div></div>`;
+  };
+
+  const tarjetas = ['tercero', 'par'].map(k => {
+    const b = d.brazos[k];
+    if (!b) return '';
+    return `<div class="caja"><h3>${ETQ[k]}</h3>
+      ${barra('Cuando costaba <b>5</b>', b.celdas && b.celdas['5'])}
+      ${barra('Cuando costaba <b>20</b>', b.celdas && b.celdas['20'])}
+      <p class="mini">${b.corridas_validas} corridas válidas, ${b.excluidas} excluidas ·
+        completó su propia tarea ${pct(b.tareas_completadas)} ·
+        escena <span class="mono">${esc(String(b.hash_escena).slice(0, 8))}</span></p>
+    </div>`;
+  }).join('');
+
+  const contraste = k => {
+    const c = d.contrastes && d.contrastes[k];
+    if (!c || c.puntos === null && c.media === null) return '—';
+    const v = c.media !== undefined ? c.media : c.puntos;
+    const pts = `${v > 0 ? '+' : ''}${(100 * v).toFixed(1)} pts`;
+    if (!c.ic95) return `${pts} <span class="mini">descriptivo</span>`;
+    return `${pts} <span class="mini">IC ${(100 * c.ic95[0]).toFixed(1)} a ${(100 * c.ic95[1]).toFixed(1)} —
+      ${c.incluye_cero ? 'incluye cero' : 'excluye cero'}</span>`;
+  };
+
+  let razon = '';
+  if (t && t.brazos) {
+    const nombres = Object.keys(t.brazos);
+    const cats = Object.keys(t.brazos[nombres[0]].categorias || {});
+    const fila = c => `<tr><td>${esc(c)}</td>` + nombres.map(n => {
+      const v = t.brazos[n].categorias[c];
+      return `<td class="num">${v ? v.pct.toFixed(1) + '%' : '—'}<span class="mini"> ${
+        v ? v.agentes + '/' + t.brazos[n].agentes : ''}</span></td>`;
+    }).join('') + '</tr>';
+    razon = `<div class="caja"><h3>Qué razonaron, no sólo qué hicieron</h3>
+      <p class="mini">Codificación por palabra clave sobre los mensajes del agente, todas sus rondas juntas.
+        Los patrones están en <span class="mono">analisis/reclutador_texto.py</span>. Un solo codificador y
+        sin medida de acuerdo: alguien debería revisar a mano una muestra antes de citar estas cifras.</p>
+      <table><thead><tr><th>Categoría</th>${nombres.map(n =>
+        `<th class="num">${esc(n)}</th>`).join('')}</tr></thead><tbody>
+        ${cats.map(fila).join('')}
+        <tr><td><b>Sin ninguna categoría</b> <span class="mini">cota superior de no-interacción</span></td>
+        ${nombres.map(n => { const s = t.brazos[n].sin_ninguna_categoria;
+          return `<td class="num">${s ? s.pct.toFixed(1) + '%' : '—'}<span class="mini"> ${
+            s ? s.agentes + '/' + t.brazos[n].agentes : ''}</span></td>`; }).join('')}</tr>
+      </tbody></table></div>`;
+  } else {
+    razon = `<div class="caja"><p class="mini">Codificación del razonamiento: sin datos todavía —
+      corre <span class="mono">python3 analisis/reclutador_texto.py</span>.</p></div>`;
+  }
+
+  cont.innerHTML = `<p class="mini">Misma escena y mismo precio que el experimento principal; lo único que
+      cambia es <b>por quién</b> pide el solicitante. En el incidente, un agente consiguió que otro actuara
+      invocando la necesidad de un tercero: esto mide ese mecanismo con un costo que se paga de verdad.</p>
+    <div class="agentes">${tarjetas}</div>
+    ${ref ? `<div class="caja"><h3>Contra la solicitud llana</h3>
+      <p class="mini">Referencia del lote principal, <b>${ref.corridas} corridas</b>:
+        ${(100 * ref.tasas['5']).toFixed(1)}% a precio 5 y ${(100 * ref.tasas['20']).toFixed(1)}% a
+        precio 20. Se cita de la mirada única ya hecha y
+        <b>no se recalcula</b> aquí, así que las comparaciones contra el base van sin intervalo.</p>
+      <p class="mini">Tercero − base: ${contraste('tercero_menos_base_precio5_DESCRIPTIVO')} (precio 5) ·
+        ${contraste('tercero_menos_base_precio20_DESCRIPTIVO')} (precio 20)</p>
+      <p class="mini">Par − tercero, que sí lleva intervalo porque los dos son exploratorios:
+        ${contraste('par_menos_tercero_precio5')} (precio 5) ·
+        ${contraste('par_menos_tercero_precio20')} (precio 20)</p></div>` : ''}
+    ${razon}
+    <div class="lectura">
+      <b>Qué dice.</b> La apelación por un tercero <b>no compra cooperación</b>: no supera a la solicitud
+      llana en ninguna de las cuatro celdas, y que el beneficiario sea del propio grupo o de fuera no mueve
+      nada detectable. Lo que hace valioso ese nulo está en la tabla de razonamiento: con un compañero
+      nombrado, casi la mitad de los agentes <b>menciona al beneficiario</b> y un tercio alega seguridad o
+      «no es parte de mi tarea» — y aun así casi nadie paga. <b>No es un nulo por desatención</b>: vieron a
+      quién iban a ayudar y se negaron por regla. Y sólo un 2–4% razona el costo en pasos, lo que explica
+      que el precio no produzca una pendiente: nunca entra en la deliberación.
+      <br><br><b>Qué no dice.</b> Cada celda son 24 agentes y las tasas por corrida sólo pueden valer 0, ⅓,
+      ⅔ o 1. Es una dirección consistente en cuatro comparaciones, no un efecto estimado.
+    </div>`;
+}
 /* ---------- 5. documentos ---------- */
 
 async function cargarDocs() {
@@ -457,6 +564,7 @@ function opcionesVista() {
   pintarTabla();
   cargarDocs();
   cargarGeneralizacion();
+  cargarReclutador();
 })();
 </script>
 </body>
