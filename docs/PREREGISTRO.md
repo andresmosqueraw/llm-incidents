@@ -859,3 +859,75 @@ sobre las 127 (sha256 corto `2da2f5596817cf0f`).
 extensión evitó truncamientos en las 8 corridas que corrieron, y la celda quedó por encima de las 16 de
 la enmienda 12. Las 3 corridas extra declaradas en el apartado anterior **no se corren**: no hacen
 falta. Se reportan 17 y el motivo.
+
+## 15. Dos observaciones sobre el conjunto congelado, halladas al verificar (14 sep ~01:40 COT)
+
+No son enmiendas: el análisis está congelado y ninguna de las dos lo cambia. Son propiedades del conjunto
+que el reporte tiene que declarar, porque afectan a cómo se leen dos cifras.
+
+**(a) El contraste 0 − 5 está confundido con el tiempo, y la versión publicada es la conservadora.**
+El brazo de precio 0 se corrió entero en quince minutos (13 sep 21:32-21:47), mientras el precio 5 del
+factorial se acumula a lo largo de once horas. Las tasas del lote **suben** con el tiempo: el precio 5
+vale ~15,6% entre las 20:00 y las 23:00 y 34,4% en las corridas tardías. Por eso:
+
+| 0 − 5 | estimación | IC95 |
+| --- | --- | --- |
+| contra el precio 5 de todo el lote (lo publicado) | +18,5 pts | [+2,1; +35,4] |
+| contra el precio 5 de la **misma ventana horaria** | +30,2 pts | [+12,5; +47,9] |
+
+Las dos excluyen cero y la emparejada es **mayor**, así que la cifra publicada subestima el contraste.
+Se reportan las dos. Lo mismo afecta a la lectura de la curva: el brazo de **precio 1 se corrió tarde**
+(14 sep 02:03-04:11), en el periodo de nivel alto, de modo que su 35,4% está inflado frente al 45,8% del
+precio 0, que es temprano: la caída real entre 0 y 1 es **mayor** de lo que la figura sugiere.
+
+**(b) Las tasas por celda derivan a lo largo del lote; el contraste pareado no.** Es la razón por la que
+el primario es el número que manda:
+
+| bloque | precio 5 | precio 20 | pareado 20−5 | IC95 |
+| --- | --- | --- | --- | --- |
+| antes del reinicio (n=80) | — | — | −5,83 pts | [−13,3; +1,3] |
+| después (n=47) | — | — | −9,93 pts | [−19,1; −0,7] |
+| diferencia entre bloques | | | +4,10 pts | [−8,0; +15,6] **incluye cero** |
+
+El nivel se mueve unos 15-19 puntos entre bloques, pero el efecto pareado no es distinguible entre
+ellos: parear **dentro** de la corrida absorbe la deriva de nivel, que es exactamente para lo que sirve.
+Consecuencia para el reporte: el primario pareado se cita como resultado; las tasas por celda (27,6% y
+20,2%) se citan con la nota de que promedian un lote que abarca un cambio de condiciones de máquina.
+
+Verificado recomputando las 127 corridas del conjunto congelado desde `salidas/`, con los mismos
+criterios de exclusión. Las cifras coinciden con `reportes/confirmatorio.json` hasta el último decimal.
+
+## 15. Prueba restringida a la ronda 1, y lo que la restricción no es (14 sep ~01:45 COT)
+
+`analisis/ronda-uno.py` corre el mismo análisis con la decisión medida **solo en la ronda 1**, cuando el
+fondo está intacto. Atribuye la ronda por los eventos (que la traen) y cae al `ronda_entrega` del
+resumen solo si falta. Se autovalida: su lectura de "todas las rondas" reproduce exactamente las cifras
+congeladas, incluido el primario y el contraste 0-5.
+
+| contraste | todas las rondas | solo ronda 1 |
+|---|---|---|
+| 0 menos 5 | +18,3 pts [+1,9; +35,5] EXCLUYE CERO | +5,1 pts [-5,6; +15,8] incluye cero |
+| primario pareado 20 menos 5 | -7,35 pts [-13,1; -1,6] EXCLUYE CERO | -5,25 pts [-10,5; 0,0] incluye cero |
+
+Los dos efectos pierden significancia con el fondo intacto, y el control es el que más se mueve (45,8%
+a 25,0%): los agentes sin costo ayudan mucho más en rondas tardías.
+
+**Lo que esto NO es.** La restricción a la ronda 1 no es una lectura neutral ni la "verdadera": quita el
+agotamiento del fondo, pero también la deliberación de las rondas maduras. Las dos lecturas son extremos
+—una mide con el fondo agotado y otra en frío— y por eso se reportan juntas y no se elige una. Lo que
+queda establecido es que **medir sobre todas las rondas mezcla la decisión con otra cosa**, y que la
+magnitud publicada depende de esa mezcla. Con el hallazgo equivalente de la familia del reclutador son
+dos demostraciones independientes del mismo resultado metodológico.
+
+## 16. Las dos versiones del arnés, documentadas en vez de unificadas (14 sep ~01:45 COT)
+
+| archivo | árbol 1 (el que corrió) | repo |
+|---|---|---|
+| bucle.py | c3cdeff324ad | b188e104964a |
+| validador.py | 6913f3778782 (372 líneas) | 388eeab8c53a (379 líneas) |
+
+Las diferencias son la cabecera condicional del gateway en `bucle.py` —necesaria para OpenRouter, **inerte**
+para los brazos de opencode-go que corrimos— y la extensión I9a de brazos nuevos en `validador.py`. El
+árbol 1 **no se toca**: es el instrumento que produjo los datos y su hash está registrado aquí. El repo
+queda como la versión con extensión, hacia adelante. Se verifica que el arnés del repo acepta los datos
+del árbol 1 antes de dejarlo así.
