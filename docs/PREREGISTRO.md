@@ -575,3 +575,9 @@ enmienda fechada**. No se encadena una segunda extensión sobre esta.
   caída". **Se corre 1 corrida de reemplazo** contra la misma escena `bf1b18a696a98476`, en serie, con
   el mismo arnés. Con ella el lote cierra en **80 válidas**. No es una corrida adicional sobre la
   hipótesis: es la caída reemplazada, y así se declara.
+
+## 10 bis
+
+Los brazos del incidente (R1c y reclutador × abstención) tienen su propia
+declaración en `docs/PREREGISTRO-INCIDENTE.md`: qué corren, con qué hash, y que se
+reportan como exploratorios de dirección, no de magnitud.
