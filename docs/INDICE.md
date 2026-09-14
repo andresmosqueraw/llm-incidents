@@ -15,6 +15,10 @@ Los que definen el proyecto y los que sirve el dashboard.
 | `ESTADO.md` | estado del proyecto |
 | `papers.md` | los 42 trabajos verificados; **todo ID citado en el reporte tiene que estar aquí** |
 | `MATERIAL-PARA-EL-REPORTE.md` | insumos con fuente. No es prosa: el escrito es del equipo |
+| `MATERIAL-INCIDENTE.md` | qué le sirve a quien trabaja el incidente, por pista del sprint, con cifra, fuente y límite |
+| `paper/draft.md` | borrador completo del reporte en inglés, en el orden de la plantilla; cuerpo ≤ 8 páginas carta; apéndices A-L; mapa de fuentes al final |
+| `paper/build.py` | renderiza el borrador a `paper/build/draft.pdf` y `.docx` con LibreOffice, para contar páginas (no usa los estilos de la plantilla) |
+| `FORMALIZACION.md` | definiciones, proposiciones y estimandos, con el dato que respalda cada uno |
 | `ESCENARIOS.md` | catálogo de escenarios |
 | `abstencion.md` | el brazo de abstención |
 | `checklist-entrega.md` | requisitos exactos de Guidelines y FAQ, con las horas de cierre |
@@ -70,3 +74,10 @@ en el reporte.
 que la pestaña de documentos llevaba rota desde el principio. La lista ya apunta a las rutas reales e
 incluye `NUMEROS-CONGELADOS.md` y los tres documentos de revisión. **El servidor lee `DOCS` al arrancar**,
 así que el cambio no se ve hasta que se reinicie.
+
+## `docs/FORMALIZACION.md` y `analisis/formalizacion/`
+
+Formalización del experimento (definiciones, proposiciones, estimandos) escrita el 14 sep sobre los
+datos congelados. Los guiones que producen sus cifras: `scan.py` (construye `runs.json` desde
+`salidas/`), `analiza.py` y `analiza2.py` (tablas), `modelo.py` (logit umbral + pendiente, mezcla de
+tipos, elasticidad). Correr en orden: `scan.py` y luego los otros. Solo lectura sobre `salidas/`.
