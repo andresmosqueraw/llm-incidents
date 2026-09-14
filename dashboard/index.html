@@ -120,6 +120,9 @@
 
   <div id="det"></div>
 
+  <h2>¿Se repite con otros modelos? <span class="mini">— exploratorio, no reemplaza el número de arriba</span></h2>
+  <div id="generalizacion"><div class="vacio">cargando…</div></div>
+
   <details>
     <summary>Documentos del proyecto</summary>
     <div class="fila-sel" style="margin-top:12px">
@@ -330,6 +333,47 @@ async function abrirAgente(rel, agente) {
   cont.scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 
+/* ---------- 4.b generalizacion a otros modelos (exploratorio) ---------- */
+
+function nombreCorto(m) {
+  return { 'openai/gpt-5.4': 'GPT-5.4', 'google/gemini-3.1-flash-lite': 'Gemini 3.1 Flash Lite',
+           'deepseek/deepseek-v4.1-flash': 'DeepSeek V4.1 Flash' }[m] || m;
+}
+
+async function cargarGeneralizacion() {
+  const cont = document.getElementById('generalizacion');
+  let d;
+  try { d = await (await fetch('/api/reporte/generalizacion.json')).json(); }
+  catch { cont.innerHTML = '<div class="vacio">sin datos todavía — corre analisis/generalizacion.py</div>'; return; }
+  if (d.error || !d.modelos || !d.modelos.length) {
+    cont.innerHTML = '<div class="vacio">sin datos todavía — corre analisis/generalizacion.py</div>'; return;
+  }
+  const tarjetas = d.modelos.map(m => {
+    const nom = nombreCorto(m.modelo);
+    if (!m.clave) {
+      return `<div class="caja"><h3>${esc(nom)}</h3>
+        <p class="mini">${m.corridas} corrida${m.corridas === 1 ? '' : 's'} (${num(m.tokens_totales)} tokens,
+          ${num(m.tokens_promedio)} prom.) — muy poco para tasas; se cortó por tiempo de reloj, no por costo.</p>
+      </div>`;
+    }
+    const c5 = m.clave.precio5, c20 = m.clave.precio20, dif = m.clave.media_diferencia;
+    return `<div class="caja"><h3>${esc(nom)} <span class="mini">— ${m.corridas} corridas, ${num(m.tokens_totales)} tokens</span></h3>
+      <div class="barra"><div class="et">Cuando costaba <b>5</b></div>
+        <div class="pista"><i style="width:${Math.round(100 * (c5.tasa || 0))}%"></i></div>
+        <div class="val">${pct(c5.tasa)}<span>${c5.k} de ${c5.n}</span></div></div>
+      <div class="barra"><div class="et">Cuando costaba <b>20</b></div>
+        <div class="pista"><i style="width:${Math.round(100 * (c20.tasa || 0))}%"></i></div>
+        <div class="val">${pct(c20.tasa)}<span>${c20.k} de ${c20.n}</span></div></div>
+      <p class="mini">Diferencia (20−5): <b>${dif === null || dif === undefined ? '—' : (dif > 0 ? '+' : '') + dif.toFixed(2)}</b>
+        — con solo ${m.corridas} corridas el margen de error es ancho, esto es una señal, no una conclusión.</p>
+    </div>`;
+  }).join('');
+  cont.innerHTML = `<p class="mini">Misma escena y mismo diseño del experimento (autosuficiente, precio 5 vs 20),
+      corrido con otros modelos vía OpenRouter en vez de glm-5.3-flash. El número que sostiene el reporte
+      sigue siendo el de arriba: esto solo dice si el patrón se repite, se aplana o se invierte según el modelo.</p>
+    <div class="agentes">${tarjetas}</div>`;
+}
+
 /* ---------- 5. documentos ---------- */
 
 async function cargarDocs() {
@@ -386,6 +430,7 @@ function opcionesVista() {
   pintarPanel();
   pintarTabla();
   cargarDocs();
+  cargarGeneralizacion();
 })();
 </script>
 </body>

@@ -3,6 +3,7 @@
 # ---------------------------------------------------------------------------
 .env
 .env.*
+!.env.example
 *.key
 *.pem
 dashboard/.clave
@@ -14,6 +15,12 @@ dashboard/.clave.inicial
 # por proteccion de secretos y ademas es material de doble uso: se queda fuera.
 # ---------------------------------------------------------------------------
 recon/
+
+# Snapshots de paginas guardadas que traen un token de terceros embebido
+# (Mapbox Secret Access Token) y bloquean GitHub Push Protection. Se citan por
+# URL en papers.md; el HTML local no se versiona.
+data/raw/public_artifacts/Public evidence of the OpenAI-HuggingFace AI attack — LessWrong.html
+data/raw/public_artifacts/Further public evidence of the OpenAI-HuggingFace attack — LessWrong.html
 
 # ---------------------------------------------------------------------------
 # Entornos y cachés (peso sin valor de proyecto)
@@ -36,6 +43,7 @@ harness/parametros.json
 harness/*workdir*/
 harness/instrumento.json
 salidas/**/work/
+salidas-generalizacion/**/work/
 
 # ---------------------------------------------------------------------------
 # Traza de sesion (conversacion completa de trabajo): se excluye por decision,

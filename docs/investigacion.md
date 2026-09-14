@@ -403,3 +403,173 @@ export OPENCODE_GO_BASE_URL=https://opencode.ai/zen/go/v1
    del lote del `main`, ni en una tabla, sin declararlo.
 2. **Reporta el hash.** Anota en tu resumen de corrida el hash de escena y de arnés, y sube los
    agregados (`reportes/*.json`) para que el equipo pueda leerlos.
+
+---
+
+## D. Generalización a otros modelos vía OpenRouter (implementado 13 sep, noche)
+
+Distinto de §C (familias mixtas = varios modelos **dentro** de una misma corrida). Esto es el brazo
+de `docs/ESTADO-Y-PLAN.md` §2 punto 4: **el mismo diseño confirmatorio (autosuficiente, precio 5 vs
+20), un solo modelo por corrida, N=6 por modelo** (3 por precio), corrido dos veces con modelos
+distintos. Es exploratorio, sin hipótesis ni potencia; **no** toca ni reemplaza el confirmatorio
+(`glm-5.3-flash`, N=80).
+
+### Qué cambió en el código
+
+`harness/bucle.py` seguía la convención de Inspect `openai-api/<proveedor>/<modelo>` con la cabecera
+`x-opencode-session` obligatoria para el gateway `opencode-go`. Esa cabecera no existe en OpenRouter
+(que Inspect soporta nativamente como proveedor `openrouter`, leyendo `OPENROUTER_API_KEY` del
+entorno). El cambio: `MODELO` sigue viniendo del mismo `OPENCODE_GO_MODELO`, pero la cabecera de
+afinidad solo se agrega si el modelo empieza por `openai-api/opencode-go/` — para cualquier otro
+proveedor (incluido `openrouter/...`) se llama a `get_model(MODELO)` sin ella. Verificado con
+`harness/prueba_solvente.py`: **75 comprobaciones, instrumento apto**, arnés `e97f5162fa06f56c`
+(nuevo hash porque `bucle.py` cambió; la escena y su hash `bf1b18a696a98476` no se tocaron).
+
+### Modelos elegidos (uno de frontera, uno ya conocido en el proyecto)
+
+| Papel | Modelo en OpenRouter | Precio (entrada/salida por 1M) | Por qué |
+|---|---|---|---|
+| Frontera | `openai/gpt-5.4` | $2.50 / $15 | Última línea frontera de OpenAI (unifica Codex y GPT); se descartaron `openai/gpt-6-astra` ($10/$50) y `anthropic/claude-opus-5` ($5/$25) por costo — GPT-5.4 sale ~46% más barato que Opus 5 y sigue siendo genuinamente de frontera, no una versión mini |
+| Segundo | `google/gemini-3.1-flash-lite` | $0.25 / $1.50 | Reemplaza a `deepseek/deepseek-v4.1-flash` (ver abajo): línea "lite" de Google, pensada para baja latencia; da diversidad de familia frente a OpenAI |
+
+**DeepSeek V4.1 Flash — intentado y descartado (13 sep, noche).** Pasó el smoke test (tool calling
+verificado, accuracy 1.0), pero en este arnés gasta **~5,6x más tokens por corrida** que GPT-5.4
+(308.690 contra ~56.000) porque explora el entorno con muchas más llamadas de herramienta repetidas.
+En dólares seguía siendo barato (~$0,06/corrida), pero en reloj **una sola corrida tardó ~20+ min**
+(proyección de ~1,5-2 h para las 6, contra ~15-17 min de GPT-5.4). Se cortó después de 1 corrida
+completa por tiempo, no por costo. Esa corrida sí cuenta (está en `salidas-generalizacion/`, con
+`"modelo": "openrouter/deepseek/deepseek-v4.1-flash"`), pero como **N=1**, sin las otras 5: se reporta
+como dato suelto, no como el segundo brazo de generalización.
+
+**Costo estimado del reemplazo (~150k tokens/corrida, 6 corridas por modelo):** ~$3,40 GPT-5.4 +
+~$0,15-0,25 Gemini 3.1 Flash Lite ≈ **~$3,55-3,65 en total**. Correr **1 corrida de Gemini primero**
+y mirar `tokens_totales` real antes de lanzar las otras 5 (misma disciplina que con GPT-5.4).
+
+Si se prefieren otros, solo hay que cambiar el string de modelo en los comandos de abajo — no hace
+falta tocar código.
+
+### Cómo correr, paso a paso
+
+**0. Clave, en `.env` (nunca en el repo ni en el chat):**
+```bash
+echo 'OPENROUTER_API_KEY=<tu-clave>' >> .env   # ver .env.example
+```
+
+**1. Verificar tool-calling de punta a punta ANTES de gastar tokens del factorial (regla del
+proyecto: ningún modelo entra sin este chequeo pasado):**
+```bash
+export OPENROUTER_API_KEY=<tu-clave>
+.venv/bin/inspect eval harness/smoke_test.py --model openrouter/openai/gpt-5.4
+.venv/bin/inspect eval harness/smoke_test.py --model openrouter/google/gemini-3.1-flash-lite
+```
+Éxito = accuracy 1.0 en los dos (el modelo llamó la herramienta y respondió "42"). Si alguno falla,
+se excluye y se documenta por qué, igual que en §C.
+
+**2. Levantar los seis puertos (reutiliza el rango estándar; el lote del `main` no está corriendo
+ahora mismo — confirmar con `pgrep -f harness/lote.py` antes de lanzar):**
+```bash
+.venv/bin/python harness/servicios.py 8201 6
+```
+
+**3. Correr, un modelo a la vez, sobre la MISMA escena ya validada del confirmatorio (no se crea
+escena nueva: el diseño es idéntico, solo cambia el modelo):**
+```bash
+OPENCODE_GO_MODELO=openrouter/openai/gpt-5.4 \
+  .venv/bin/python harness/lote.py --escena escena.resuelta.json \
+  --etiqueta generalizacion-gpt54 --corridas 1 --tope 400000
+# ^ ya corrida la primera (13 sep, 24:01 COT): 55.064 tokens, muy por debajo de la estimación de
+#   150k. Costo real ≈ $0,20-0,28 (no hay split entrada/salida en resumen.json, se estima con el
+#   mismo supuesto 90/10 de arriba) — bien por debajo del estimado de ~$0,56/corrida. Quedan 5 por
+#   lanzar; a este ritmo las 6 de GPT-5.4 saldrían por ~$1,50 en vez de ~$3,40.
+
+OPENCODE_GO_MODELO=openrouter/google/gemini-3.1-flash-lite \
+  .venv/bin/python harness/lote.py --escena escena.resuelta.json \
+  --etiqueta generalizacion-gemini --corridas 6 --tope 1000000
+```
+(Tope de tokens más alto para GPT-5.4: cuesta ~10x más por token que Gemini 3.1 Flash Lite —
+confirmar el precio en openrouter.ai/models antes de lanzar si el presupuesto es ajustado.)
+
+**3.b OBLIGATORIO después de cada lanzamiento, antes de tocar nada más — sacar la salida de
+`salidas/`:** el bucle escribe en `salidas/<marca>_factorial-base/` igual que el lote confirmatorio,
+con el **mismo `hash_escena`** (`bf1b18a696a98476`, porque es la misma escena). `harness/agregar.py`
+no filtra por modelo ni por hash de arnés: mete **todo** lo que hay bajo `salidas/*/` al cálculo del
+primario. Sin este paso, una corrida de generalización se mezclaría en silencio con las de
+`glm-5.3-flash` la próxima vez que alguien corra `agregar.py`. Ya se movió la primera corrida (ver
+abajo); repetir por cada lanzamiento:
+```bash
+mkdir -p salidas-generalizacion
+mv salidas/*_factorial-base salidas-generalizacion/ 2>/dev/null   # solo mueve las que no estén ya
+mv salidas/lote_generalizacion-*.json salidas-generalizacion/ 2>/dev/null
+```
+(Fix pendiente y más limpio a futuro: que `bucle.py`/`lote.py` acepten un directorio de salida por
+parámetro en vez de tener `"salidas"` fijo en el código — no se hizo ahora para no volver a tocar el
+arnés dos veces en la misma noche.)
+
+**4. Leer la tasa por modelo (sobre `salidas-generalizacion/`, NO sobre `salidas/`):**
+```bash
+.venv/bin/python harness/agregar.py   # ojo: apunta a salidas/ por defecto — para esto hay que
+                                        # correrlo aparte, apuntando a salidas-generalizacion/
+```
+
+### Resultado real de las 13 corridas (13-14 sep, noche)
+
+| Modelo | Corridas | Tokens totales | Promedio/corrida | Costo estimado |
+|---|---|---|---|---|
+| `openai/gpt-5.4` | 6/6 | 337.521 | 56.254 | ~$1,27 |
+| `deepseek/deepseek-v4.1-flash` | 1 (cortado por tiempo, ver arriba) | 308.690 | 308.690 | ~$0,06 |
+| `google/gemini-3.1-flash-lite` | 6/6 | 710.028 | 118.338 | ~$0,27 |
+| **Total** | **13** | **1.356.239** | | **~$1,60** |
+
+Muy por debajo del estimado original (~$3,55-3,65 para 12 corridas).
+
+### Análisis: ¿el patrón se repite en otros modelos? (13-14 sep, noche)
+
+Calculado con `analisis/generalizacion.py` (nuevo, reutiliza `evaluar()` de `harness/agregar.py` y
+`wilson()`/`bootstrap()` de `analisis/estimador.py` — misma lógica de validez que el confirmatorio,
+sin duplicarla). Reporte crudo en `reportes/generalizacion.json`, visible también en
+`dashboard/index.html` ("¿Se repite con otros modelos?").
+
+**No se repite igual.** La tasa de depósito de la clave (primario, autosuficientes) por modelo:
+
+| Modelo | Precio 5 | Precio 20 | Diferencia (20−5) | N (agentes) |
+|---|---|---|---|---|
+| `openai/gpt-5.4` | 0/18 = 0% | 1/18 = 5,6% | +0,056 (IC95 boot [0, 0,167]) | 36 |
+| `google/gemini-3.1-flash-lite` | 11/18 = 61,1% | 9/18 = 50% | −0,111 (IC95 boot [−0,556, 0,333]) | 36 |
+| `deepseek/deepseek-v4.1-flash` | — | — | N=1, sin tasas (cortado por tiempo) | 6 |
+
+- **GPT-5.4 se parece al patrón que se viene viendo con `glm-5.3-flash`**: tasa casi nula en los dos
+  precios (0% y 5,6%). Un modelo de frontera, con más capacidad, **no paga más** por ayudar a un
+  desconocido cuando no le sirve para nada — si acaso, la dirección (+0,056) va al revés de H1, pero
+  el intervalo incluye holgadamente el cero con N=6: no hay nada que interpretar ahí todavía.
+- **Gemini 3.1 Flash Lite es otra historia completamente distinta.** Paga **10 veces más** que GPT-5.4
+  (61% vs 0% a precio 5), y **sí muestra la dirección esperada** de H1 (cae de 61,1% a 50% al subir el
+  precio), aunque el intervalo de la diferencia también cruza el cero con N=6.
+- **Lectura honesta:** con solo 6 corridas por modelo (36 agentes, la mitad del tamaño de la sonda 4
+  original) ninguna de las dos diferencias es distinguible de cero — pero la **tasa base** sí difiere
+  muchísimo entre modelos (0-6% contra 50-61%), y eso ya es informativo aunque la pendiente no lo sea:
+  dice que el resultado confirmatorio (`glm-5.3-flash`, tasa ~20-22% en el ensayo) **no generaliza
+  igual a toda la familia de modelos** — varía por un orden de magnitud según el modelo, antes incluso
+  de mirar si responde al precio.
+- Esto refuerza el límite que el proyecto ya declara en todos los documentos: **es una medición de un
+  modelo**, y esta rama exploratoria muestra por qué esa declaración no es una formalidad — el número
+  cambiaría materialmente el titular si `gemini-3.1-flash-lite` hubiera sido el modelo confirmatorio
+  en vez de `glm-5.3-flash`.
+- DeepSeek V4.1 Flash queda sin conclusión posible: N=1 no permite ni describir una tasa.
+
+**Para el reporte:** esto va a Discussion/Limitations como generalización exploratoria (nunca con el
+peso de H1), apoyando el punto de "validez externa" que ya está en `propuesta-cooperacion-costosa.md`
+§Límites — con datos reales en vez de solo la advertencia teórica.
+
+### Disciplina (igual que en §C)
+
+- Corridas con hash de arnés `e97f5162fa06f56c` (el de este cambio, cuando se corrió) **no se
+  mezclan** en el mismo cálculo con las corridas confirmatorias, salvo que se declare la diferencia
+  explícitamente — la regla del proyecto es no mezclar versiones de instrumento sin decirlo.
+- Va a Discussion/Limitations como generalización exploratoria, nunca con el mismo estatus que H1.
+- **`resumen.json` NO trae qué modelo se usó** (el `bucle.py` vigente, tras el merge del equipo, ya
+  no escribe ese campo — las corridas de GPT-5.4 y DeepSeek de esta sesión sí lo tenían porque se
+  generaron con una versión anterior del arnés). Identificar cada corrida por la carpeta/etiqueta del
+  lote (`salidas-generalizacion/lote_generalizacion-<modelo>_*.json` lista qué carpetas produjo cada
+  lanzamiento) o por el orden temporal de las carpetas.
+- **Las salidas de este brazo viven en `salidas-generalizacion/`, no en `salidas/`** (ver 3.b) —
+  precisamente para que no se mezclen por accidente con el confirmatorio.

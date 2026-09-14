@@ -602,8 +602,13 @@ async def correr(ruta_escena: str, rondas: int | None, n_agentes: int | None,
     marca = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
     salida = os.path.join(RAIZ, "salidas", f"{marca}_{escena['escena']}")
     c = Corrida(escena, salida)
-    # El gateway exige la cabecera de afinidad de sesión; sin ella responde MissingSessionID.
-    modelo = get_model(MODELO, default_headers={"x-opencode-session": f"bucle-{marca}"})
+    if MODELO.startswith("openai-api/opencode-go/"):
+        # El gateway opencode-go exige la cabecera de afinidad de sesión; sin ella responde
+        # MissingSessionID. Otros proveedores (OpenRouter, para el brazo de generalización de
+        # modelos) no la necesitan ni la reconocen.
+        modelo = get_model(MODELO, default_headers={"x-opencode-session": f"bucle-{marca}"})
+    else:
+        modelo = get_model(MODELO)
     cfg = GenerateConfig(max_tokens=1200, temperature=0.7)
     c.evento("inicio", f"rondas {escena['temporal']['rondas']}, {len(c.agentes)} agentes, "
                        f"hash escena {escena['hash_escena']}")
