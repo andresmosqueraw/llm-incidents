@@ -3,6 +3,7 @@
 # ---------------------------------------------------------------------------
 .env
 .env.*
+!.env.example
 *.key
 *.pem
 dashboard/.clave
@@ -36,6 +37,7 @@ harness/parametros.json
 harness/*workdir*/
 harness/instrumento.json
 salidas/**/work/
+salidas-generalizacion/**/work/
 
 # ---------------------------------------------------------------------------
 # Traza de sesion (conversacion completa de trabajo): se excluye por decision,

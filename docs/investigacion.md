@@ -403,3 +403,115 @@ export OPENCODE_GO_BASE_URL=https://opencode.ai/zen/go/v1
    del lote del `main`, ni en una tabla, sin declararlo.
 2. **Reporta el hash.** Anota en tu resumen de corrida el hash de escena y de arnés, y sube los
    agregados (`reportes/*.json`) para que el equipo pueda leerlos.
+
+---
+
+## D. Generalización a otros modelos vía OpenRouter (implementado 13 sep, noche)
+
+Distinto de §C (familias mixtas = varios modelos **dentro** de una misma corrida). Esto es el brazo
+de `docs/ESTADO-Y-PLAN.md` §2 punto 4: **el mismo diseño confirmatorio (autosuficiente, precio 5 vs
+20), un solo modelo por corrida, N=6 por modelo** (3 por precio), corrido dos veces con modelos
+distintos. Es exploratorio, sin hipótesis ni potencia; **no** toca ni reemplaza el confirmatorio
+(`glm-5.3-flash`, N=80).
+
+### Qué cambió en el código
+
+`harness/bucle.py` seguía la convención de Inspect `openai-api/<proveedor>/<modelo>` con la cabecera
+`x-opencode-session` obligatoria para el gateway `opencode-go`. Esa cabecera no existe en OpenRouter
+(que Inspect soporta nativamente como proveedor `openrouter`, leyendo `OPENROUTER_API_KEY` del
+entorno). El cambio: `MODELO` sigue viniendo del mismo `OPENCODE_GO_MODELO`, pero la cabecera de
+afinidad solo se agrega si el modelo empieza por `openai-api/opencode-go/` — para cualquier otro
+proveedor (incluido `openrouter/...`) se llama a `get_model(MODELO)` sin ella. Verificado con
+`harness/prueba_solvente.py`: **75 comprobaciones, instrumento apto**, arnés `e97f5162fa06f56c`
+(nuevo hash porque `bucle.py` cambió; la escena y su hash `bf1b18a696a98476` no se tocaron).
+
+### Modelos elegidos (uno de frontera, uno ya conocido en el proyecto)
+
+| Papel | Modelo en OpenRouter | Precio (entrada/salida por 1M) | Por qué |
+|---|---|---|---|
+| Frontera | `openai/gpt-5.4` | $2.50 / $15 | Última línea frontera de OpenAI (unifica Codex y GPT); se descartaron `openai/gpt-6-astra` ($10/$50) y `anthropic/claude-opus-5` ($5/$25) por costo — GPT-5.4 sale ~46% más barato que Opus 5 y sigue siendo genuinamente de frontera, no una versión mini |
+| Segundo | `deepseek/deepseek-v4.1-flash` | $0.15 / $0.60 | El mismo modelo que ya tiene tool calling verificado de punta a punta en `harness/README-inspect.md` (ahí vía opencode-go); aquí se verifica de nuevo porque el proveedor cambia |
+
+**Costo estimado (~150k tokens/corrida, 6 corridas por modelo):** ~$3,40 GPT-5.4 + ~$0,17 DeepSeek
+≈ **~$3,55 en total**, hasta ~$7 si GPT-5.4 gasta el doble de tokens de lo estimado. Correr **1
+corrida de GPT-5.4 primero** y mirar `tokens_totales` real antes de lanzar las otras 5.
+
+Si se prefieren otros, solo hay que cambiar el string de modelo en los comandos de abajo — no hace
+falta tocar código.
+
+### Cómo correr, paso a paso
+
+**0. Clave, en `.env` (nunca en el repo ni en el chat):**
+```bash
+echo 'OPENROUTER_API_KEY=<tu-clave>' >> .env   # ver .env.example
+```
+
+**1. Verificar tool-calling de punta a punta ANTES de gastar tokens del factorial (regla del
+proyecto: ningún modelo entra sin este chequeo pasado):**
+```bash
+export OPENROUTER_API_KEY=<tu-clave>
+.venv/bin/inspect eval harness/smoke_test.py --model openrouter/openai/gpt-5.4
+.venv/bin/inspect eval harness/smoke_test.py --model openrouter/deepseek/deepseek-v4.1-flash
+```
+Éxito = accuracy 1.0 en los dos (el modelo llamó la herramienta y respondió "42"). Si alguno falla,
+se excluye y se documenta por qué, igual que en §C.
+
+**2. Levantar los seis puertos (reutiliza el rango estándar; el lote del `main` no está corriendo
+ahora mismo — confirmar con `pgrep -f harness/lote.py` antes de lanzar):**
+```bash
+.venv/bin/python harness/servicios.py 8201 6
+```
+
+**3. Correr, un modelo a la vez, sobre la MISMA escena ya validada del confirmatorio (no se crea
+escena nueva: el diseño es idéntico, solo cambia el modelo):**
+```bash
+OPENCODE_GO_MODELO=openrouter/openai/gpt-5.4 \
+  .venv/bin/python harness/lote.py --escena escena.resuelta.json \
+  --etiqueta generalizacion-gpt54 --corridas 1 --tope 400000
+# ^ ya corrida la primera (13 sep, 24:01 COT): 55.064 tokens, muy por debajo de la estimación de
+#   150k. Costo real ≈ $0,20-0,28 (no hay split entrada/salida en resumen.json, se estima con el
+#   mismo supuesto 90/10 de arriba) — bien por debajo del estimado de ~$0,56/corrida. Quedan 5 por
+#   lanzar; a este ritmo las 6 de GPT-5.4 saldrían por ~$1,50 en vez de ~$3,40.
+
+OPENCODE_GO_MODELO=openrouter/deepseek/deepseek-v4.1-flash \
+  .venv/bin/python harness/lote.py --escena escena.resuelta.json \
+  --etiqueta generalizacion-deepseek --corridas 6 --tope 1000000
+```
+(Tope de tokens más alto para GPT-5.4: cuesta ~17x más por token que DeepSeek V4.1 Flash —
+confirmar el precio en openrouter.ai/models antes de lanzar si el presupuesto es ajustado.)
+
+**3.b OBLIGATORIO después de cada lanzamiento, antes de tocar nada más — sacar la salida de
+`salidas/`:** el bucle escribe en `salidas/<marca>_factorial-base/` igual que el lote confirmatorio,
+con el **mismo `hash_escena`** (`bf1b18a696a98476`, porque es la misma escena). `harness/agregar.py`
+no filtra por modelo ni por hash de arnés: mete **todo** lo que hay bajo `salidas/*/` al cálculo del
+primario. Sin este paso, una corrida de generalización se mezclaría en silencio con las de
+`glm-5.3-flash` la próxima vez que alguien corra `agregar.py`. Ya se movió la primera corrida (ver
+abajo); repetir por cada lanzamiento:
+```bash
+mkdir -p salidas-generalizacion
+mv salidas/*_factorial-base salidas-generalizacion/ 2>/dev/null   # solo mueve las que no estén ya
+mv salidas/lote_generalizacion-*.json salidas-generalizacion/ 2>/dev/null
+```
+(Fix pendiente y más limpio a futuro: que `bucle.py`/`lote.py` acepten un directorio de salida por
+parámetro en vez de tener `"salidas"` fijo en el código — no se hizo ahora para no volver a tocar el
+arnés dos veces en la misma noche.)
+
+**4. Leer la tasa por modelo (sobre `salidas-generalizacion/`, NO sobre `salidas/`):**
+```bash
+.venv/bin/python harness/agregar.py   # ojo: apunta a salidas/ por defecto — para esto hay que
+                                        # correrlo aparte, apuntando a salidas-generalizacion/, o
+                                        # leer resumen.json a mano (trae "modelo" y "tokens_totales")
+```
+
+### Disciplina (igual que en §C)
+
+- Corridas con hash de arnés `e97f5162fa06f56c` (el de este cambio) **no se mezclan** en el mismo
+  cálculo con las 40+ corridas confirmatorias que ya corrieron con el arnés anterior, salvo que se
+  declare la diferencia explícitamente — el cambio es inerte para `glm-5.3-flash`, pero la regla del
+  proyecto es no mezclar versiones de instrumento sin decirlo.
+- Va a Discussion/Limitations como generalización exploratoria, nunca con el mismo estatus que H1.
+- `resumen.json` de estas corridas **sí trae el modelo usado**, en el campo `"modelo"` (confirmado en
+  la primera corrida real: `"modelo": "openrouter/openai/gpt-5.4"`). Identificar cada corrida por ese
+  campo, no hace falta usar la carpeta/etiqueta para eso.
+- **Las salidas de este brazo viven en `salidas-generalizacion/`, no en `salidas/`** (ver 3.b) —
+  precisamente para que no se mezclen por accidente con el confirmatorio.
