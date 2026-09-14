@@ -105,3 +105,30 @@ clasificados y compruebe el **destino**, no la palabra.
 ## Brazo de abstención: el confundidor y su arreglo
 
 El expediente completo está en `abstencion.md`. Resumen: el primer diseño dejaba dos decisiones simultáneas (dar y no tomar), así que la tasa nacía confundida. Se resuelve aprovechando el brazo en vuelo como condición *con marco* (el contraste de tentación sigue siendo válido dentro de ella) y añadiendo una escena **solo-reserva a K=5** para la medida primaria. Pendiente: declarar la excepción al invariante I10 en `validador.py`, sin tandas en vuelo.
+
+---
+
+## Estado de la noche (13 sep ~20:35 COT) — para quien escribe el reporte
+
+**Lo que ya se puede usar, con sus números y sus límites.**
+
+**1. Factorial confirmatorio — N=80 (completo, y ampliado a 160 por enmienda).**
+- Tasa de la clave: precio 0 = 45,8% · precio 5 = 20,5% · precio 20 = 17,1%.
+- Primario pareado 20−5 (N=70): **−0,0333** con IC que **incluye cero** → no hay efecto de magnitud.
+- Titular: **la barrera es que exista un costo, no cuánto cuesta**.
+- Enmienda §9: N 80 → **160**, para acotar el nulo (IC esperado ±5 puntos). **Tres miradas declaradas** (70, 80, 160). Corriendo.
+
+**2. Brazo de abstención — 2×2 (marco × tentación).** Medida primaria: escena **solo-reserva**.
+- Limpio, 8 corridas por celda: **K=5 → 35,4% toma** · **K=20 → 47,9% toma** (+12,5 puntos, 1,51 errores estándar).
+- **Las 16 corridas anteriores de este brazo quedan RETIRADAS** (heredaban reclamos entre corridas; expediente en `docs/abstencion.md`).
+- Extensión declarada a **16 por celda** (error estándar baja a 5,8 puntos → 2,14 errores). Declarada **con la dirección ya vista**: se reporta como exploratoria y se reportan las dos lecturas.
+
+**El contraste que sostiene la tesis:** insensibilidad al costo de *dar* (eje de precio plano) frente a sensibilidad a la magnitud de *tomar*. Es el "la barrera es que exista un costo" con su otra mitad.
+
+**3. Brazos del incidente (árbol 2, puertos 8401+).** R1c completo; reclutador × abstención K=5 y K=20 corriendo. Exploratorios de dirección: con 8 corridas el IC de una diferencia es ±13 puntos y el de una interacción más ancho. Declaración en `docs/PREREGISTRO-INCIDENTE.md`.
+
+**Dos reglas de método que salieron de los defectos de hoy**, y que aplican a cualquier corrida nueva:
+1. **Aislamiento = efecto, no residuo.** Un resultado aplicado sin acción del agente es herencia. El archivo `salidas/<corrida>/puertos/` es la foto *previa a la limpieza*: sus restos son lo esperado y marcarlos excluye corridas legítimas.
+2. **Piloto de dos corridas, no de una.** El defecto de herencia es invisible con una sola, porque lo que lo delata es el estallido en la segunda.
+
+**Estado del repositorio:** `main` integrado (`b4b70fb`) con la estructura del equipo (`docs/`), los datos de las corridas (`salidas/`, 3940 archivos) y los arreglos del arnés. Sin ramas de estado.
