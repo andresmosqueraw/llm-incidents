@@ -1,0 +1,3 @@
+{"t": 1789364306.159, "agente": "agente-04", "metodo": "GET", "ruta": "/"}
+{"t": 1789364334.896, "agente": "agente-04", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789364334.909, "agente": "agente-04", "metodo": "GET", "ruta": "/parametro", "desconocida": true}

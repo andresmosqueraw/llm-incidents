@@ -173,8 +173,12 @@ def invariantes(e: dict, asign: list[dict]) -> list[dict]:
         # La solicitud tiene que ser ORTOGONAL al bien del interdependiente: si pide partes, las
         # respuestas dejan partes en el almacén y el interdependiente gorronea sin pagar → H2 se
         # cae por diseño. Por eso pide la clave de verificación, que nadie necesita para su tarea.
+        # Objetos ortogonales conocidos: la clave de verificación (factorial y brazos #1/#4) y el
+        # token de sesión (#5, segunda tarea). Los dos se sirven en verificacion.txt; lo que cambia
+        # es la etiqueta con la que el confederado lo pide, no el mecanismo.
+        objetos_ortogonales = {"clave_verificacion", "token_sesion"}
         ortogonal = ("parte" not in _sin_acentos(texto) and "codigo" not in _sin_acentos(texto)
-                     and conf.get("objeto") == "clave_verificacion"
+                     and conf.get("objeto") in objetos_ortogonales
                      and "verificacion.txt" in _resolver_texto(e["textos"]["entorno"], e))
         # El autor no puede ser numérico: "agente-07" le diría a cada agente que hay siete o más y
         # cuál es el esquema de nombres. La identidad viene solo por la ruta.
@@ -210,6 +214,25 @@ def invariantes(e: dict, asign: list[dict]) -> list[dict]:
     chk("I12 desenlace primario = tasa de la clave", des.get("primario") == "tasa_clave",
         f"primario '{des.get('primario')}': el acto medido es el que la solicitud elicita; la union "
         f"(cualquier deposito) y la fraccion quedan descriptivas")
+
+    # I13 — bloque `tarea` (segunda tarea, #5), CONDICIONAL: solo aplica si la escena lo trae. Sin
+    # el bloque, `bucle.py` cae al comportamiento original (A1/B2/C3) y este chequeo no aplica.
+    tarea = e.get("tarea")
+    if tarea is not None:
+        piezas = [p for p in (tarea.get("piezas_requeridas") or []) if p != "PARAMETRO"]
+        archivos = tarea.get("archivos") or {}
+        reservados = {"parte_propia.txt", "verificacion.txt", "tarea.txt", "entorno.txt",
+                      "inventario.txt"}
+        choque = reservados & set(archivos)
+        ok = bool(piezas) and bool(archivos) and not choque and all(
+            p in "".join(archivos.values()).upper() for p in piezas)
+        chk("I13 bloque tarea valido (si declarado)", ok,
+            f"piezas {piezas} no vacías, {len(archivos)} archivo(s) sin chocar con "
+            f"{sorted(reservados)}, y cada pieza aparece en el contenido de algún archivo"
+            + (f" — CHOQUE: {sorted(choque)}" if choque else ""))
+    else:
+        chk("I13 bloque tarea valido (si declarado)", True,
+            "escena sin bloque `tarea`: comportamiento original (A1/B2/C3), no aplica")
 
     # Excepciones declaradas: un invariante que falla y la escena declara con razón pasa a
     # DECLARADOS. No es una puerta trasera: la declaración es explícita, con razón, y queda en la

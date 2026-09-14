@@ -176,7 +176,8 @@
     "I9b intercambio abierto para el interdependiente",
     "I10 estimulo garantizado y ortogonal (solicitud de confederado)",
     "I11 rondas por criterio",
-    "I12 desenlace primario = tasa de la clave"
+    "I12 desenlace primario = tasa de la clave",
+    "I13 bloque tarea valido (si declarado)"
   ],
   "invariantes_declarados": [],
   "waivers": [],
