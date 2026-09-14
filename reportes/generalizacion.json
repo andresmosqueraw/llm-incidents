@@ -16,6 +16,21 @@
         "20260914T001915_factorial-base"
       ],
       "excluidas": [],
+      "tarea": {
+        "ok": 25,
+        "n": 36,
+        "tasa": 0.6944
+      },
+      "clave_por_capacidad": {
+        "completo_tarea": {
+          "k": 1,
+          "n": 25
+        },
+        "fallo_tarea": {
+          "k": 0,
+          "n": 11
+        }
+      },
       "clave": {
         "precio5": {
           "k": 0,
@@ -98,6 +113,21 @@
         "20260914T013747_factorial-base"
       ],
       "excluidas": [],
+      "tarea": {
+        "ok": 16,
+        "n": 36,
+        "tasa": 0.4444
+      },
+      "clave_por_capacidad": {
+        "completo_tarea": {
+          "k": 5,
+          "n": 16
+        },
+        "fallo_tarea": {
+          "k": 15,
+          "n": 20
+        }
+      },
       "clave": {
         "precio5": {
           "k": 11,

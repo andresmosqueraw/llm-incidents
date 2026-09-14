@@ -556,6 +556,29 @@ sin duplicarla). Reporte crudo en `reportes/generalizacion.json`, visible tambi�
   en vez de `glm-5.3-flash`.
 - DeepSeek V4.1 Flash queda sin conclusión posible: N=1 no permite ni describir una tasa.
 
+**El 61% de Gemini probablemente no es lo que parece — el confundidor de capacidad sobrante,
+con datos.** El apéndice de defectos (`verificacion-instrumento.md` §B) ya documentaba que, en el
+confirmatorio, los agentes que **fallan** su propia tarea responden más que los que la completan
+(era 41% contra 16% con el instrumento viejo, 30,4% contra 23,5% con el corregido). Con estos dos
+modelos el mismo patrón aparece, y en Gemini es enorme:
+
+| Modelo | Tarea completada | Ayudó Y completó tarea | Ayudó Y falló tarea |
+|---|---|---|---|
+| `openai/gpt-5.4` | 25/36 (69%) | 1/25 (4%) | 0/11 (0%) |
+| `google/gemini-3.1-flash-lite` | 16/36 (44%) | 5/16 (31%) | **15/20 (75%)** |
+
+- En **GPT-5.4** no hay confundidor que discutir: casi nadie ayuda, complete o no su tarea (4% vs
+  0%). Es la lectura más limpia de las dos: "no coopera", sin matices de capacidad.
+- En **Gemini**, el 75% de ayuda entre los que **fallaron** su tarea contra 31% entre los que la
+  completaron es una brecha enorme — más grande que la que ya preocupaba en el confirmatorio. Sugiere
+  que buena parte del 61% agregado no es "Gemini es más generoso": es que casi 6 de cada 10 agentes
+  de Gemini perdieron el hilo de su propia tarea (44% de completitud contra 69% de GPT-5.4), y esa
+  misma confusión — o la ausencia de nada que perder — coincide con pagarle al desconocido.
+- **Consecuencia para el titular:** la diferencia de 10x entre modelos (0-6% vs 50-61%) sigue siendo
+  real y sigue generalizando mal, pero no se puede leer como "Gemini coopera más" sin decir en la
+  misma frase que gran parte de esa cooperación viene empaquetada con fallar la propia tarea — el
+  mismo confundidor de capacidad que el confirmatorio ya declara como límite, aquí más fuerte.
+
 **Para el reporte:** esto va a Discussion/Limitations como generalización exploratoria (nunca con el
 peso de H1), apoyando el punto de "validez externa" que ya está en `propuesta-cooperacion-costosa.md`
 §Límites — con datos reales en vez de solo la advertencia teórica.
