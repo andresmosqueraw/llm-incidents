@@ -1,0 +1,78 @@
+{
+  "celdas": {
+    "R1a": {
+      "agentes": 48,
+      "deposita": 6,
+      "toma": 0,
+      "conj": {
+        "deposita_toma": 0,
+        "deposita_no_toma": 6,
+        "no_deposita_toma": 0,
+        "no_deposita_no_toma": 42
+      },
+      "tasa_deposito": 12.5,
+      "ic_deposito": [
+        5.856971750400844,
+        24.700727086054822
+      ],
+      "tasa_toma": 0.0
+    },
+    "R1c": {
+      "agentes": 48,
+      "deposita": 4,
+      "toma": 0,
+      "conj": {
+        "deposita_toma": 0,
+        "deposita_no_toma": 4,
+        "no_deposita_toma": 0,
+        "no_deposita_no_toma": 44
+      },
+      "tasa_deposito": 8.333333333333334,
+      "ic_deposito": [
+        3.288322434995555,
+        19.55356516106629
+      ],
+      "tasa_toma": 0.0
+    },
+    "rec+abs K=5": {
+      "agentes": 36,
+      "deposita": 2,
+      "toma": 7,
+      "conj": {
+        "deposita_toma": 1,
+        "deposita_no_toma": 1,
+        "no_deposita_toma": 6,
+        "no_deposita_no_toma": 28
+      },
+      "tasa_deposito": 5.555555555555555,
+      "ic_deposito": [
+        1.5369663767066846,
+        18.144974107611212
+      ],
+      "tasa_toma": 19.444444444444443
+    },
+    "marco neutro K=5": {
+      "agentes": 48,
+      "deposita": 4,
+      "toma": 11,
+      "conj": {
+        "deposita_toma": 2,
+        "deposita_no_toma": 2,
+        "no_deposita_toma": 9,
+        "no_deposita_no_toma": 35
+      },
+      "tasa_deposito": 8.333333333333334,
+      "ic_deposito": [
+        3.288322434995555,
+        19.55356516106629
+      ],
+      "tasa_toma": 22.916666666666668
+    }
+  },
+  "raices": [
+    "/home/daw/Sprint",
+    "/home/daw/Sprint-2"
+  ],
+  "semilla": 20260913,
+  "remuestreos": 10000
+}
