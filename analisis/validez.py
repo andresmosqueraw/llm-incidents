@@ -33,7 +33,11 @@ import json
 import os
 import sys
 
-FALLOS_DE_PUERTO = ("Failed to connect", "Connection refused", "Could not connect")
+FALLOS_DE_PUERTO = ("error_red", "Failed to connect", "Connection refused", "Could not connect")
+# El criterio que de verdad delata la caida de servicio es `error_red`, que va en los EVENTOS (no en el
+# resumen). Se comprobo sobre una corrida afectada: `error_red` aparece 6 veces, `Connection refused` 6, y
+# `Failed to connect` CERO -- por eso ese ultimo, solo, no sirve como patron unico. Se dejan los cuatro:
+# la union es lo robusto.
 
 
 def cargar(d: str) -> tuple[dict, list[dict]]:
