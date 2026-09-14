@@ -127,6 +127,9 @@
 <h2>El reclutador: ¿pesa pedir por un tercero? <span class="mini">— exploratorio; el mecanismo del incidente, con costo real</span></h2>
   <div id="reclutador"><div class="vacio">cargando…</div></div>
 
+  <h2>El conjunto congelado y el titular <span class="mini">— la mirada única, el contraste 0 contra 5 y el primario</span></h2>
+  <div id="congelado"><div class="vacio">cargando…</div></div>
+
   <details>
     <summary>Documentos del proyecto</summary>
     <div class="fila-sel" style="margin-top:12px">
@@ -507,6 +510,62 @@ async function cargarReclutador() {
       ⅔ o 1. Es una dirección consistente en cuatro comparaciones, no un efecto estimado.
     </div>`;
 }
+/* ---------- 4.f conjunto congelado y titular ---------- */
+
+async function cargarCongelado() {
+  const c = document.getElementById('congelado');
+  let a = null, p = null, cf = null, r1 = null;
+  try { a  = await (await fetch('/api/reporte/conjunto-congelado.json')).json(); } catch { a = null; }
+  try { p  = await (await fetch('/api/reporte/precio-cero.json')).json(); } catch { p = null; }
+  try { cf = await (await fetch('/api/reporte/confirmatorio.json')).json(); } catch { cf = null; }
+  try { r1 = await (await fetch('/api/reporte/ronda-uno.json')).json(); } catch { r1 = null; }
+  if (!a && !p) { c.innerHTML = '<div class="vacio">todavía no hay conjunto fijado ni contraste calculado</div>'; return; }
+  const pts = v => (100 * v).toFixed(1).replace('.', ',');
+  const conSigno = v => (v >= 0 ? '+' : '−') + pts(Math.abs(v));
+  const filaLect = (et, l) => !l ? '' : `<tr>
+      <td>${esc(et)}</td>
+      <td>${l.precio_0.tasa}% <span class="mini">(${l.precio_0.k}/${l.precio_0.n})</span></td>
+      <td>${l.precio_5.tasa}% <span class="mini">(${l.precio_5.k}/${l.precio_5.n})</span></td>
+      <td><b>${conSigno(l.diferencia_0_menos_5)} pts</b><br>
+          <span class="mini">IC ${pts(l.ic95_bootstrap[0])} a ${pts(l.ic95_bootstrap[1])} ·
+          ${l.incluye_cero ? 'incluye cero' : '<b>excluye cero</b>'}</span></td></tr>`;
+  const pp = cf && cf.primario_pareado;
+  const prim = pp ? `<p><b>Primario preplaneado (precio 20 menos 5), ${pp.n_corridas} corridas:</b>
+      ${conSigno(pp.media)} pts <span class="mini">IC ${pts(pp.ic95_bootstrap[0])} a
+      ${pts(pp.ic95_bootstrap[1])} · ${pp.incluye_cero ? 'incluye cero' : '<b>excluye cero</b>'}</span></p>` : '';
+  const aviso = (pp && !pp.incluye_cero) ? `<p class="mini">El veredicto del primario depende del N y
+      así se reporta: con la mirada de 70 era −3,3 pts [−11,4; +4,3] e <b>incluía</b> cero; con las
+      ${a ? a.n_congeladas : 127} lo excluye. La mirada de 70 sigue localizable:
+      <code>reportes/confirmatorio.json</code> del commit <code>8602461</code>.</p>` : '';
+  c.innerHTML = `
+    ${a ? `<p class="mini">Conjunto congelado: <b>${a.n_congeladas} corridas</b> · sha256 de la lista
+        <code>${esc(String(a.sha256_de_la_lista).slice(0, 16))}…</code> · fijado ${esc(a.fijado_utc)} ·
+        ${a.criterios_de_exclusion.length} criterios de exclusión, ${(a.excluidas || []).length} excluidas</p>` : ''}
+    <table><thead><tr><th>lectura</th><th>precio 0</th><th>precio 5</th><th>0 menos 5</th></tr></thead>
+    <tbody>
+      ${p ? filaLect('mirada congelada (70 + 8)', p.congelada) : ''}
+      ${p ? filaLect('extensión de precisión (127 + 8)', p.precision) : ''}
+    </tbody></table>
+    ${prim}${aviso}
+    ${r1 ? `<p style="margin-top:14px"><b>El efecto depende de cómo se agreguen las rondas.</b>
+      Sobre todas las rondas el 0 contra 5 da
+      ${conSigno(r1.lecturas['todas las rondas']['0_menos_5']['diferencia'])} pts y el primario
+      ${conSigno(r1.lecturas['todas las rondas']['primario_pareado_20_menos_5']['media'])} pts;
+      restringidos a la <b>ronda 1</b>, con el fondo intacto, dan
+      ${conSigno(r1.lecturas['solo ronda 1']['0_menos_5']['diferencia'])} y
+      ${conSigno(r1.lecturas['solo ronda 1']['primario_pareado_20_menos_5']['media'])} pts y
+      <b>ninguno de los dos excluye cero</b>.</p>
+    <p class="mini">La ronda 1 no es la lectura neutral: quita el agotamiento del fondo y también la
+      deliberación de las rondas maduras — el control pasa de
+      ${r1.lecturas['todas las rondas']['tasas']['0']['tasa']}% a
+      ${r1.lecturas['solo ronda 1']['tasas']['0']['tasa']}%. Las dos lecturas se reportan juntas y no se
+      elige una. El detalle está en <code>docs/PREREGISTRO.md</code> §15 y en
+      <code>reportes/ronda-uno.json</code>.</p>` : ''}
+    <p class="mini">La unidad es el agente expuesto al precio, y el intervalo es bootstrap por
+    conglomerado —se remuestrean corridas, no agentes— con semilla ${p ? p.semilla : '—'}.
+    El primario pareado se calcula aparte y no se recalcula aquí.</p>`;
+}
+
 /* ---------- 5. documentos ---------- */
 
 async function cargarDocs() {
@@ -558,13 +617,15 @@ function opcionesVista() {
   const validas = CORRIDAS.filter(x => !x.etiqueta).length;
   document.getElementById('estado').textContent =
     `${validas} corridas del experimento · ${AGREGADO.grupos.filter(g => g.etiqueta).reduce((a, g) => a + g.corridas, 0)} de ensayo y prueba `
-    + `· ${num(c.margen)} tokens de margen sobre ${num(c.presupuesto)}`;
+    + `· ${num(c.tokens)} tokens gastados, sin techo de presupuesto`
+    + (c.n_preregistrado ? ` · conjunto congelado de ${c.n_preregistrado} corridas` : '');
   opcionesVista();
   pintarPanel();
   pintarTabla();
   cargarDocs();
   cargarGeneralizacion();
   cargarReclutador();
+  cargarCongelado();
 })();
 </script>
 </body>

@@ -262,40 +262,61 @@
       ]
     },
     "marco reclutador|K=20": {
-      "corridas": 5,
-      "agentes": 30,
-      "tomaron": 7,
-      "toma_ronda1": 20.0,
+      "corridas": 12,
+      "agentes": 72,
+      "tomaron": 16,
+      "toma_ronda1": 12.5,
       "toma_ronda1_por_corrida": [
         0.16666666666666666,
         0.16666666666666666,
         0.16666666666666666,
         0.3333333333333333,
-        0.16666666666666666
+        0.16666666666666666,
+        0.16666666666666666,
+        0.0,
+        0.16666666666666666,
+        0.0,
+        0.16666666666666666,
+        0.0,
+        0.0
       ],
-      "tasa_toma": 23.3,
-      "abstencion": 76.7,
+      "tasa_toma": 22.2,
+      "abstencion": 77.8,
       "ic95_por_corrida": [
-        16.7,
-        30.0
+        15.3,
+        29.2
       ],
       "ic95_wilson_por_agente": [
-        11.8,
-        40.9
+        14.2,
+        33.1
       ],
       "toma_por_corrida": [
         0.16666666666666666,
         0.3333333333333333,
         0.16666666666666666,
         0.3333333333333333,
-        0.16666666666666666
+        0.16666666666666666,
+        0.16666666666666666,
+        0.3333333333333333,
+        0.16666666666666666,
+        0.16666666666666666,
+        0.5,
+        0.16666666666666666,
+        0.0
       ],
       "corridas_usadas": [
         "20260914T005250_factorial-reclutador-abstencion-caro-arbol2",
         "20260914T005734_factorial-reclutador-abstencion-caro-arbol2",
         "20260914T010820_factorial-reclutador-abstencion-caro-arbol2",
         "20260914T011024_factorial-reclutador-abstencion-caro-arbol2",
-        "20260914T011233_factorial-reclutador-abstencion-caro-arbol2"
+        "20260914T011233_factorial-reclutador-abstencion-caro-arbol2",
+        "20260914T045046_factorial-reclutador-abstencion-caro-arbol2",
+        "20260914T045502_factorial-reclutador-abstencion-caro-arbol2",
+        "20260914T045713_factorial-reclutador-abstencion-caro-arbol2",
+        "20260914T045845_factorial-reclutador-abstencion-caro-arbol2",
+        "20260914T050014_factorial-reclutador-abstencion-caro-arbol2",
+        "20260914T050343_factorial-reclutador-abstencion-caro-arbol2",
+        "20260914T050954_factorial-reclutador-abstencion-caro-arbol2"
       ]
     }
   },
@@ -317,10 +338,10 @@
       "incluye_cero": true
     },
     "marco reclutador": {
-      "puntos": -9.0,
+      "puntos": -10.1,
       "ic95": [
-        -20.4,
-        2.7
+        -21.5,
+        2.1
       ],
       "incluye_cero": true
     }
@@ -359,18 +380,18 @@
       "incluye_cero": false
     },
     "sin marco menos marco reclutador | K=20": {
-      "puntos": 24.6,
+      "puntos": 25.7,
       "ic95": [
-        13.8,
-        36.2
+        13.9,
+        37.5
       ],
       "incluye_cero": false
     },
     "marco neutral menos marco reclutador | K=20": {
-      "puntos": 1.7,
+      "puntos": 2.8,
       "ic95": [
-        -16.7,
-        22.9
+        -16.0,
+        23.6
       ],
       "incluye_cero": true
     }
@@ -387,31 +408,32 @@
       "pendiente_marco_neutral": 2.1
     },
     "pendiente(sin marco) menos pendiente(marco reclutador)": {
-      "puntos": 21.5,
+      "puntos": 22.6,
       "ic95": [
-        2.5,
-        40.4
+        3.5,
+        41.3
       ],
       "incluye_cero": false,
       "pendiente_sin_marco": 12.5,
-      "pendiente_marco_reclutador": -9.0
+      "pendiente_marco_reclutador": -10.1
     },
     "pendiente(marco neutral) menos pendiente(marco reclutador)": {
-      "puntos": 11.0,
+      "puntos": 12.2,
       "ic95": [
-        -13.1,
-        35.8
+        -11.1,
+        37.2
       ],
       "incluye_cero": true,
       "pendiente_marco_neutral": 2.1,
-      "pendiente_marco_reclutador": -9.0
+      "pendiente_marco_reclutador": -10.1
     }
   },
   "excluidas": {
     "marco reclutador|K=20": [
       "005958: truncada",
       "010412: truncada",
-      "011412: truncada"
+      "011412: truncada",
+      "045205: truncada"
     ]
   },
   "semilla": 20260913,
@@ -451,18 +473,18 @@
       "incluye_cero": true
     },
     "sin marco menos marco reclutador | K=20": {
-      "puntos": 5.0,
+      "puntos": 12.5,
       "ic95": [
-        -5.8,
-        14.6
+        2.1,
+        22.2
       ],
-      "incluye_cero": true
+      "incluye_cero": false
     },
     "marco neutral menos marco reclutador | K=20": {
-      "puntos": -1.3,
+      "puntos": 6.2,
       "ic95": [
-        -16.7,
-        16.7
+        -9.0,
+        24.3
       ],
       "incluye_cero": true
     }
@@ -479,24 +501,24 @@
       "pendiente_marco_neutral": 4.2
     },
     "pendiente(sin marco) menos pendiente(marco reclutador)": {
-      "puntos": -7.5,
+      "puntos": -0.0,
       "ic95": [
-        -24.6,
-        9.2
+        -16.7,
+        16.3
       ],
       "incluye_cero": true,
       "pendiente_sin_marco": -4.2,
-      "pendiente_marco_reclutador": 3.3
+      "pendiente_marco_reclutador": -4.2
     },
     "pendiente(marco neutral) menos pendiente(marco reclutador)": {
-      "puntos": 0.8,
+      "puntos": 8.3,
       "ic95": [
-        -21.2,
-        22.7
+        -13.2,
+        30.9
       ],
       "incluye_cero": true,
       "pendiente_marco_neutral": 4.2,
-      "pendiente_marco_reclutador": 3.3
+      "pendiente_marco_reclutador": -4.2
     }
   }
 }

@@ -85,11 +85,19 @@ if inc:
     print("|---|---|---|---|")
     for nombre, c in inc["celdas"].items():
         dep = f"{c['tasa_deposito']:.1f}%" if c.get("tasa_deposito") is not None else "—"
-        tom = f"{c['tasa_toma']:.1f}%" if c.get("tasa_toma") is not None else "—"
+        tom = f"{c['tasa_toma']:.1f}%" if c.get("tasa_toma") is not None else "n/a"
         print(f"| {nombre} | {c['agentes']} | {dep} | {tom} |")
     print()
-    print("Con 8 corridas por celda el IC de una diferencia de tasas es de ~±13 puntos y el de una "
-          "interaccion bastante mas ancho: **exploratorio de direccion, no de magnitud**.")
+    ns = sorted({c["agentes"] // 6 for c in inc["celdas"].values() if c.get("agentes")})
+    rango = f"{ns[0]}" if len(ns) == 1 else f"{ns[0]}-{ns[-1]}"
+    print(f"Corridas por celda: {rango}. Con ese tamano el IC de una diferencia de tasas ronda los "
+          "±13 puntos y el de una interaccion es bastante mas ancho: **exploratorio de direccion, no "
+          "de magnitud**.")
+    print()
+    print("`n/a` en la columna de la reserva significa **no aplica**: en esas escenas el recurso comun "
+          "no existe, asi que esos agentes nunca tuvieron la oportunidad de tomarlo. No es un cero "
+          "medido, y por eso no se escribe 0%. Las corridas se deduplican por nombre: varias viven en "
+          "los dos arboles.")
     print()
     print(f"Hash del archivo: `{hash_de('incidente.json')}`")
     print()
