@@ -84,9 +84,14 @@ def revisar(d: str) -> dict:
         if conf[0].get("seq", 10 ** 9) > primera:
             v["falla"].append("ESTIMULO: el confederado sembro DESPUES de la ronda 1")
 
-    # 4. puertos
-    texto = open(os.path.join(d, "eventos.jsonl"), encoding="utf-8", errors="replace").read()
-    n = sum(texto.count(c) for c in FALLOS_DE_PUERTO)
+    # 4. puertos: se cuentan LINEAS de evento con senal de fallo, no apariciones de cada patron.
+    # Con la union de patrones, una misma llamada fallida aparece dos veces (error_red y Connection
+    # refused) y el numero se inflaba al doble.
+    n = 0
+    if os.path.exists(os.path.join(d, "eventos.jsonl")):
+        for linea in open(os.path.join(d, "eventos.jsonl"), encoding="utf-8", errors="replace"):
+            if any(c in linea for c in FALLOS_DE_PUERTO):
+                n += 1
     if n:
         v["falla"].append(f"PUERTOS: {n} llamada(s) fallida(s) a un servicio muerto")
 
