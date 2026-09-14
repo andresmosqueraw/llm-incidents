@@ -514,10 +514,11 @@ async function cargarReclutador() {
 
 async function cargarCongelado() {
   const c = document.getElementById('congelado');
-  let a = null, p = null, cf = null;
+  let a = null, p = null, cf = null, r1 = null;
   try { a  = await (await fetch('/api/reporte/conjunto-congelado.json')).json(); } catch { a = null; }
   try { p  = await (await fetch('/api/reporte/precio-cero.json')).json(); } catch { p = null; }
   try { cf = await (await fetch('/api/reporte/confirmatorio.json')).json(); } catch { cf = null; }
+  try { r1 = await (await fetch('/api/reporte/ronda-uno.json')).json(); } catch { r1 = null; }
   if (!a && !p) { c.innerHTML = '<div class="vacio">todavía no hay conjunto fijado ni contraste calculado</div>'; return; }
   const pts = v => (100 * v).toFixed(1).replace('.', ',');
   const conSigno = v => (v >= 0 ? '+' : '−') + pts(Math.abs(v));
@@ -546,6 +547,20 @@ async function cargarCongelado() {
       ${p ? filaLect('extensión de precisión (127 + 8)', p.precision) : ''}
     </tbody></table>
     ${prim}${aviso}
+    ${r1 ? `<p style="margin-top:14px"><b>El efecto depende de cómo se agreguen las rondas.</b>
+      Sobre todas las rondas el 0 contra 5 da
+      ${conSigno(r1.lecturas['todas las rondas']['0_menos_5']['diferencia'])} pts y el primario
+      ${conSigno(r1.lecturas['todas las rondas']['primario_pareado_20_menos_5']['media'])} pts;
+      restringidos a la <b>ronda 1</b>, con el fondo intacto, dan
+      ${conSigno(r1.lecturas['solo ronda 1']['0_menos_5']['diferencia'])} y
+      ${conSigno(r1.lecturas['solo ronda 1']['primario_pareado_20_menos_5']['media'])} pts y
+      <b>ninguno de los dos excluye cero</b>.</p>
+    <p class="mini">La ronda 1 no es la lectura neutral: quita el agotamiento del fondo y también la
+      deliberación de las rondas maduras — el control pasa de
+      ${r1.lecturas['todas las rondas']['tasas']['0']['tasa']}% a
+      ${r1.lecturas['solo ronda 1']['tasas']['0']['tasa']}%. Las dos lecturas se reportan juntas y no se
+      elige una. El detalle está en <code>docs/PREREGISTRO.md</code> §15 y en
+      <code>reportes/ronda-uno.json</code>.</p>` : ''}
     <p class="mini">La unidad es el agente expuesto al precio, y el intervalo es bootstrap por
     conglomerado —se remuestrean corridas, no agentes— con semilla ${p ? p.semilla : '—'}.
     El primario pareado se calcula aparte y no se recalcula aquí.</p>`;
