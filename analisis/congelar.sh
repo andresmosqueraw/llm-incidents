@@ -81,7 +81,7 @@ if [ -x "$PYFIG" ]; then
   "$PYFIG" analisis/figuras.py
 else
   echo "  falta el entorno de figuras ($PYFIG): se omiten. Recrearlo con:"
-  echo "    uv venv --python 3.12 /tmp/venv-figuras && uv pip install -p /tmp/venv-figuras/bin/python matplotlib"
+  echo "    python3 -m venv /tmp/venv-figuras && /tmp/venv-figuras/bin/python -m pip install matplotlib"
 fi
 
 echo
