@@ -641,3 +641,55 @@ peso de H1), apoyando el punto de "validez externa" que ya está en `propuesta-c
   lanzamiento) o por el orden temporal de las carpetas.
 - **Las salidas de este brazo viven en `salidas-generalizacion/`, no en `salidas/`** (ver 3.b) —
   precisamente para que no se mezclen por accidente con el confirmatorio.
+
+---
+
+## E. Auditoría: ¿seguimos respondiendo la pregunta original? (14 sep, madrugada)
+
+Con el aluvión de brazos nuevos que el equipo agregó en paralelo (reclutador, abstención, precio-uno,
+identidad del solicitante) más este brazo de generalización de modelos, valía la pena verificar que la
+pregunta de investigación no se hubiera diluido. Auditoría hecha releyendo `PREREGISTRO.md` completo
+(62k, casi el doble del tamaño con el que arrancó el día), `ESTADO.md`, y todos los documentos nuevos
+de brazos (`docs/BRIEF-RECLUTADOR.md`, `docs/abstencion.md`, `docs/ESCENARIOS.md`,
+`docs/PREREGISTRO-INCIDENTE.md`, `docs/trabajo-futuro-5.md`, `docs-material-uso-dual.md`).
+
+**Veredicto: sí, seguimos respondiendo la pregunta original**, y de hecho ya tiene un resultado
+preliminar concreto. Lo único que cambió es el tamaño de muestra confirmatorio (**N: 80 → 160**, §9 de
+`PREREGISTRO.md`: *"el motivo del aumento es la precisión, no el resultado — la mirada de 70 fue
+nula"*). `ESTADO.md` reporta el número:
+
+> "primario pareado 20-5 = -0,0333 [-0,1143; +0,0429], incluye cero: **el hallazgo es un UMBRAL, no
+> una pendiente**." Tasas por precio: 0 = 45,8%, 5 = 20,5%, 20 = 17,1% — el corte está entre **0 y 5**,
+> no entre 5 y 20 como predecía H1 originalmente.
+
+**Todos los brazos nuevos son exploratorios, con disciplina explícita en su propio texto** — ninguno
+redefine el desenlace primario ni el título de la pregunta:
+
+| Brazo | Estatus declarado |
+|---|---|
+| Factorial (H1, N→160) | Confirmatorio único |
+| Costo cero, encuadre | Controles preregistrados (H4, H5) |
+| Reclutador | Exploratorio; ancla su motivación en el 20,4% observado en el lote |
+| Abstención | "acto simétrico al del factorial", exploratorio, hash propio, "no se mezcla en un mismo cálculo" |
+| Reclutador × abstención | Intersección exploratoria de los dos anteriores |
+| Identidad del solicitante, precio 1, segunda tarea | §11: "no cambian el desenlace confirmatorio ni se mezclan" |
+| Generalización de modelos (este documento, §D) | Exploratorio, ninguna cifra reemplaza al confirmatorio |
+
+**Volumen real en `salidas/` (14 sep, madrugada):** ~204 corridas fuera del brazo de generalización —
+123 `factorial-base` (camino a N=160), 8 `factorial-costo-cero`, 32 de las cuatro celdas de abstención,
+24 de reclutador y sus variantes, 13 `solicitante-externo-p5`, 6 `solicitante-par-p5`, 6 `precio-uno`.
+
+**El riesgo real no es que la pregunta haya cambiado — es de presentación.** Con 204+ corridas en ~10
+escenas distintas más las 30 de este brazo, el reporte de 8 páginas corre el riesgo de enterrar el
+hallazgo confirmatorio (el umbral 0→5, plano 5→20) bajo la cantidad de brazos secundarios. Si en algún
+momento el equipo quiere una frase que describa el *programa completo* de investigación (no que
+reemplace la pregunta confirmatoria, que sigue siendo la que sostiene el N=160 y el titular):
+
+> *"¿Dónde está el umbral en el que un agente deja de ayudar a un desconocido sin beneficio propio, y
+> ese umbral se mueve con quién pide, para quién, o con lo que hay en juego para los demás?"*
+
+Recomendación concreta para Results/Discussion: liderar con el hallazgo confirmatorio (el umbral, no
+la pendiente) en una frase, y presentar cada brazo satélite como una pregunta que ese hallazgo deja
+abierta — no como hallazgos del mismo peso. El generalización de modelos (§D de este documento) entra
+ahí también: la tasa base varía por un orden de magnitud entre modelos, lo que sugiere que el umbral
+mismo podría no ser universal.
