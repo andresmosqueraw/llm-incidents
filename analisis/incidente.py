@@ -38,6 +38,7 @@ CELDAS = {
     "rec+abs K=5":    {"hash": "dd9086e2d38f3740", "reserva": True},
     "rec+abs K=20":   {"hash": "580e8ae01e1b0ff9", "reserva": True},
     "marco neutro K=5": {"hash": "f7687d942f54334f", "reserva": True},
+    "marco neutro K=20": {"hash": "58f40d59dfa5e1d3", "reserva": True},
 }
 
 
@@ -177,7 +178,7 @@ print("\n=== 3b. control de financiacion: tomar da pasos, y ayudar cuesta pasos 
 print("     Si el que toma ayuda mas, puede ser disposicion O puede ser que el acto danino le pago")
 print("     el presupuesto. Se compara el presupuesto disponible antes de mirar la tasa de ayuda.")
 for nombre, runs in datos.items():
-    if not runs or "reserva" not in nombre and "neutro" not in nombre:
+    if not runs or not CELDAS[nombre]["reserva"]:
         continue
     tom_pasos, no_pasos = [], []
     for c in runs:
