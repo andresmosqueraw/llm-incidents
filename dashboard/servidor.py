@@ -37,6 +37,8 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 RAIZ = os.path.dirname(BASE)
 REPORTES = os.path.join(RAIZ, "reportes")
 SALIDAS = os.path.join(RAIZ, "salidas")
+SALIDAS_GENERALIZACION = os.path.join(RAIZ, "salidas-generalizacion")
+PREFIJO_GENERALIZACION = "generalizacion/"
 DOCS = ["docs/ESTADO.md", "docs/PREREGISTRO.md", "docs/PROTOCOLO-JUEGO.md", "docs/papers.md",
         "docs/abstencion.md", "docs/MATERIAL-PARA-EL-REPORTE.md", "docs/ESCENARIOS.md",
         "docs/NUMEROS-CONGELADOS.md",
@@ -53,14 +55,21 @@ N_PREREGISTRADO = 127                  # 80 preregistrado, ampliado a 160 por en
 
 # ---------------------------------------------------------------- lectura de corridas
 
-def _corridas() -> list[dict]:
-    """Todas las corridas con resumen.json, incluidas las etiquetadas en subcarpetas (ensayo)."""
-    rutas = glob.glob(os.path.join(SALIDAS, "*", "resumen.json"))
-    rutas += glob.glob(os.path.join(SALIDAS, "*", "*", "resumen.json"))
+def _leer_corridas_de(base: str, prefijo_rel: str = "",
+                       modelo_fijo: str | None = "glm-5.3-flash") -> list[dict]:
+    """Corridas con resumen.json bajo `base`, con "corrida" prefijado por `prefijo_rel`.
+
+    `modelo_fijo` es el modelo a usar cuando el resumen no trae "modelo" propio. La rama de
+    generalizacion pasa None porque cada resumen.json ya trae su modelo (incluido el backfill de
+    las 20 corridas a las que bucle.py no les escribio el campo; verificado por coincidencia exacta
+    de tokens_totales contra las sumas por modelo de docs/investigacion.md).
+    """
+    rutas = glob.glob(os.path.join(base, "*", "resumen.json"))
+    rutas += glob.glob(os.path.join(base, "*", "*", "resumen.json"))
     out = []
     for r in sorted(rutas):
         carpeta = os.path.dirname(r)
-        rel = os.path.relpath(carpeta, SALIDAS)
+        rel = os.path.relpath(carpeta, base)
         try:
             with open(r, encoding="utf-8") as fh:
                 res = json.load(fh)
@@ -72,10 +81,11 @@ def _corridas() -> list[dict]:
         # la etiqueta del resumen manda; si la corrida vive en subcarpeta sin etiqueta, se deduce
         etiqueta = res.get("etiqueta") or (rel.split("/")[0] if "/" in rel else "")
         out.append({
-            "corrida": rel,
+            "corrida": prefijo_rel + rel,
             "nombre": nombre,
             "etiqueta": etiqueta,
             "brazo": "costo-cero" if "costo-cero" in nombre else "factorial",
+            "modelo": res.get("modelo") or modelo_fijo,
             "tokens": res.get("tokens_totales"),
             "rondas": res.get("rondas"),
             "eventos": res.get("eventos"),
@@ -94,10 +104,37 @@ def _corridas() -> list[dict]:
     return out
 
 
-def _una_corrida(rel: str) -> dict | None:
+def _corridas() -> list[dict]:
+    """Corridas del experimento confirmatorio primario. Es la UNICA fuente valida para
+    /api/agregado: la de generalizacion comparte hash_escena/hash_textos con esta (misma escena,
+    sin etiqueta propia) y se mezclaria en silencio con el agrupado de H1 si se juntaran aqui
+    (ver docs/investigacion.md, seccion D)."""
+    return _leer_corridas_de(SALIDAS)
+
+
+def _corridas_generalizacion() -> list[dict]:
+    """Corridas del brazo de generalizacion a otros modelos via OpenRouter (salidas-generalizacion/)."""
+    return _leer_corridas_de(SALIDAS_GENERALIZACION, PREFIJO_GENERALIZACION, modelo_fijo=None)
+
+
+def _corridas_todas() -> list[dict]:
+    """Todas las corridas conocidas (primarias + generalizacion), cada una con su modelo.
+    Para /api/corridas. NO usar para _agregado (ver docstring de _corridas)."""
+    return _corridas() + _corridas_generalizacion()
+
+
+def _resolver_base(rel: str) -> tuple[str, str]:
+    """(carpeta_base, rel_sin_prefijo) segun si `rel` pertenece a la rama de generalizacion."""
+    if rel.startswith(PREFIJO_GENERALIZACION):
+        return SALIDAS_GENERALIZACION, rel[len(PREFIJO_GENERALIZACION):]
+    return SALIDAS, rel
+
+
+def _una_corrida(rel_completo: str) -> dict | None:
     """Eventos e indicadores del instrumento, leidos del log encadenado."""
-    carpeta = os.path.join(SALIDAS, rel)
-    raiz = os.path.realpath(SALIDAS)
+    base, rel = _resolver_base(rel_completo)
+    carpeta = os.path.join(base, rel)
+    raiz = os.path.realpath(base)
     real = os.path.realpath(carpeta)
     if not os.path.isdir(carpeta) or not real.startswith(raiz + os.sep):
         return None
@@ -136,7 +173,7 @@ def _una_corrida(rel: str) -> dict | None:
             por_ronda[k] = por_ronda.get(k, 0) + 1
     tope = 8
     return {
-        "corrida": rel,
+        "corrida": rel_completo,
         "agentes": [{**v, "id": k} for k, v in sorted(ags.items())],
         "eventos": eventos,
         "indicadores": {
@@ -155,9 +192,10 @@ def _una_corrida(rel: str) -> dict | None:
     }
 
 
-def _transcripcion(rel: str, agente: str) -> dict | None:
+def _transcripcion(rel_completo: str, agente: str) -> dict | None:
     """La conversacion completa del agente, ronda por ronda (texto y razonamiento por separado)."""
-    carpeta = os.path.join(SALIDAS, rel, "transcripciones")
+    base, rel = _resolver_base(rel_completo)
+    carpeta = os.path.join(base, rel, "transcripciones")
     if not os.path.isdir(carpeta):
         return None
     rondas = []
@@ -169,7 +207,7 @@ def _transcripcion(rel: str, agente: str) -> dict | None:
             continue
         rondas.append({"archivo": os.path.basename(f),
                        "mensajes": x if isinstance(x, list) else x.get("mensajes", [])})
-    return {"corrida": rel, "agente": agente, "rondas": rondas}
+    return {"corrida": rel_completo, "agente": agente, "rondas": rondas}
 
 
 # ---------------------------------------------------------------- estadistica
@@ -565,7 +603,7 @@ class Manejador(BaseHTTPRequestHandler):
             with open(os.path.join(BASE, "index.html"), encoding="utf-8") as fh:
                 self._html(fh.read())
         elif ruta == "/api/corridas":
-            self._json(_corridas())
+            self._json(_corridas_todas())
         elif ruta == "/api/agregado":
             self._json(_agregado(_corridas()))
         elif ruta.startswith("/api/corrida/"):
