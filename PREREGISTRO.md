@@ -837,3 +837,25 @@ mezcla la decisión con el colapso del fondo. Esto **no es una anécdota de un b
 agregue rondas —incluida la tasa de la clave del confirmatorio— está expuesta a lo mismo. Se declara aquí
 para que la prueba restringida a la ronda 1 entre al análisis como **robustez exploratoria declarada**, no
 como resultado principal, y para que las limitaciones lo digan.
+
+## 14. El veredicto del primario depende de la N, y así se reporta (14 sep ~01:15 COT)
+
+El congelamiento corrió el confirmatorio sobre las **127** corridas del conjunto fijado, y el contraste
+pareado 20 contra 5 —el primario preplaneado— **dejó de ser nulo**: −0,0735 [−0,1312, −0,0157], que
+excluye cero. La mirada anterior, sobre 70 corridas, daba −0,0333 [−0,1143, +0,0429], que lo incluía.
+Las dos cifras se reportan juntas y ninguna se borra.
+
+La ampliación a más N se declaró **antes** de calcular esta última, así que no hay selección por
+resultado; pero un intervalo que cambia de veredicto con el tamaño de muestra **obliga a decirlo en
+estos términos**, no a elegir la N que conviene: el efecto de pagar 5 contra 20 es pequeño y negativo,
+y el N decide si el intervalo lo distingue de cero. El contraste 0 contra 5 se mantiene como el más
+grande y robusto (+0,254 [+0,087, +0,428] en la mirada de 70; +0,183 [+0,019, +0,355] sobre las 127).
+
+Los dos archivos quedan localizables: la mirada de 70 es `reportes/confirmatorio.json` del commit
+`8602461` (sha256 corto `7972c708088544c6`); el congelamiento la sobrescribió en disco con su corrida
+sobre las 127 (sha256 corto `2da2f5596817cf0f`).
+
+**K=20 de reclutador × abstención: cerrado en 17 válidas, sin las 3 extra.** El tope alto de la
+extensión evitó truncamientos en las 8 corridas que corrieron, y la celda quedó por encima de las 16 de
+la enmienda 12. Las 3 corridas extra declaradas en el apartado anterior **no se corren**: no hacen
+falta. Se reportan 17 y el motivo.
