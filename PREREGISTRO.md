@@ -760,3 +760,80 @@ comprobar que tiene seis servicios vivos antes de lanzar**, no reusar la de otro
 Corren en paralelo con la extensión de reclutador × abstención porque usan bases distintas (8501-8506
 contra 8401-8406) y no comparten servicios ni puertos: la única interferencia posible es el caudal del
 gateway, que ya se reparte entre dos árboles desde el arranque de la noche.
+
+**Corrección al plan de reposición (14 sep ~00:10 COT).** Al pasar la lista de validez por los datos, dos
+ajustes sobre lo que decía la nota anterior: las corridas de precio 1 afectadas son **dos** (`034756` y
+`035259`), no una; y las de `externo-p5` son **siete**, que reponen exactamente las siete caídas contra las
+ocho lanzadas de ese brazo. Con eso, cada brazo vuelve a su N declarado sin sumar de más:
+  · externo-p5: 8 lanzadas, 7 invalidadas por puertos -> 7 reposiciones -> 8 válidas
+  · precio-uno: 8 lanzadas (2 del piloto + 6 de la cadena), 2 invalidadas -> 2 reposiciones -> 8 válidas
+El criterio de exclusión, ahora ejecutable, es `analisis/validez.py`: cuatro criterios duros (resumen,
+cadena, estímulo sembrado antes de la ronda 1, cero llamadas fallidas) y uno de revisión (herencia por
+efecto). El guion se probó contra los datos reales: marca las 7 de externo-p5 y las 2 de precio-uno, y no
+marca ninguna de las 6 de `par-p5` ni las del lote.
+
+**Instrumento del árbol 2, declarado (14 sep ~00:40 COT).** Las corridas del árbol 2 —las celdas del 2×2
+de abstención, la familia del reclutador (R1a, R1c, reclutador × abstención) y los brazos #1 y #4— las
+produjo un arnés cuyo `bucle.py` tiene hash `c3cdeff324ad`, **distinto** del que está en el repositorio
+(`b188e104964a`). La diferencia es la cabecera de sesión condicional del gateway que el equipo añadió para
+su brazo de generalización de modelos: inerte para nuestras corridas, que van por opencode-go. Los otros
+archivos del arnés (`validador.py`, `puerto.py`) sí coinciden con los del repositorio. Se declara igual que
+la variante del árbol 1, y por la misma razón: que nadie tenga que deducir de qué instrumento salió qué.
+
+**Tercer reemplazo declarado, y el conteo reconciliado (14 sep ~00:45 COT).** La corrida `043130` de la
+extensión se truncó por el tope por corrida (354.811 tokens, el tope del lote es 333k). Es el mismo caso
+que `024943`: fallo técnico del instrumento, se repone. Van **tres reemplazos** declarados en total: uno
+por la contaminación de la suite, uno por `024943` y uno por `043130`. El paso de reemplazo que ya está
+en la cola de la cadena cubre el primero (`--corridas 1`); los otros dos se corren al cerrar la cadena,
+antes del congelamiento, y son cinco minutos.
+
+Sobre el conteo, para que nadie discuta una cifra que se mueve: el analizador da **123 corridas válidas**
+a las 00:43, sobre 128 en disco menos las 5 exclusiones. A las 00:42 daba 122, y cierran una cada 1,6 a
+2,7 minutos (media ~2,1). Las cifras de 121 que circulan son correctas para su hora: el conteo cambia cada
+dos minutos, así que cualquier número es válido con su marca de tiempo y falso sin ella.
+
+## 13. Parada de la extensión en N=124 por reloj de entrega (14 sep ~00:47 COT, antes de mirar)
+
+**Qué se para.** La extensión del factorial, en el punto donde cerraba su corrida en vuelo: **124 corridas
+válidas** de la escena `bf1b18a696a98476`. No se corre el resto de la cola: quedan sin correr la extensión
+del 2×2 (32 corridas) y las dos últimas reposiciones declaradas.
+
+**Por qué, y por qué no es conveniencia.** Se para **por reloj de entrega**, no por resultado: el
+congelamiento es lo que bloquea la sección de Results del reporte, y cada hora que la extensión sigue
+corriendo es una hora que el equipo no puede escribir. La decisión se toma **antes** de calcular el
+desenlace a N=124 —el analizador se ha corrido siempre con `--solo-validez`, que se detiene antes del
+contraste— así que la parada no puede estar inducida por lo que salga.
+
+**Por qué no rompe la regla del N.** El N preregistrado es **80**. Los 160 fueron una **enmienda de
+precisión** declarada a las 19:05, no un mínimo. Parar en 124 está **por encima** del preregistro y la
+regla que escribí ("si el reloj aprieta, lo que cede es la hora del congelamiento, no el tamaño de la
+muestra") aplica a no bajar del N declarado, que aquí no ocurre.
+
+**Qué queda incompleto, y cómo se reporta.** La extensión de precisión, que pasa a declararse así: las
+corridas entre 80 y 124 entran como **seguimiento de precisión** que estrecha el semiancho del intervalo
+de ±7,4 a ±6,0 puntos. El titular sigue siendo el contraste preregistrado. Se reportan **todas las
+miradas**: la de N=70 congelada, la de N=80 del relleno, y la final a N=124 más sus reemplazos.
+
+**El K=20 de reclutador × abstención, cuello de botella declarado (14 sep ~00:55 COT).** La extensión de
+esa familia se repartió mal por causas del diseño, no del conteo: el K=5 recibió sus 8 corridas y quedó en
+16 cerradas (16 válidas), mientras el **K=20 sigue corto** — 9 cerradas, 6 válidas y 3 truncadas por tope,
+que son las que ya venían de antes. El paso que corre ahora apunta al K=20 (`escena-reclutador-abstencion-
+caro`, 8 corridas, tope 500k por corrida en vez del que truncaba), así que el sesgo se corrige solo; pero
+al terminar quedará en ~14 válidas de las 16 de la enmienda 12. **Se declaran 3 corridas extra sobre el
+K=20** para cerrar en 16, con el tope alto y la guarda de puertos de la casa.
+
+**Conteo del factorial: 124 o 125, según una exclusión (14 sep ~00:55 COT).** Mi analizador da **124
+válidas** (cinco exclusiones: cuatro truncadas por tope y la contaminada por la suite). El conteo de 125
+que circula es el mismo conjunto **sin** excluir la corrida contaminada. Con los tres reemplazos en curso,
+el N queda en **127** según mi criterio y en 128 según el otro. Recomiendo mantener la exclusión —esa
+corrida contabilizó un acto que ningún sujeto hizo— y reportar **127**; si el equipo prefiere 128, la
+decisión es no excluirla y hay que escribirla con ese motivo.
+
+**Nota metodológica que llega de la familia del reclutador (14 sep ~00:55 COT).** Al ganar precisión en
+K=5 apareció una interacción que excluía cero sobre **todas las rondas** (+21,5 [+2,5; +40,4]) y que
+**cambia de signo y vuelve a incluir cero al restringirse a la ronda 1** (−7,5 [−24,6; +9,2]). La lectura
+es que el agotamiento del fondo fabrica el efecto y la ronda 1 lo desarma: medir sobre todas las rondas
+mezcla la decisión con el colapso del fondo. Esto **no es una anécdota de un brazo**: cualquier medida que
+agregue rondas —incluida la tasa de la clave del confirmatorio— está expuesta a lo mismo. Se declara aquí
+para que la prueba restringida a la ronda 1 entre al análisis como **robustez exploratoria declarada**, no
+como resultado principal, y para que las limitaciones lo digan.
