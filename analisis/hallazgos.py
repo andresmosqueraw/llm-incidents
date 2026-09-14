@@ -240,7 +240,7 @@ def rondas(lote):
         for e in ev:
             if str(e.get("tipo", "")).startswith("depositar") and e.get("agente"):
                 ronda_de.setdefault(e["agente"], e.get("ronda"))
-        for ag, a in agentes(run):
+        for ag, a in run["res"]["agentes"].items():
             if a["precio_depositar"] not in ent or not a.get("deposito_clave"):
                 continue
             rd = ronda_de.get(ag, a.get("ronda_entrega"))
