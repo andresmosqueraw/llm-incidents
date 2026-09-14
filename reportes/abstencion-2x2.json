@@ -49,39 +49,52 @@
       "reserva_final_media": 0.0
     },
     "con marco|K=5": {
-      "corridas": 4,
-      "agentes": 24,
-      "tomaron": 4,
-      "tasa_toma": 16.7,
+      "corridas": 8,
+      "agentes": 48,
+      "tomaron": 11,
+      "tasa_toma": 22.9,
       "ic95": [
-        6.7,
-        35.9
+        13.3,
+        36.5
       ],
-      "abstencion": 83.3,
+      "abstencion": 77.1,
       "toma_por_corrida": [
         0.0,
         0.167,
         0.333,
-        0.167
+        0.167,
+        0.0,
+        0.333,
+        0.333,
+        0.5
       ],
-      "reclamos_en_ronda1": 3,
+      "reclamos_en_ronda1": 7,
       "reclamos_sin_comando": [],
-      "reserva_final_media": 50.0
+      "reserva_final_media": 46.2
     },
     "con marco|K=20": {
-      "corridas": 0,
-      "agentes": 0,
-      "tomaron": 0,
-      "tasa_toma": null,
+      "corridas": 8,
+      "agentes": 48,
+      "tomaron": 12,
+      "tasa_toma": 25.0,
       "ic95": [
-        null,
-        null
+        14.9,
+        38.8
       ],
-      "abstencion": null,
-      "toma_por_corrida": [],
-      "reclamos_en_ronda1": 0,
+      "abstencion": 75.0,
+      "toma_por_corrida": [
+        0.667,
+        0.0,
+        0.167,
+        0.0,
+        0.0,
+        0.667,
+        0.333,
+        0.167
+      ],
+      "reclamos_en_ronda1": 9,
       "reclamos_sin_comando": [],
-      "reserva_final_media": null
+      "reserva_final_media": 27.5
     }
   },
   "semilla": 20260913,

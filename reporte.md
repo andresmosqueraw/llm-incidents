@@ -37,8 +37,8 @@ en agentes de LLM tiene un umbral, no una pendiente».⟧
 ## Abstract — 150–250 palabras · **se pule al final**
 
 ⟦ESCRIBIR: problema, enfoque, resultados clave, conclusión principal. Cifras que puede citar:⟧
-⟦CIFRA: precio 0 = 45,8% (22/48) · precio 5 = 20,5% (43/210) · precio 20 = 17,1% (36/210) — reportes/confirmatorio.json⟧
-⟦CIFRA: primario pareado 20−5 = −3,3 pts, IC95 [−11,4; +4,3], incluye cero — reportes/confirmatorio.json⟧
+⟦CIFRA: precio 0 = 45,8% (22/48) · precio 5 = **27,6% (105/381)** · precio 20 = **20,2% (77/381)** — reportes/confirmatorio.json, congelado N=127⟧
+⟦CIFRA: primario pareado 20−5 = **−7,35 pts, IC95 [−13,1; −1,6], EXCLUYE cero**, N=127 — reportes/confirmatorio.json⟧
 
 ## 1. Introduction — ~450 palabras · **no depende de ningún número, escribible ya**
 
@@ -95,17 +95,25 @@ positivo, de ahí el objeto ortogonal; y el autor `agente-07` filtraba el númer
 | precio | tasa | IC95 | fuente |
 | --- | --- | --- | --- |
 | 0 | 45,8% (22/48) | [32,6; 59,7] | confirmatorio.json |
-| 1 | ⟦PENDIENTE: 30,6% (11/36) hoy; cifra final tras reposiciones — deepseek, luego yo⟧ | | exploratorios.json |
-| 5 | 20,5% (43/210) | [15,6; 26,4] | confirmatorio.json |
-| 20 | 17,1% (36/210) | [12,6; 22,8] | confirmatorio.json |
+| 1 | **35,4% (17/48)** | [20,8; 47,9] | exploratorios.json |
+| 5 | 27,6% (105/381) | [23,3; 32,3] | confirmatorio.json |
+| 20 | 20,2% (77/381) | [16,5; 24,5] | confirmatorio.json |
 
-⟦CIFRA: primario pareado 20−5 = −3,3 pts [−11,4; +4,3], N=70 corridas — confirmatorio.json⟧
-⟦PENDIENTE: la misma cifra sobre el conjunto congelado de 128, reportando las tres miradas (70/80/128) — deepseek⟧
-⟦PENDIENTE: intervalo de **0 − 5**, el contraste del titular. Necesita las tasas por corrida del base separadas por precio; confirmatorio.json sólo guarda agregados — deepseek al congelar⟧
+⟦CIFRA: primario pareado 20−5 = **−7,35 pts [−13,1; −1,6], excluye cero**, N=127 congeladas — confirmatorio.json⟧
+⟦CIFRA: la mirada previa a N=70 dio −3,3 pts [−11,4; +4,3], incluía cero. Localizable en el commit 8602461, sha 7972c708088544c6. **Se reportan las dos**: un intervalo que cambia de veredicto con el tamaño de muestra se declara, no se elige.⟧
+⟦CIFRA: 0 − 5 = **+18,5 pts [+2,1; +35,4]** contra todo el lote — verificado por mí sobre salidas/⟧
+⟦CIFRA: 0 − 5 = **+30,2 pts [+12,5; +47,9]** contra el precio 5 de la MISMA ventana horaria (20:00-23:00, cuando corrió el precio 0). El precio 0 se corrió en 15 minutos de un periodo de nivel bajo, así que la versión pooled es la **conservadora**. Reportar las dos.⟧
 
 ⟦ESCRIBIR: observación e interpretación **separadas**, que la plantilla lo pide. Observación: la tasa cae
-25 puntos entre 0 y 5 y no se mueve entre 5 y 20. Interpretación: importa que el costo exista, no cuánto
-vale. **Precio 0 es el control positivo** — sin él, un nulo no se distingue de un instrumento sordo.⟧
+18-30 puntos entre 0 y 5, y otros 7,4 entre 5 y 20. Interpretación: la historia es de **dos partes** —
+pagar cualquier cosa hunde la cooperación (grande y robusto), y pagar más la deprime algo más (pequeño
+pero real). «Umbral, no pendiente» se queda corto con las 127. **Precio 0 es el control positivo**: sin
+él, un nulo no se distingue de un instrumento sordo.⟧
+⟦CIFRA: **las tasas por celda derivan a lo largo del lote** (precio 5 va de ~15,6% entre las 20:00 y
+las 23:00 a 34,4% en las corridas tardías), pero el **pareado no**: cortando por el reinicio da −5,83
+[−13,3; +1,3] antes y −9,93 [−19,1; −0,7] después, con la diferencia entre bloques en +4,1 pts
+[−8,0; +15,6], incluye cero. Parear dentro de la corrida absorbe la deriva de nivel. El número que
+manda es el pareado; las tasas de celda van con esta nota.⟧
 
 **Pie de Figura 2** ⟦ESCRIBIR: tiene que entenderse solo. Algo como: «Tasa de entrega de la clave frente
 al precio en pasos de presupuesto. Barras de error: IC95 por remuestreo de corridas. La cooperación se
