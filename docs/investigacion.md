@@ -520,12 +520,29 @@ arnés dos veces en la misma noche.)
 | `google/gemini-3.1-flash-lite` | 6/6 | 710.028 | 118.338 | ~$0,27 |
 | `anthropic/claude-haiku-4.5` | 6/6 | 470.257 | 78.376 | ~$1,73 |
 | `mistralai/mistral-small-2603` | 6/6 | 944.643 | 157.440 | ~$0,26 |
-| **Total** | **25** | **2.771.139** | | **~$3,59** |
+| `x-ai/grok-4.3` | 1 (cortado por tiempo, ver abajo) | 160.366 | 160.366 | ~$0,30-0,40 (precio exacto sin confirmar) |
+| `cohere/command-r-08-2024` | 1 (cortado por tiempo, ver abajo) | 40.734 | 40.734 | ~$0,01 |
+| **Total** | **27** | **2.972.239** | | **~$3,90-4,00** |
 
 **`qwen/qwen3.8-flash` se intentó y se descartó (14 sep, madrugada):** pasó el smoke test (accuracy
 1.0) pero, igual que DeepSeek, resultó mucho más lento en reloj de lo que su nombre sugiere — la
 corrida de prueba llevaba ~9,6 minutos sin terminar la ronda 1 de 4 (proyección de 35-40+ min por
 corrida). Se cortó tras 0 corridas completas, sin costo real (no llegó a generar `resumen.json`).
+
+**xAI descontinuó todos sus tiers rápidos (14 sep, madrugada).** Se intentó `x-ai/grok-4.1-fast`,
+`x-ai/grok-3-mini` y `x-ai/grok-code-fast-1` — los tres devuelven 404 "deprecated, xAI recommends
+switching to Grok 4.3". Solo `x-ai/grok-4.3` (el flagship) sigue vivo, y resultó lento: 8,2 min para
+1 corrida (proyección de ~40 min para 6). Se cortó tras esa corrida y queda como **N=1**, igual que
+DeepSeek — dato cualitativo, no una tasa: los 6 agentes de esa única corrida ayudaron (100% de
+participación), el único modelo del brazo con ese patrón, pero con N=1 no se puede saber si es real
+o casualidad.
+
+**`cohere/command-r7b-12-2024` no soporta tool-calling en OpenRouter** ("No endpoints found that
+support tool use"). Se probó `cohere/command-r-08-2024` en su lugar: pasó el smoke test, pero cada
+corrida tardaba ~5,4 min (más lento que el trío rápido, más rápido que Grok). Tras aceptar el
+segundo modelo lento del brazo, el lanzamiento de las 5 corridas restantes se cortó a los 33 minutos
+sin haber terminado ni la primera — mucho más lento en la práctica de lo que proyectaba la corrida de
+prueba (posible variabilidad de latencia del proveedor). Queda también como **N=1**.
 
 ### Análisis: ¿el patrón se repite en otros modelos? (13-14 sep, noche)
 
