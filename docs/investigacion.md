@@ -522,6 +522,44 @@ arnés dos veces en la misma noche.)
 
 Muy por debajo del estimado original (~$3,55-3,65 para 12 corridas).
 
+### Análisis: ¿el patrón se repite en otros modelos? (13-14 sep, noche)
+
+Calculado con `analisis/generalizacion.py` (nuevo, reutiliza `evaluar()` de `harness/agregar.py` y
+`wilson()`/`bootstrap()` de `analisis/estimador.py` — misma lógica de validez que el confirmatorio,
+sin duplicarla). Reporte crudo en `reportes/generalizacion.json`, visible también en
+`dashboard/index.html` ("¿Se repite con otros modelos?").
+
+**No se repite igual.** La tasa de depósito de la clave (primario, autosuficientes) por modelo:
+
+| Modelo | Precio 5 | Precio 20 | Diferencia (20−5) | N (agentes) |
+|---|---|---|---|---|
+| `openai/gpt-5.4` | 0/18 = 0% | 1/18 = 5,6% | +0,056 (IC95 boot [0, 0,167]) | 36 |
+| `google/gemini-3.1-flash-lite` | 11/18 = 61,1% | 9/18 = 50% | −0,111 (IC95 boot [−0,556, 0,333]) | 36 |
+| `deepseek/deepseek-v4.1-flash` | — | — | N=1, sin tasas (cortado por tiempo) | 6 |
+
+- **GPT-5.4 se parece al patrón que se viene viendo con `glm-5.3-flash`**: tasa casi nula en los dos
+  precios (0% y 5,6%). Un modelo de frontera, con más capacidad, **no paga más** por ayudar a un
+  desconocido cuando no le sirve para nada — si acaso, la dirección (+0,056) va al revés de H1, pero
+  el intervalo incluye holgadamente el cero con N=6: no hay nada que interpretar ahí todavía.
+- **Gemini 3.1 Flash Lite es otra historia completamente distinta.** Paga **10 veces más** que GPT-5.4
+  (61% vs 0% a precio 5), y **sí muestra la dirección esperada** de H1 (cae de 61,1% a 50% al subir el
+  precio), aunque el intervalo de la diferencia también cruza el cero con N=6.
+- **Lectura honesta:** con solo 6 corridas por modelo (36 agentes, la mitad del tamaño de la sonda 4
+  original) ninguna de las dos diferencias es distinguible de cero — pero la **tasa base** sí difiere
+  muchísimo entre modelos (0-6% contra 50-61%), y eso ya es informativo aunque la pendiente no lo sea:
+  dice que el resultado confirmatorio (`glm-5.3-flash`, tasa ~20-22% en el ensayo) **no generaliza
+  igual a toda la familia de modelos** — varía por un orden de magnitud según el modelo, antes incluso
+  de mirar si responde al precio.
+- Esto refuerza el límite que el proyecto ya declara en todos los documentos: **es una medición de un
+  modelo**, y esta rama exploratoria muestra por qué esa declaración no es una formalidad — el número
+  cambiaría materialmente el titular si `gemini-3.1-flash-lite` hubiera sido el modelo confirmatorio
+  en vez de `glm-5.3-flash`.
+- DeepSeek V4.1 Flash queda sin conclusión posible: N=1 no permite ni describir una tasa.
+
+**Para el reporte:** esto va a Discussion/Limitations como generalización exploratoria (nunca con el
+peso de H1), apoyando el punto de "validez externa" que ya está en `propuesta-cooperacion-costosa.md`
+§Límites — con datos reales en vez de solo la advertencia teórica.
+
 ### Disciplina (igual que en §C)
 
 - Corridas con hash de arnés `e97f5162fa06f56c` (el de este cambio, cuando se corrió) **no se
