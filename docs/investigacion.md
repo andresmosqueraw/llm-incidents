@@ -430,11 +430,20 @@ proveedor (incluido `openrouter/...`) se llama a `get_model(MODELO)` sin ella. V
 | Papel | Modelo en OpenRouter | Precio (entrada/salida por 1M) | Por qué |
 |---|---|---|---|
 | Frontera | `openai/gpt-5.4` | $2.50 / $15 | Última línea frontera de OpenAI (unifica Codex y GPT); se descartaron `openai/gpt-6-astra` ($10/$50) y `anthropic/claude-opus-5` ($5/$25) por costo — GPT-5.4 sale ~46% más barato que Opus 5 y sigue siendo genuinamente de frontera, no una versión mini |
-| Segundo | `deepseek/deepseek-v4.1-flash` | $0.15 / $0.60 | El mismo modelo que ya tiene tool calling verificado de punta a punta en `harness/README-inspect.md` (ahí vía opencode-go); aquí se verifica de nuevo porque el proveedor cambia |
+| Segundo | `google/gemini-3.1-flash-lite` | $0.25 / $1.50 | Reemplaza a `deepseek/deepseek-v4.1-flash` (ver abajo): línea "lite" de Google, pensada para baja latencia; da diversidad de familia frente a OpenAI |
 
-**Costo estimado (~150k tokens/corrida, 6 corridas por modelo):** ~$3,40 GPT-5.4 + ~$0,17 DeepSeek
-≈ **~$3,55 en total**, hasta ~$7 si GPT-5.4 gasta el doble de tokens de lo estimado. Correr **1
-corrida de GPT-5.4 primero** y mirar `tokens_totales` real antes de lanzar las otras 5.
+**DeepSeek V4.1 Flash — intentado y descartado (13 sep, noche).** Pasó el smoke test (tool calling
+verificado, accuracy 1.0), pero en este arnés gasta **~5,6x más tokens por corrida** que GPT-5.4
+(308.690 contra ~56.000) porque explora el entorno con muchas más llamadas de herramienta repetidas.
+En dólares seguía siendo barato (~$0,06/corrida), pero en reloj **una sola corrida tardó ~20+ min**
+(proyección de ~1,5-2 h para las 6, contra ~15-17 min de GPT-5.4). Se cortó después de 1 corrida
+completa por tiempo, no por costo. Esa corrida sí cuenta (está en `salidas-generalizacion/`, con
+`"modelo": "openrouter/deepseek/deepseek-v4.1-flash"`), pero como **N=1**, sin las otras 5: se reporta
+como dato suelto, no como el segundo brazo de generalización.
+
+**Costo estimado del reemplazo (~150k tokens/corrida, 6 corridas por modelo):** ~$3,40 GPT-5.4 +
+~$0,15-0,25 Gemini 3.1 Flash Lite ≈ **~$3,55-3,65 en total**. Correr **1 corrida de Gemini primero**
+y mirar `tokens_totales` real antes de lanzar las otras 5 (misma disciplina que con GPT-5.4).
 
 Si se prefieren otros, solo hay que cambiar el string de modelo en los comandos de abajo — no hace
 falta tocar código.
@@ -451,7 +460,7 @@ proyecto: ningún modelo entra sin este chequeo pasado):**
 ```bash
 export OPENROUTER_API_KEY=<tu-clave>
 .venv/bin/inspect eval harness/smoke_test.py --model openrouter/openai/gpt-5.4
-.venv/bin/inspect eval harness/smoke_test.py --model openrouter/deepseek/deepseek-v4.1-flash
+.venv/bin/inspect eval harness/smoke_test.py --model openrouter/google/gemini-3.1-flash-lite
 ```
 Éxito = accuracy 1.0 en los dos (el modelo llamó la herramienta y respondió "42"). Si alguno falla,
 se excluye y se documenta por qué, igual que en §C.
@@ -473,11 +482,11 @@ OPENCODE_GO_MODELO=openrouter/openai/gpt-5.4 \
 #   mismo supuesto 90/10 de arriba) — bien por debajo del estimado de ~$0,56/corrida. Quedan 5 por
 #   lanzar; a este ritmo las 6 de GPT-5.4 saldrían por ~$1,50 en vez de ~$3,40.
 
-OPENCODE_GO_MODELO=openrouter/deepseek/deepseek-v4.1-flash \
+OPENCODE_GO_MODELO=openrouter/google/gemini-3.1-flash-lite \
   .venv/bin/python harness/lote.py --escena escena.resuelta.json \
-  --etiqueta generalizacion-deepseek --corridas 6 --tope 1000000
+  --etiqueta generalizacion-gemini --corridas 6 --tope 1000000
 ```
-(Tope de tokens más alto para GPT-5.4: cuesta ~17x más por token que DeepSeek V4.1 Flash —
+(Tope de tokens más alto para GPT-5.4: cuesta ~10x más por token que Gemini 3.1 Flash Lite —
 confirmar el precio en openrouter.ai/models antes de lanzar si el presupuesto es ajustado.)
 
 **3.b OBLIGATORIO después de cada lanzamiento, antes de tocar nada más — sacar la salida de
@@ -499,19 +508,30 @@ arnés dos veces en la misma noche.)
 **4. Leer la tasa por modelo (sobre `salidas-generalizacion/`, NO sobre `salidas/`):**
 ```bash
 .venv/bin/python harness/agregar.py   # ojo: apunta a salidas/ por defecto — para esto hay que
-                                        # correrlo aparte, apuntando a salidas-generalizacion/, o
-                                        # leer resumen.json a mano (trae "modelo" y "tokens_totales")
+                                        # correrlo aparte, apuntando a salidas-generalizacion/
 ```
+
+### Resultado real de las 13 corridas (13-14 sep, noche)
+
+| Modelo | Corridas | Tokens totales | Promedio/corrida | Costo estimado |
+|---|---|---|---|---|
+| `openai/gpt-5.4` | 6/6 | 337.521 | 56.254 | ~$1,27 |
+| `deepseek/deepseek-v4.1-flash` | 1 (cortado por tiempo, ver arriba) | 308.690 | 308.690 | ~$0,06 |
+| `google/gemini-3.1-flash-lite` | 6/6 | 710.028 | 118.338 | ~$0,27 |
+| **Total** | **13** | **1.356.239** | | **~$1,60** |
+
+Muy por debajo del estimado original (~$3,55-3,65 para 12 corridas).
 
 ### Disciplina (igual que en §C)
 
-- Corridas con hash de arnés `e97f5162fa06f56c` (el de este cambio) **no se mezclan** en el mismo
-  cálculo con las 40+ corridas confirmatorias que ya corrieron con el arnés anterior, salvo que se
-  declare la diferencia explícitamente — el cambio es inerte para `glm-5.3-flash`, pero la regla del
-  proyecto es no mezclar versiones de instrumento sin decirlo.
+- Corridas con hash de arnés `e97f5162fa06f56c` (el de este cambio, cuando se corrió) **no se
+  mezclan** en el mismo cálculo con las corridas confirmatorias, salvo que se declare la diferencia
+  explícitamente — la regla del proyecto es no mezclar versiones de instrumento sin decirlo.
 - Va a Discussion/Limitations como generalización exploratoria, nunca con el mismo estatus que H1.
-- `resumen.json` de estas corridas **sí trae el modelo usado**, en el campo `"modelo"` (confirmado en
-  la primera corrida real: `"modelo": "openrouter/openai/gpt-5.4"`). Identificar cada corrida por ese
-  campo, no hace falta usar la carpeta/etiqueta para eso.
+- **`resumen.json` NO trae qué modelo se usó** (el `bucle.py` vigente, tras el merge del equipo, ya
+  no escribe ese campo — las corridas de GPT-5.4 y DeepSeek de esta sesión sí lo tenían porque se
+  generaron con una versión anterior del arnés). Identificar cada corrida por la carpeta/etiqueta del
+  lote (`salidas-generalizacion/lote_generalizacion-<modelo>_*.json` lista qué carpetas produjo cada
+  lanzamiento) o por el orden temporal de las carpetas.
 - **Las salidas de este brazo viven en `salidas-generalizacion/`, no en `salidas/`** (ver 3.b) —
   precisamente para que no se mezclen por accidente con el confirmatorio.

@@ -16,6 +16,12 @@ dashboard/.clave.inicial
 # ---------------------------------------------------------------------------
 recon/
 
+# Snapshots de paginas guardadas que traen un token de terceros embebido
+# (Mapbox Secret Access Token) y bloquean GitHub Push Protection. Se citan por
+# URL en papers.md; el HTML local no se versiona.
+data/raw/public_artifacts/Public evidence of the OpenAI-HuggingFace AI attack — LessWrong.html
+data/raw/public_artifacts/Further public evidence of the OpenAI-HuggingFace attack — LessWrong.html
+
 # ---------------------------------------------------------------------------
 # Entornos y cachés (peso sin valor de proyecto)
 # ---------------------------------------------------------------------------
