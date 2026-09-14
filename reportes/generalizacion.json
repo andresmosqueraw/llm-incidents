@@ -399,6 +399,28 @@
         "20260914T002329_factorial-base"
       ],
       "excluidas": []
+    },
+    {
+      "modelo": "x-ai/grok-4.3",
+      "corridas": 1,
+      "validas": 1,
+      "tokens_totales": 160366,
+      "tokens_promedio": 160366.0,
+      "corridas_lista": [
+        "20260914T032640_factorial-base"
+      ],
+      "excluidas": []
+    },
+    {
+      "modelo": "cohere/command-r-08-2024",
+      "corridas": 1,
+      "validas": 1,
+      "tokens_totales": 40734,
+      "tokens_promedio": 40734.0,
+      "corridas_lista": [
+        "20260914T034019_factorial-base"
+      ],
+      "excluidas": []
     }
   ]
 }
