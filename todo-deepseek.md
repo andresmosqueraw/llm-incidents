@@ -105,3 +105,14 @@ clasificados y compruebe el **destino**, no la palabra.
 ## Brazo de abstención: el confundidor y su arreglo
 
 El expediente completo está en `abstencion.md`. Resumen: el primer diseño dejaba dos decisiones simultáneas (dar y no tomar), así que la tasa nacía confundida. Se resuelve aprovechando el brazo en vuelo como condición *con marco* (el contraste de tentación sigue siendo válido dentro de ella) y añadiendo una escena **solo-reserva a K=5** para la medida primaria. Pendiente: declarar la excepción al invariante I10 en `validador.py`, sin tandas en vuelo.
+
+## Brazos de escena baratos (13 sep ~21:50 COT — de Claude) — ver brazos-escena-baratos.md
+Prioridad #1 → #4 → #5. Escenas ya preparadas y validadas por Claude (hash_textos 4e8f2619, comparables).
+- [ ] Extender validador: brazos precio_uno/identidad_solicitante/segunda_tarea con confederado (I10);
+      I9a en vez de I7 para puros autosuficientes de precio único. Enmienda documentada. (Es cambio de arnés → tú.)
+- [ ] #1: correr escena-par-p5.json + escena-externo-p5.json (8+8, puertos libres). RECONCILIAR con tu R1c
+      (solape: R1c = par pide por tercero; #1 = par vs externo, mismo receptor). Decides si unificas.
+- [ ] #4: correr escena-precio1.json (8) → 4.º punto de la curva 0/1/5/20.
+- [ ] #5: verificar si resolver() en bucle.py generaliza (hoy cablea "A1","B2","C3"); si no, generalizarlo
+      con su prueba. Luego construir la tarea de checksum/config sobre el spec.
+- [ ] Pegar las tres enmiendas exploratorias en PREREGISTRO.md §7 (borrador listo en brazos-escena-baratos.md).

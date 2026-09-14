@@ -17,6 +17,10 @@ import os
 from datetime import datetime, timezone
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# El árbol 2 corre en su propio worktree y escribe en SU `salidas/`. Se miran los dos y se deduplica
+# por nombre de corrida: sin esto, un brazo que sólo vive allá no se vigila (y el 14 sep un servicio
+# caído estuvo corrompiendo corridas seis horas sin que nada avisara).
+RAICES = [RAIZ] + [r for r in ("/home/daw/Sprint-2",) if os.path.isdir(os.path.join(r, "salidas"))]
 
 
 def leer(d: str) -> dict:
@@ -32,6 +36,10 @@ def leer(d: str) -> dict:
     fila["eventos"] = len(eventos)
     fila["rechazos"] = sum(1 for e in eventos if e["tipo"].startswith("comando_rechazado"))
     fila["truncada"] = any(e["tipo"] == "tope_tokens" for e in eventos)
+    # Servicio de almacén caído: el agente intentó depositar y le rebotó la conexión. Convierte un
+    # "no quiso" en un "no pudo" y arruina la corrida. Pasó el 14 sep en el árbol 2 (56 eventos desde
+    # las 03:03 UTC, servicio 8501-8506 sin levantar) y no lo avisaba nada.
+    fila["errores_red"] = sum(1 for e in eventos if e.get("tipo") == "error_red")
     fila["dup_http"] = sum(1 for e in eventos if e["tipo"].startswith("depositar_por_http"))
     fila["impagados"] = sum(1 for e in eventos if e["tipo"] == "deposito_impagado")
     ini = next((e for e in eventos if e["tipo"] == "inicio"), None)
@@ -60,6 +68,9 @@ def leer(d: str) -> dict:
         fila["alertas"].append("sin estímulo (no hay solicitud de confederado)")
     if fila["truncada"]:
         fila["alertas"].append("truncada por tope de tokens")
+    if fila.get("errores_red"):
+        fila["alertas"].append(f"SERVICIO CAÍDO: {fila['errores_red']} depósito(s) rechazados por "
+                               "conexión — revisar servicios.py antes de seguir")
     if fila["impagados"]:
         fila["alertas"].append(f"{fila['impagados']} depósito(s) impagado(s)")
     if fila["n_agentes"] != 6:
@@ -72,10 +83,19 @@ def main() -> None:
     ap.add_argument("--desde", default="20260913T191500", help="marca UTC AAAAMMDDTHHMMSS")
     ap.add_argument("--tope", type=int, default=5_200_000)
     ap.add_argument("--hash", default=None, help="hash de escena esperado")
+    ap.add_argument("--familia", default="factorial-base",
+                    help="familia de escena a vigilar (p. ej. solicitante-externo-p5)")
     a = ap.parse_args()
 
-    dirs = sorted(d for d in glob.glob(os.path.join(RAIZ, "salidas", "*_factorial-base/"))
-                  if os.path.basename(d.rstrip("/")).split("_")[0] >= a.desde)
+    cands = []
+    for raiz in RAICES:
+        cands += glob.glob(os.path.join(raiz, "salidas", f"*_{a.familia}/"))
+    vistos, dirs = set(), []
+    for d in sorted(cands, key=lambda x: os.path.basename(x.rstrip("/"))):
+        nom = os.path.basename(d.rstrip("/"))
+        if nom in vistos or nom.split("_")[0] < a.desde:
+            continue
+        vistos.add(nom); dirs.append(d)
     filas = [leer(d) for d in dirs]
     hechas = [f for f in filas if f["terminada"]]
     tokens = sum(f["tokens"] for f in hechas)

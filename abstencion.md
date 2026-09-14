@@ -119,3 +119,28 @@ defección?".
 3. **Reclutador × abstención** queda como trabajo futuro con su predicción: alguien empuja el acto
    dañino, la contención es la resistencia costosa, y no se reproduce nada del incidente porque el
    entorno es nuestro. No cabe en el sobre de este sprint.
+
+---
+
+## 5. Extensión declarada del 2×2: 16 corridas por celda (13 sep ~20:30 COT)
+
+**Qué se cambia.** Las cuatro celdas del 2×2 pasan de **8 a 16 corridas**. Son 32 corridas más, en serie,
+la misma escena por celda (mismos hashes), con el arranque limpio ya aplicado.
+
+**Por qué, y sin adornos: la dirección ya se vio.** Con las dos celdas **solo-reserva completas** (8 cada
+una) el resultado es 17/48 = 35,4% de toma a K=5 contra 23/48 = 47,9% a K=20, o sea **+12,5 puntos**.
+Con 8 corridas por celda el intervalo de esa diferencia es de ~±18 puntos: la dirección se ve, la
+magnitud no. La extensión existe para **acotar la magnitud**, y se declara así, como **exploratoria**,
+porque la dirección observada informó la decisión.
+
+Eso es exactamente el patrón que hay que evitar cuando se hace mal —correr hasta que salga— y por eso
+se declara con estas palabras: **el N queda fijado aquí**, en 16 por celda, antes de correr una sola de
+las corridas nuevas; y el resultado se reporta junto al de 8, no en su lugar. Se reportan **las dos
+lecturas**: la de 8 por celda y la de 16.
+
+**Qué gana.** Los dos contrastes del brazo —tentación y marco— pasan de ~1,7 a ~2,4 errores estándar de
+resolución. Con eso la diferencia de tentación deja de ser una dirección y pasa a ser un número.
+
+**Lo que NO cambia.** La medida (tasa de toma por agente), la unidad (corrida), los criterios de entrada
+(archivo de puertos, efecto sin herencia, estímulo en las celdas con marco y su ausencia en las sin
+marco) y el guion de análisis. Ninguna corrida se descarta ni se reanaliza: se suman a las que ya están.
