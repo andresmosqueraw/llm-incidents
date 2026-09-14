@@ -518,9 +518,13 @@ arnés dos veces en la misma noche.)
 | `openai/gpt-5.4` | 6/6 | 337.521 | 56.254 | ~$1,27 |
 | `deepseek/deepseek-v4.1-flash` | 1 (cortado por tiempo, ver arriba) | 308.690 | 308.690 | ~$0,06 |
 | `google/gemini-3.1-flash-lite` | 6/6 | 710.028 | 118.338 | ~$0,27 |
-| **Total** | **13** | **1.356.239** | | **~$1,60** |
+| `anthropic/claude-haiku-4.5` | 6/6 | 470.257 | 78.376 | ~$1,73 |
+| **Total** | **19** | **1.826.496** | | **~$3,33** |
 
-Muy por debajo del estimado original (~$3,55-3,65 para 12 corridas).
+**`qwen/qwen3.8-flash` se intentó y se descartó (14 sep, madrugada):** pasó el smoke test (accuracy
+1.0) pero, igual que DeepSeek, resultó mucho más lento en reloj de lo que su nombre sugiere — la
+corrida de prueba llevaba ~9,6 minutos sin terminar la ronda 1 de 4 (proyección de 35-40+ min por
+corrida). Se cortó tras 0 corridas completas, sin costo real (no llegó a generar `resumen.json`).
 
 ### Análisis: ¿el patrón se repite en otros modelos? (13-14 sep, noche)
 
@@ -534,6 +538,7 @@ sin duplicarla). Reporte crudo en `reportes/generalizacion.json`, visible tambi�
 | Modelo | Precio 5 | Precio 20 | Diferencia (20−5) | N (agentes) |
 |---|---|---|---|---|
 | `openai/gpt-5.4` | 0/18 = 0% | 1/18 = 5,6% | +0,056 (IC95 boot [0, 0,167]) | 36 |
+| `anthropic/claude-haiku-4.5` | 5/18 = 27,8% | 5/18 = 27,8% | 0,0 (IC95 boot [−0,333, 0,278]) | 36 |
 | `google/gemini-3.1-flash-lite` | 11/18 = 61,1% | 9/18 = 50% | −0,111 (IC95 boot [−0,556, 0,333]) | 36 |
 | `deepseek/deepseek-v4.1-flash` | — | — | N=1, sin tasas (cortado por tiempo) | 6 |
 
@@ -544,12 +549,15 @@ sin duplicarla). Reporte crudo en `reportes/generalizacion.json`, visible tambi�
 - **Gemini 3.1 Flash Lite es otra historia completamente distinta.** Paga **10 veces más** que GPT-5.4
   (61% vs 0% a precio 5), y **sí muestra la dirección esperada** de H1 (cae de 61,1% a 50% al subir el
   precio), aunque el intervalo de la diferencia también cruza el cero con N=6.
+- **Claude Haiku 4.5 queda en un punto intermedio y sin gradiente:** 27,8% en los dos precios,
+  exactamente igual — cero diferencia. No confirma ni refuta H1 con este N, pero ubica un cuarto
+  punto de referencia entre el ~0-6% de GPT-5.4 y el ~50-61% de Gemini.
 - **Lectura honesta:** con solo 6 corridas por modelo (36 agentes, la mitad del tamaño de la sonda 4
-  original) ninguna de las dos diferencias es distinguible de cero — pero la **tasa base** sí difiere
-  muchísimo entre modelos (0-6% contra 50-61%), y eso ya es informativo aunque la pendiente no lo sea:
-  dice que el resultado confirmatorio (`glm-5.3-flash`, tasa ~20-22% en el ensayo) **no generaliza
-  igual a toda la familia de modelos** — varía por un orden de magnitud según el modelo, antes incluso
-  de mirar si responde al precio.
+  original) ninguna diferencia de precio es distinguible de cero en ningún modelo — pero la
+  **tasa base** sí difiere muchísimo entre modelos (0-6%, 28%, 50-61%), y eso ya es informativo aunque
+  la pendiente no lo sea: dice que el resultado confirmatorio (`glm-5.3-flash`, tasa ~20-22% en el
+  ensayo) **no generaliza igual a toda la familia de modelos** — varía por un orden de magnitud según
+  el modelo, antes incluso de mirar si responde al precio.
 - Esto refuerza el límite que el proyecto ya declara en todos los documentos: **es una medición de un
   modelo**, y esta rama exploratoria muestra por qué esa declaración no es una formalidad — el número
   cambiaría materialmente el titular si `gemini-3.1-flash-lite` hubiera sido el modelo confirmatorio
@@ -565,10 +573,15 @@ modelos el mismo patrón aparece, y en Gemini es enorme:
 | Modelo | Tarea completada | Ayudó Y completó tarea | Ayudó Y falló tarea |
 |---|---|---|---|
 | `openai/gpt-5.4` | 25/36 (69%) | 1/25 (4%) | 0/11 (0%) |
+| `anthropic/claude-haiku-4.5` | 34/36 (94%) | 9/34 (26%) | 1/2 (n muy chico) |
 | `google/gemini-3.1-flash-lite` | 16/36 (44%) | 5/16 (31%) | **15/20 (75%)** |
 
 - En **GPT-5.4** no hay confundidor que discutir: casi nadie ayuda, complete o no su tarea (4% vs
   0%). Es la lectura más limpia de las dos: "no coopera", sin matices de capacidad.
+- **Claude Haiku 4.5 es el más limpio de los cuatro modelos en este eje**: completó su tarea el 94%
+  de las veces (34/36), el más alto con diferencia, así que casi no queda margen para el confundidor
+  (solo 2 agentes fallaron su tarea en total). Su 27,8% de ayuda es, hasta ahora, la medición menos
+  contaminada por capacidad sobrante que tiene el brazo de generalización.
 - En **Gemini**, el 75% de ayuda entre los que **fallaron** su tarea contra 31% entre los que la
   completaron es una brecha enorme — más grande que la que ya preocupaba en el confirmatorio. Sugiere
   que buena parte del 61% agregado no es "Gemini es más generoso": es que casi 6 de cada 10 agentes

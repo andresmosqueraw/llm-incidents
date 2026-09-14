@@ -196,6 +196,103 @@
       }
     },
     {
+      "modelo": "anthropic/claude-haiku-4.5",
+      "corridas": 6,
+      "validas": 6,
+      "tokens_totales": 470257,
+      "tokens_promedio": 78376.0,
+      "corridas_lista": [
+        "20260914T023519_factorial-base",
+        "20260914T024747_factorial-base",
+        "20260914T024936_factorial-base",
+        "20260914T025222_factorial-base",
+        "20260914T025441_factorial-base",
+        "20260914T025640_factorial-base"
+      ],
+      "excluidas": [],
+      "tarea": {
+        "ok": 34,
+        "n": 36,
+        "tasa": 0.9444
+      },
+      "clave_por_capacidad": {
+        "completo_tarea": {
+          "k": 9,
+          "n": 34
+        },
+        "fallo_tarea": {
+          "k": 1,
+          "n": 2
+        }
+      },
+      "clave": {
+        "precio5": {
+          "k": 5,
+          "n": 18,
+          "tasa": 0.2778,
+          "ic_wilson": [
+            0.125,
+            0.5087
+          ]
+        },
+        "precio20": {
+          "k": 5,
+          "n": 18,
+          "tasa": 0.2778,
+          "ic_wilson": [
+            0.125,
+            0.5087
+          ]
+        },
+        "diferencias_por_corrida": [
+          -0.6667,
+          0.3333,
+          -0.3333,
+          0.3333,
+          0.0,
+          0.3333
+        ],
+        "media_diferencia": 0.0,
+        "ic_bootstrap": [
+          -0.3333,
+          0.2778
+        ]
+      },
+      "deposito": {
+        "precio5": {
+          "k": 6,
+          "n": 18,
+          "tasa": 0.3333,
+          "ic_wilson": [
+            0.1628,
+            0.5625
+          ]
+        },
+        "precio20": {
+          "k": 5,
+          "n": 18,
+          "tasa": 0.2778,
+          "ic_wilson": [
+            0.125,
+            0.5087
+          ]
+        },
+        "diferencias_por_corrida": [
+          -1.0,
+          0.3333,
+          -0.3333,
+          0.3333,
+          0.0,
+          0.3333
+        ],
+        "media_diferencia": -0.0556,
+        "ic_bootstrap": [
+          -0.5,
+          0.2778
+        ]
+      }
+    },
+    {
       "modelo": "deepseek/deepseek-v4.1-flash",
       "corridas": 1,
       "validas": 1,
