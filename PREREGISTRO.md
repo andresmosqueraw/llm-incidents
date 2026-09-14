@@ -705,3 +705,58 @@ pareado y su intervalo es más ancho; nunca se reporta junto con las diferencias
     · repositorio (canónico): lleva además la cabecera de sesión condicional del gateway y la extensión
       del validador para los brazos nuevos. Su hash se escribe cuando se corra la suite sobre él, ya con
       la extensión cerrada. Ninguno de esos dos cambios toca el camino que la escena del lote ejecuta.
+
+  **Segundo reemplazo declarado (14 sep ~23:30 COT).** La corrida `20260914T024943` de la extensión se
+  truncó al agotar el tope por corrida del lote (333.000 tokens), que es un tope de seguridad del arnés y
+  no una regla de la escena: la escena tiene su propio presupuesto de pasos, y el tope de tokens es el
+  cinturón que evita que una corrida se vaya. Es, por tanto, un fallo técnico del instrumento y aplica la
+  misma regla que a la corrida contaminada: **se repone con una corrida de reemplazo**. El analizador la
+  excluye por su cuenta, así que el N final se calcula solo. Van **dos reemplazos declarados**: uno por la
+  contaminación de la suite, uno por este truncamiento. El tope del lote en curso (333k por corrida) no
+  se toca: matar una cadena viva para reencuadrar un tope cuesta más —una corrida truncada más y su
+  reemplazo— que dejar que cierre y reponer.
+
+## 12. Extensión de reclutador × abstención a 16 por celda (14 sep ~23:45 COT, escrito antes de correr)
+
+**Qué se extiende.** Las dos celdas de la familia del reclutador que cruzan el acto dañino con la
+restricción costosa: `factorial-reclutador-abstencion-arbol2` (K=5) y `...-caro-arbol2` (K=20), hoy con 8
+corridas cada una, pasan a **16**. Ocho corridas más por celda, 16 en total.
+
+**Por qué, y con qué límite.** No es por el resultado: la primera mirada a esta familia ya ocurrió y su
+lectura fue **nula y frágil** —el empuje del reclutador no separaba, y el signo cambió al pasar de 5 a 8
+corridas—, y con 8 por celda el intervalo es demasiado ancho para sostener esa nulidad. Se extiende para
+**estrechar el intervalo, no para buscar otro veredicto**. Si el nulo se mantiene, se reporta como nulo
+preciso; si el signo vuelve a cambiar, eso también se reporta, y es precisamente la razón de extenderlo.
+
+**Las dos miradas, declaradas.** El diseño no admite una mirada sola aquí porque ya hubo una: se reportan
+**las dos** —la de n=8, que está en `reportes/incidente.json`, y la de n=16, que se calculará una sola vez
+al cerrar— con el mismo criterio que la enmienda del N=160 del factorial.
+
+**Qué no cambia.** Las escenas son las mismas, con sus hashes (`dd9086e2d38f3740` para K=5 y
+`580e8ae01e1b0ff9` para K=20) y su bono ya declarado (5 y 20). Mismo arnés, mismos puertos (8401-8406, el
+árbol 2), misma codificación. Las 8 corridas nuevas se apilan con las 8 existentes de cada celda.
+
+**Costo declarado.** En reloj: unos 45 minutos del árbol 2, que queda ocioso al cerrar precio1, y **cero
+en la ruta crítica** del congelamiento (no comparte puertos con el árbol 1). En escritura: un contraste
+más con su intervalo, para el equipo. Ese es el costo real y por eso la decisión fue del equipo.
+
+**Servicios en la base equivocada: 8 corridas de los brazos de escena (14 sep ~00:10 COT).** Las tres
+escenas de escena barata declaran `puertos.egreso_base = 8501`, y tras el reinicio del PC se levantaron
+los servicios en 8401-8406 (la base de los brazos de reclutador), que es distinta. Durante ~1 hora los
+agentes de #1 y de #4 llamaron a `localhost:8501..8506` y **nadie escuchaba**: 8 corridas (7 de
+externo-p5 y 1 de precio1) registran entre 3 y 11 llamadas fallidas cada una. Efecto sobre la medida: no
+impide la tarea ni el depósito —el material de la tarea va en el directorio y el depósito va por la
+herramienta—, pero **quema pasos del presupuesto en llamadas muertas**, y los pasos son la moneda del
+juego. Así que es un fallo técnico del instrumento y aplica la regla de siempre: **esas 8 corridas se
+excluyen y se reponen**. Criterio decidible: la corrida contiene `Failed to connect` / `Connection
+refused` en sus eventos. Corregido a las 00:05 (servicios en 8501-8506, verificados con `/entrada`).
+Lección para el recetario de escenas: **cada escena declara su propia base de puertos, y hay que
+comprobar que tiene seis servicios vivos antes de lanzar**, no reusar la de otro brazo.
+
+**Reposición de las 8 corridas de los brazos de escena (14 sep ~00:00 COT).** Se reponen así: 7 de
+`externo-p5` y 1 de `precio1`, contra las mismas escenas resueltas y con los mismos argumentos, en el
+árbol 2, cuando su cadena actual cierre. **No es una extensión**: el N declarado de cada brazo no cambia
+(8 para #1, 6 para #4); son los reemplazos de las corridas que el fallo de puertos invalidó.
+Corren en paralelo con la extensión de reclutador × abstención porque usan bases distintas (8501-8506
+contra 8401-8406) y no comparten servicios ni puertos: la única interferencia posible es el caudal del
+gateway, que ya se reparte entre dos árboles desde el arranque de la noche.
