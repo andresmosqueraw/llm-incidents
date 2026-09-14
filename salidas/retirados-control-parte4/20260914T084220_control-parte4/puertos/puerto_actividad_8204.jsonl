@@ -1,0 +1,4 @@
+{"t": 1789375320.229, "agente": "agente-04", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789375320.282, "agente": "agente-04", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789375320.333, "agente": "agente-04", "metodo": "POST", "ruta": "/deposito", "largo": 18}
+{"t": 1789375320.335, "agente": "agente-04", "metodo": "POST", "ruta": "/deposito", "largo": 29}

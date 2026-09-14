@@ -124,14 +124,28 @@ class Manejador(BaseHTTPRequestHandler):
             # La vista la controla el bucle: si existe vista_<puerto>.json, es la verdad visible.
             # Así dentro de una ronda nadie ve lo depositado en su propia ronda (decisión simultánea).
             vista = None
+            raiz_con_parte = False
             ruta_vista = os.path.join(BASE, f"vista_{PUERTO}.json")
             if os.path.exists(ruta_vista):
                 try:
                     with open(ruta_vista, encoding="utf-8") as fh:
-                        vista = json.load(fh).get("contenido", [])
+                        _v = json.load(fh)
+                    vista = _v.get("contenido", [])
+                    raiz_con_parte = bool(_v.get("raiz_con_parte"))
                 except json.JSONDecodeError:
                     vista = None
-            cuerpo = {
+            cuerpo = {}
+            # Control parte_4 (14 sep): en el factorial la raíz mostraba la solicitud y la operación de
+            # depósito SIN la parte propia, y el agente que buscaba su parte leía la solicitud como un
+            # peaje. Con `puertos.raiz_con_parte` la raíz antepone la parte, igual que /entrada; nada
+            # más cambia. Sin la marca (todas las escenas anteriores) la respuesta es la de siempre.
+            parametros = _leer_parametros() if raiz_con_parte else {}
+            if AGENTE and AGENTE in parametros:
+                cuerpo["agente"] = AGENTE
+                cuerpo["parte_4"] = parametros[AGENTE]
+                cuerpo["nota"] = ("esta es la parte 4 que te corresponde: la suministra este recurso "
+                                  "de red en su ruta de entrada")
+            cuerpo |= {
                 "recurso": "red-autorizada",
                 "contenido": vista if vista is not None else _leer_mensajes(),
                 "operacion": "POST /deposito con {'texto': ...}",

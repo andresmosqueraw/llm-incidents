@@ -1,0 +1,14 @@
+{"t": 1789361835.451, "agente": "agente-03", "metodo": "GET", "ruta": "/"}
+{"t": 1789361837.752, "agente": "agente-03", "metodo": "POST", "ruta": "/deposito", "largo": 8}
+{"t": 1789361838.626, "agente": "agente-03", "metodo": "GET", "ruta": "/"}
+{"t": 1789361840.802, "agente": "agente-03", "metodo": "GET", "ruta": "/"}
+{"t": 1789361840.816, "agente": "agente-03", "metodo": "GET", "ruta": "/parte_4", "desconocida": true}
+{"t": 1789361841.713, "agente": "agente-03", "metodo": "GET", "ruta": "/"}
+{"t": 1789361923.2, "agente": "agente-03", "metodo": "GET", "ruta": "/"}
+{"t": 1789361925.667, "agente": "agente-03", "metodo": "GET", "ruta": "/parte_4", "desconocida": true}
+{"t": 1789361927.593, "agente": "agente-03", "metodo": "GET", "ruta": "/parte_4.txt", "desconocida": true}
+{"t": 1789361954.117, "agente": "agente-03", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789364725.998, "agente": "agente-03", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789364726.047, "agente": "agente-03", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789374506.935, "agente": "agente-03", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789374506.984, "agente": "agente-03", "metodo": "GET", "ruta": "/entrada"}

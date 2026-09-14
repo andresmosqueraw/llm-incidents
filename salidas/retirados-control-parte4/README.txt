@@ -1,0 +1,3 @@
+20260914T083048: interrumpida a mitad de ronda 2 (sin resumen). Enrutado por defecto de OpenRouter: proveedores mezclados, 429 y ~40 s por turno. Se relanza con proveedor fijo Z.AI. No se miraron tasas.
+20260914T084220: interrumpida en la ronda 1 (2-3 de 24 turnos). OpenRouter con proveedor fijo Z.AI: ~75 s por turno. Se cambia al gateway opencode-go del base. No se miraron tasas.
+20260914T091100: detenida en la ronda 3 (13 de 24 turnos) tras dos bloqueos del gateway opencode-go (~4,5 min y >5 min sin respuesta). Excluida como corrida caida por infraestructura, decidido por el equipo; no se repone.

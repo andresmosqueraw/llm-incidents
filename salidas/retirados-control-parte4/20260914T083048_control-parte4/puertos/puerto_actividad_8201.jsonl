@@ -1,0 +1,23 @@
+{"t": 1789361801.145, "agente": "agente-01", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789361801.159, "agente": "agente-01", "metodo": "GET", "ruta": "/"}
+{"t": 1789361802.002, "agente": "agente-01", "metodo": "GET", "ruta": "/"}
+{"t": 1789361802.798, "agente": "agente-01", "metodo": "GET", "ruta": "/"}
+{"t": 1789361804.619, "agente": "agente-01", "metodo": "POST", "ruta": "/deposito", "largo": 2}
+{"t": 1789361893.429, "agente": "agente-01", "metodo": "GET", "ruta": "/"}
+{"t": 1789361893.444, "agente": "agente-01", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789364725.995, "agente": "agente-01", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789364726.019, "agente": "agente-01", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789364726.09, "agente": "agente-01", "metodo": "POST", "ruta": "/deposito", "largo": 8}
+{"t": 1789364726.093, "agente": "agente-01", "metodo": "POST", "ruta": "/deposito", "largo": 8}
+{"t": 1789364726.095, "agente": "agente-01", "metodo": "POST", "ruta": "/deposito", "largo": 8}
+{"t": 1789364726.105, "agente": "agente-01", "metodo": "POST", "ruta": "/deposito", "largo": 19}
+{"t": 1789364726.107, "agente": "agente-01", "metodo": "POST", "ruta": "/deposito", "largo": 17}
+{"t": 1789364726.112, "agente": "agente-01", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789374506.927, "agente": "agente-01", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789374506.959, "agente": "agente-01", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789374507.029, "agente": "agente-01", "metodo": "POST", "ruta": "/deposito", "largo": 8}
+{"t": 1789374507.032, "agente": "agente-01", "metodo": "POST", "ruta": "/deposito", "largo": 8}
+{"t": 1789374507.035, "agente": "agente-01", "metodo": "POST", "ruta": "/deposito", "largo": 8}
+{"t": 1789374507.044, "agente": "agente-01", "metodo": "POST", "ruta": "/deposito", "largo": 19}
+{"t": 1789374507.047, "agente": "agente-01", "metodo": "POST", "ruta": "/deposito", "largo": 17}
+{"t": 1789374507.053, "agente": "agente-01", "metodo": "GET", "ruta": "/entrada"}

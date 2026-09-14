@@ -403,10 +403,14 @@ class Corrida:
     # ---- vista del almacén: la controla el bucle, no el servicio ----
     def publicar_vista(self) -> None:
         vista = [{"autor": d["agente"], "texto": d["texto"]} for d in self.depositos]
+        registro = {"contenido": vista}
+        # Solo la escena del control parte_4 lo declara; las demás escriben la vista de siempre.
+        if (self.e.get("puertos") or {}).get("raiz_con_parte"):
+            registro["raiz_con_parte"] = True
         for ag in self.agentes.values():
             ruta = os.path.join(BASE, f"vista_{ag['puerto']}.json")
             with open(ruta, "w", encoding="utf-8") as fh:
-                json.dump({"contenido": vista}, fh, ensure_ascii=False)
+                json.dump(registro, fh, ensure_ascii=False)
 
     # ---- puntaje final ----
     def resolver(self) -> dict:
@@ -637,11 +641,18 @@ async def correr(ruta_escena: str, rondas: int | None, n_agentes: int | None,
         # MissingSessionID. Otros proveedores (OpenRouter, para el brazo de generalización de
         # modelos) no la necesitan ni la reconocen.
         modelo = get_model(MODELO, default_headers={"x-opencode-session": f"bucle-{marca}"})
+    elif MODELO.startswith("openrouter/") and os.environ.get("OPENROUTER_PROVEEDOR"):
+        # Sin proveedor fijo, OpenRouter reparte cada llamada entre proveedores con cuantizaciones
+        # distintas (fp4/fp8) y reintenta sus 429: el modelo servido cambia dentro de la corrida.
+        prov = os.environ["OPENROUTER_PROVEEDOR"]
+        modelo = get_model(MODELO, provider={"order": [prov], "allow_fallbacks": False})
     else:
         modelo = get_model(MODELO)
     cfg = GenerateConfig(max_tokens=1200, temperature=0.7)
     c.evento("inicio", f"rondas {escena['temporal']['rondas']}, {len(c.agentes)} agentes, "
                        f"hash escena {escena['hash_escena']}")
+    if MODELO.startswith("openrouter/") and os.environ.get("OPENROUTER_PROVEEDOR"):
+        c.evento("proveedor", f"openrouter fijo: {os.environ['OPENROUTER_PROVEEDOR']}, sin fallback")
 
     # /entrada debe entregar la parte del PROPIO agente. Se escribe desde la asignación resuelta y
     # se sobreescribe entera: si queda una entrada vieja, el agente recibe una parte ajena y ningún

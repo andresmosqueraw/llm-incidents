@@ -1,0 +1,12 @@
+{"t": 1789361858.5, "agente": "agente-04", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789361929.595, "agente": "agente-04", "metodo": "GET", "ruta": "/"}
+{"t": 1789361932.499, "agente": "agente-04", "metodo": "GET", "ruta": "/"}
+{"t": 1789361934.184, "agente": "agente-04", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789364726.0, "agente": "agente-04", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789364726.06, "agente": "agente-04", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789364726.109, "agente": "agente-04", "metodo": "POST", "ruta": "/deposito", "largo": 18}
+{"t": 1789364726.111, "agente": "agente-04", "metodo": "POST", "ruta": "/deposito", "largo": 29}
+{"t": 1789374506.938, "agente": "agente-04", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789374506.997, "agente": "agente-04", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789374507.05, "agente": "agente-04", "metodo": "POST", "ruta": "/deposito", "largo": 18}
+{"t": 1789374507.052, "agente": "agente-04", "metodo": "POST", "ruta": "/deposito", "largo": 29}

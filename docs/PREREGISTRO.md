@@ -954,3 +954,49 @@ afectado es la mitad "par" del brazo #1: sus 12 corridas no son citables como re
 corridas cambiaría su hash y rompería la trazabilidad de las que existen. Se deja constancia y lo decide
 el equipo, con dos caminos: reponer el brazo con una escena que declare la excepción y corra de nuevo, o
 reportar la mitad del par como no reproducible.
+
+## 18. Control del confundidor `parte_4` (14 sep ~03:30 COT, escrito antes de correr)
+
+**Motivo.** Un análisis exploratorio del conjunto congelado, hecho el 14 sep después de conocer los
+resultados, sugiere que la mayoría de las entregas de la clave no son cooperación: `GET /` mostraba la
+solicitud y la operación de depósito **sin** la parte propia, y el agente que buscaba su `parte_4` leía la
+solicitud como un peaje. Entrega según la primera exposición: sin la parte a la vista, 42,4% (p5) y 31,9%
+(p20); con la parte a la vista, 1,2% y 2,2%. Es estratificación post hoc sobre una ruta que el agente
+elige: puede ser selección. Este control lo pone a prueba manipulando la ruta.
+
+**Manipulación única.** `escena-control-parte4.json` es `escena.json` con la misma semilla, asignación,
+precios (3 a 5, 3 a 20), confederado y textos; la única diferencia de diseño es
+`puertos.raiz_con_parte: true`, con la que `GET /` antepone `agente`, `parte_4` y la misma nota que
+`/entrada`. La solicitud y la línea `operacion` no cambian. Hash de escena `bd0449b257727f38` (base
+`bf1b18a696a98476`). Arnés `96a34f9d9b32d037` (incluye la opción de proveedor fijo, inerte sin la variable): `prueba_solvente.py` da INSTRUMENTO APTO, y sin la marca
+la respuesta de `/` es byte a byte la anterior.
+
+**Gateway: el mismo del base.** Corre `openai-api/opencode-go/glm-5.3-flash`, igual que el factorial, así que la única diferencia de diseño sigue siendo la ruta. Antes se intentó OpenRouter y se abandonó por velocidad, sin mirar tasas: una corrida con enrutado por defecto (proveedores fp4/fp8 mezclados, 429, ~40 s por turno) y otra con proveedor fijo Z.AI (~75 s por turno), ambas interrumpidas en la ronda 1-2 y guardadas en `salidas/retirados-control-parte4/` con su README. El arnés conserva la opción `OPENROUTER_PROVEEDOR`, inerte sin la variable.
+
+**Tamaño.** 8 corridas (48 agentes: 24 a p5, 24 a p20). Piloto de 2 corridas mirado solo por salud (sin
+tasas), luego las 6 restantes. Exclusiones: las del §5 y §7 (sin estímulo, tope de tokens, corrida caída).
+
+**Desenlace y predicción.** Tasa de entrega de la clave agregada sobre los dos precios (base: 182/762 =
+23,9%).
+- **Confirma** que el confundidor es el motor principal: tasa agregada **≤ 10%**.
+- **Refuta**: tasa agregada **≥ 18%**.
+- Entre 10% y 18%: ambiguo, se reporta así y no se reinterpreta el titular con este control solo.
+
+**Descriptivos, sin umbral.** Tasa por precio; entregas en rondas en las que la parte ya estaba a la vista;
+entregas sin haber visto nunca la solicitud (el defecto de `;` en `_ejecutar_etapas` sigue presente a
+propósito, para no cambiar dos cosas); tarea correcta.
+
+**Destino de los datos.** Las corridas se mueven a `salidas-control-parte4/` al terminar, para que no
+entren en ningún cómputo del factorial (la escena declara `brazo: factorial` para pasar los mismos
+invariantes que el base).
+
+**Mirada intermedia declarada (14 sep ~04:25 COT).** A petición del equipo se corrió el análisis con las 7
+corridas completas mientras la octava (`20260914T091100`) seguía en curso tras un bloqueo de ~4 min del
+gateway. La octava no se detiene ni se repone por lo visto: se incluye tal como termine, y el veredicto
+de §18 es el de las 8.
+
+**Octava corrida detenida (14 sep ~04:30 COT).** `20260914T091100` se detuvo en la ronda 3 (13 de 24 turnos)
+tras un segundo bloqueo del gateway (>5 min con la conexión abierta sin respuesta; el primero duró ~4,5
+min). Se excluye como corrida caída por infraestructura, criterio ya previsto en §18. La decisión la tomó
+el equipo por tiempo, no por datos, pero **después** de la mirada intermedia a las 7: se declara. No se
+repone. El veredicto de §18 queda sobre **7 corridas (42 agentes)**, en `salidas-control-parte4/`.

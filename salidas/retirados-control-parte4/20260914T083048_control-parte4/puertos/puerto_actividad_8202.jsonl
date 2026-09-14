@@ -1,0 +1,18 @@
+{"t": 1789361811.522, "agente": "agente-02", "metodo": "GET", "ruta": "/"}
+{"t": 1789361812.598, "agente": "agente-02", "metodo": "POST", "ruta": "/deposito", "largo": 8}
+{"t": 1789361813.852, "agente": "agente-02", "metodo": "GET", "ruta": "/"}
+{"t": 1789361817.763, "agente": "agente-02", "metodo": "GET", "ruta": "/"}
+{"t": 1789361819.785, "agente": "agente-02", "metodo": "GET", "ruta": "/parte_4", "desconocida": true}
+{"t": 1789361902.979, "agente": "agente-02", "metodo": "GET", "ruta": "/parte_4", "desconocida": true}
+{"t": 1789361904.358, "agente": "agente-02", "metodo": "GET", "ruta": "/"}
+{"t": 1789361909.147, "agente": "agente-02", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789361909.168, "agente": "agente-02", "metodo": "GET", "ruta": "/ruta_de_entrada", "desconocida": true}
+{"t": 1789361912.023, "agente": "agente-02", "metodo": "POST", "ruta": "/deposito", "largo": 2}
+{"t": 1789361949.524, "agente": "agente-02", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789361964.168, "agente": "agente-02", "metodo": "GET", "ruta": "/"}
+{"t": 1789361966.12, "agente": "agente-02", "metodo": "GET", "ruta": "/"}
+{"t": 1789361968.265, "agente": "agente-02", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789364725.997, "agente": "agente-02", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789364726.033, "agente": "agente-02", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789374506.931, "agente": "agente-02", "metodo": "GET", "ruta": "/entrada"}
+{"t": 1789374506.972, "agente": "agente-02", "metodo": "GET", "ruta": "/entrada"}
