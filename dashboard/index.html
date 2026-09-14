@@ -357,6 +357,10 @@ async function cargarGeneralizacion() {
       </div>`;
     }
     const c5 = m.clave.precio5, c20 = m.clave.precio20, dif = m.clave.media_diferencia;
+    const t = m.tarea, cpc = m.clave_por_capacidad;
+    const tasaOk = cpc && t.ok ? cpc.completo_tarea.k / cpc.completo_tarea.n : null;
+    const tasaFalla = cpc && (t.n - t.ok) ? cpc.fallo_tarea.k / cpc.fallo_tarea.n : null;
+    const brechaGrande = tasaOk !== null && tasaFalla !== null && (tasaFalla - tasaOk) >= 0.3;
     return `<div class="caja"><h3>${esc(nom)} <span class="mini">— ${m.corridas} corridas, ${num(m.tokens_totales)} tokens</span></h3>
       <div class="barra"><div class="et">Cuando costaba <b>5</b></div>
         <div class="pista"><i style="width:${Math.round(100 * (c5.tasa || 0))}%"></i></div>
@@ -366,12 +370,25 @@ async function cargarGeneralizacion() {
         <div class="val">${pct(c20.tasa)}<span>${c20.k} de ${c20.n}</span></div></div>
       <p class="mini">Diferencia (20−5): <b>${dif === null || dif === undefined ? '—' : (dif > 0 ? '+' : '') + dif.toFixed(2)}</b>
         — con solo ${m.corridas} corridas el margen de error es ancho, esto es una señal, no una conclusión.</p>
+      ${t ? `<p class="mini">Completó su propia tarea: <b>${pct(t.tasa)}</b> (${t.ok} de ${t.n}).
+        Ayudó y completó: ${cpc.completo_tarea.k}/${cpc.completo_tarea.n} · Ayudó y falló: ${cpc.fallo_tarea.k}/${cpc.fallo_tarea.n}
+        ${brechaGrande ? '<b style="color:var(--warn)">— brecha grande: buena parte de "ayudar" coincide con fallar la propia tarea, no con generosidad</b>' : ''}</p>` : ''}
     </div>`;
   }).join('');
   cont.innerHTML = `<p class="mini">Misma escena y mismo diseño del experimento (autosuficiente, precio 5 vs 20),
       corrido con otros modelos vía OpenRouter en vez de glm-5.3-flash. El número que sostiene el reporte
       sigue siendo el de arriba: esto solo dice si el patrón se repite, se aplana o se invierte según el modelo.</p>
-    <div class="agentes">${tarjetas}</div>`;
+    <div class="agentes">${tarjetas}</div>
+    <div class="lectura">
+      <b>Interpretación.</b> GPT-5.4 casi no ayuda en ningún caso (0% a precio 5, 5,6% a precio 20) —
+      no es que no pudiera: completó su propia tarea el 69% de las veces, y aun con presupuesto de
+      sobra casi nadie pagó por el desconocido. Gemini 3.1 Flash Lite ayuda mucho más (61% a precio 5),
+      pero gran parte de eso viene acompañado de <b>fallar su propia tarea</b> (75% de ayuda entre los
+      que fallaron, contra 31% entre los que la completaron) — el mismo confundidor de "capacidad
+      sobrante" que ya documenta el experimento confirmatorio, aquí mucho más marcado. La tasa base
+      varía por un orden de magnitud entre modelos (0-6% contra 50-61%): el resultado con
+      <code>glm-5.3-flash</code> no generaliza igual a toda la familia de modelos.
+    </div>`;
 }
 
 /* ---------- 5. documentos ---------- */

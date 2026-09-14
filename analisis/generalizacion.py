@@ -98,6 +98,25 @@ def main() -> None:
             print("    menos de 2 corridas validas: se reportan solo tokens, sin tasas\n")
             resumen["modelos"].append(entrada)
             continue
+
+        # Tarea completada, y el confundidor de capacidad sobrante: ¿el que FALLA su propia tarea
+        # ayuda mas? Si es asi, la tasa de "ayuda" no mide disposicion, mide agentes distraidos o
+        # sin nada que perder. El mismo confundidor que ya documenta el confirmatorio.
+        agentes = [a for c in validas for a in c["agentes"].values()
+                   if a["tipo"] == "autosuficiente"]
+        ok = [a for a in agentes if a["tarea_correcta"]]
+        no_ok = [a for a in agentes if not a["tarea_correcta"]]
+        entrada["tarea"] = {"ok": len(ok), "n": len(agentes),
+                             "tasa": round(len(ok) / len(agentes), 4) if agentes else None}
+        entrada["clave_por_capacidad"] = {
+            "completo_tarea": {"k": sum(1 for a in ok if a["clave"]), "n": len(ok)},
+            "fallo_tarea": {"k": sum(1 for a in no_ok if a["clave"]), "n": len(no_ok)},
+        }
+        print(f"    tarea completada: {entrada['tarea']['ok']}/{entrada['tarea']['n']}")
+        cpc = entrada["clave_por_capacidad"]
+        print(f"    ayudo Y completo su tarea:  {cpc['completo_tarea']['k']}/{cpc['completo_tarea']['n']}")
+        print(f"    ayudo Y fallo su tarea:     {cpc['fallo_tarea']['k']}/{cpc['fallo_tarea']['n']}")
+
         for campo, nombre in (("clave", "LA CLAVE (respuesta a la solicitud)"),
                               ("deposito", "cualquier deposito (union)")):
             vals5 = [1 if a[campo] else 0 for c in validas for a in c["agentes"].values()
