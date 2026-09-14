@@ -20,3 +20,115 @@ salud del lote — 20:12 UTC — corridas desde 20260913T200900
     201135  sin resumen (en curso o interrumpida)
   minutos entre arranques: media 1.7, máximo 1.7
 20:12 UTC respaldo respaldos/lote_20260913T2012.tar.gz 1.4M
+=== 20:42 UTC — bloque B ===
+salud del lote — 20:42 UTC — corridas desde 20260913T200900
+  terminadas: 15   en curso/interrumpidas: 1
+  hash de escena: ÚNICO bf1b18a696a98476
+  tokens: 1,701,581 de 5,200,000 (33%)   media/corrida 113,438
+  tareas completadas: 87/90 (97%)   rechazos: 121/1733 eventos (7%)   depósitos por http: 13
+  con estímulo: 15/15   saldos negativos: 0   truncadas: 0
+  ALERTAS:
+    201804  1 depósito(s) impagado(s)
+    201945  2 depósito(s) impagado(s)
+    204044  sin resumen (en curso o interrumpida)
+  minutos entre arranques: media 2.1, máximo 3.8
+20:42 UTC respaldo respaldos/lote_20260913T2042.tar.gz 1.7M
+=== 21:12 UTC — bloque B ===
+salud del lote — 21:12 UTC — corridas desde 20260913T200900
+  terminadas: 27   en curso/interrumpidas: 1
+  hash de escena: ÚNICO bf1b18a696a98476
+  tokens: 3,077,513 de 5,200,000 (59%)   media/corrida 113,981
+  tareas completadas: 154/162 (95%)   rechazos: 223/3148 eventos (7%)   depósitos por http: 17
+  con estímulo: 27/27   saldos negativos: 0   truncadas: 0
+  ALERTAS:
+    201804  1 depósito(s) impagado(s)
+    201945  2 depósito(s) impagado(s)
+    205008  1 depósito(s) impagado(s)
+    205415  1 depósito(s) impagado(s)
+    205935  1 depósito(s) impagado(s)
+    210655  sin resumen (en curso o interrumpida)
+  minutos entre arranques: media 2.1, máximo 3.8
+21:12 UTC respaldo respaldos/lote_20260913T2112.tar.gz 1.9M
+=== 21:42 UTC — bloque B ===
+salud del lote — 21:42 UTC — corridas desde 20260913T200900
+  terminadas: 31   en curso/interrumpidas: 0
+  hash de escena: ÚNICO bf1b18a696a98476
+  tokens: 5,215,569 de 5,200,000 (100%)   media/corrida 168,244
+  tareas completadas: 171/186 (92%)   rechazos: 259/3662 eventos (7%)   depósitos por http: 17
+  con estímulo: 31/31   saldos negativos: 0   truncadas: 1
+  ALERTAS:
+    201804  1 depósito(s) impagado(s)
+    201945  2 depósito(s) impagado(s)
+    205008  1 depósito(s) impagado(s)
+    205415  1 depósito(s) impagado(s)
+    205935  1 depósito(s) impagado(s)
+    212428  truncada por tope de tokens
+  minutos entre arranques: media 2.5, máximo 13.2
+21:42 UTC respaldo respaldos/lote_20260913T2142.tar.gz 2.1M
+=== 22:12 UTC — bloque B ===
+salud del lote — 22:12 UTC — corridas desde 20260913T200900
+  terminadas: 31   en curso/interrumpidas: 0
+  hash de escena: ÚNICO bf1b18a696a98476
+  tokens: 5,215,569 de 5,200,000 (100%)   media/corrida 168,244
+  tareas completadas: 171/186 (92%)   rechazos: 259/3662 eventos (7%)   depósitos por http: 17
+  con estímulo: 31/31   saldos negativos: 0   truncadas: 1
+  ALERTAS:
+    201804  1 depósito(s) impagado(s)
+    201945  2 depósito(s) impagado(s)
+    205008  1 depósito(s) impagado(s)
+    205415  1 depósito(s) impagado(s)
+    205935  1 depósito(s) impagado(s)
+    212428  truncada por tope de tokens
+  minutos entre arranques: media 2.5, máximo 13.2
+22:12 UTC respaldo respaldos/lote_20260913T2212.tar.gz 2.3M
+=== 22:42 UTC — bloque B ===
+salud del lote — 22:42 UTC — corridas desde 20260913T200900
+  terminadas: 31   en curso/interrumpidas: 0
+  hash de escena: ÚNICO bf1b18a696a98476
+  tokens: 5,215,569 de 5,200,000 (100%)   media/corrida 168,244
+  tareas completadas: 171/186 (92%)   rechazos: 259/3662 eventos (7%)   depósitos por http: 17
+  con estímulo: 31/31   saldos negativos: 0   truncadas: 1
+  ALERTAS:
+    201804  1 depósito(s) impagado(s)
+    201945  2 depósito(s) impagado(s)
+    205008  1 depósito(s) impagado(s)
+    205415  1 depósito(s) impagado(s)
+    205935  1 depósito(s) impagado(s)
+    212428  truncada por tope de tokens
+  minutos entre arranques: media 2.5, máximo 13.2
+22:42 UTC respaldo respaldos/lote_20260913T2242.tar.gz 2.5M
+=== 23:12 UTC — bloque B ===
+salud del lote — 23:12 UTC — corridas desde 20260913T200900
+  terminadas: 37   en curso/interrumpidas: 1
+  hash de escena: ÚNICO bf1b18a696a98476
+  tokens: 5,918,529 de 5,200,000 (114%)   media/corrida 159,960
+  tareas completadas: 206/222 (93%)   rechazos: 305/4364 eventos (7%)   depósitos por http: 19
+  con estímulo: 37/37   saldos negativos: 0   truncadas: 1
+  ALERTAS:
+    201804  1 depósito(s) impagado(s)
+    201945  2 depósito(s) impagado(s)
+    205008  1 depósito(s) impagado(s)
+    205415  1 depósito(s) impagado(s)
+    205935  1 depósito(s) impagado(s)
+    212428  truncada por tope de tokens
+    231138  sin resumen (en curso o interrumpida)
+  minutos entre arranques: media 4.9, máximo 91.6
+23:12 UTC respaldo respaldos/lote_20260913T2312.tar.gz 2.7M
+=== 23:42 UTC — lote.py terminó (bloque B) ===
+salud del lote — 23:42 UTC — corridas desde 20260913T200900
+  terminadas: 41   en curso/interrumpidas: 0
+  hash de escena: ÚNICO bf1b18a696a98476
+  tokens: 6,596,884 de 5,200,000 (127%)   media/corrida 160,899
+  tareas completadas: 224/246 (91%)   rechazos: 330/4768 eventos (7%)   depósitos por http: 22
+  con estímulo: 41/41   saldos negativos: 0   truncadas: 2
+  ALERTAS:
+    201804  1 depósito(s) impagado(s)
+    201945  2 depósito(s) impagado(s)
+    205008  1 depósito(s) impagado(s)
+    205415  1 depósito(s) impagado(s)
+    205935  1 depósito(s) impagado(s)
+    212428  truncada por tope de tokens
+    231138  truncada por tope de tokens
+    231656  1 depósito(s) impagado(s)
+  minutos entre arranques: media 4.7, máximo 91.6
+23:42 UTC respaldo respaldos/lote_20260913T2342.tar.gz 2.8M

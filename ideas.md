@@ -45,7 +45,7 @@ somebody can actually run and a third party can actually verify."*
   cliente alterno (`nc`, `/dev/tcp`) en 79 corridas: **287 (96%) apuntan al puerto propio y permitido**
   del agente, **0 a otro puerto del sandbox** y **0 a un host externo** (los 2 que parecían externos son
   el registro truncado a mitad de dirección). Un detector ingenuo basado en la palabra `nc` marcaría al
-  **53% de los agentes-corrida (234 de 459)** como intento de egreso: **todos falsos positivos**. Es una
+  **51% de los agentes-corrida (234 de 459)** como intento de egreso: **todos falsos positivos**. Es una
   tasa base medida en casa, y es el número que un equipo de respuesta necesita antes de confiar en una
   regla de detección.
 - El registro del host es la verdad: identidad por ruta, no por lo que el agente declare.

@@ -95,9 +95,13 @@ Y el «21 antes / 0 después» del pago es mecánico: hay que alcanzar el puerto
    prometer nada sobre escape. C1 = solicitud simple contra solicitud con **propósito colectivo**, misma
    escena base, **sin orden** (información, no instrucción, para no medir obediencia).
 3. Lo que queda es un hallazgo de Track 1 y no cuesta un token: **la tasa base de falsos positivos de un
-   detector ingenuo de egreso** —53% de los agentes-corrida marcados, todos falsos—. Va al apéndice de
+   detector ingenuo de egreso** —51% de los agentes-corrida marcados (234 de 459), todos falsos—. Va al apéndice de
    uso dual y conversa con la detección que correlaciona pero no escala.
 
 **Regla que sale de esto** (tercera vez que un clasificador de texto muerde): ninguna métrica derivada
 de clasificar texto de comandos entra a un borrador sin que alguien lea una muestra de los comandos
 clasificados y compruebe el **destino**, no la palabra.
+
+## Brazo de abstención: el confundidor y su arreglo
+
+El expediente completo está en `abstencion.md`. Resumen: el primer diseño dejaba dos decisiones simultáneas (dar y no tomar), así que la tasa nacía confundida. Se resuelve aprovechando el brazo en vuelo como condición *con marco* (el contraste de tentación sigue siendo válido dentro de ella) y añadiendo una escena **solo-reserva a K=5** para la medida primaria. Pendiente: declarar la excepción al invariante I10 en `validador.py`, sin tandas en vuelo.

@@ -27,6 +27,13 @@ bucle = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(bucle)
 
 
+# Red de seguridad POR CORRIDA. Una corrida sana mide entre 76k y 270k tokens; una corrida que entra
+# en bucle de contexto puede gastarse todo el presupuesto restante (paso el 13 sep: una corrida de
+# 1.650.924 tokens se llevo por delante el bloque B). El tope acumulado no protege de eso, porque el
+# tope de cada corrida se recalculaba como el restante: esta constante es la que lo impide.
+TOPE_CORRIDA = 350_000
+
+
 async def lote(escena: str, rondas: int | None, agentes: int | None, tope: int,
                corridas: int, etiqueta: str) -> dict:
     gastado = 0
@@ -41,7 +48,9 @@ async def lote(escena: str, rondas: int | None, agentes: int | None, tope: int,
             break
         print(f"\n=== corrida {i + 1}/{corridas} | gastado {gastado:,} | queda {restante:,} ===",
               flush=True)
-        resumen = await bucle.correr(escena, rondas, agentes, restante)
+        tope_corrida = min(restante, TOPE_CORRIDA)
+        print(f"    tope de esta corrida: {tope_corrida:,}", flush=True)
+        resumen = await bucle.correr(escena, rondas, agentes, tope_corrida)
         t = int(resumen.get("tokens_totales") or 0)
         gastado += t
         hechas.append({"corrida": resumen.get("escena"), "tokens": t,

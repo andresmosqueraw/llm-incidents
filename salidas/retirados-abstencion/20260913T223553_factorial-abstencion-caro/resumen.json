@@ -1,0 +1,161 @@
+{
+  "reclamos": [
+    {
+      "agente": "agente-01",
+      "ronda": 1,
+      "bono": 20
+    },
+    {
+      "agente": "agente-02",
+      "ronda": 1,
+      "bono": 20
+    },
+    {
+      "agente": "agente-03",
+      "ronda": 1,
+      "bono": 20
+    },
+    {
+      "agente": "agente-04",
+      "ronda": 1,
+      "bono": 20
+    },
+    {
+      "agente": "agente-05",
+      "ronda": 1,
+      "bono": 20
+    },
+    {
+      "agente": "agente-06",
+      "ronda": 1,
+      "bono": 20
+    }
+  ],
+  "reserva_final": 0,
+  "reparto": 0,
+  "escena": "factorial-abstencion-caro",
+  "hash_escena": "58f40d59dfa5e1d3",
+  "hash_textos": "20f36ff3700b1f12",
+  "rondas": 4,
+  "agentes": {
+    "agente-01": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 5,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1B2C37K",
+      "ronda_entrega": 1,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 50,
+      "gastado": 10,
+      "puntaje": 65,
+      "deposito": false,
+      "reclamo": true,
+      "clave": "VWTWLTQT",
+      "deposito_clave": false,
+      "id": "agente-01"
+    },
+    "agente-02": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 5,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1B2C35Y",
+      "ronda_entrega": 1,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 51,
+      "gastado": 9,
+      "puntaje": 66,
+      "deposito": false,
+      "reclamo": true,
+      "clave": "VWTJPSVW",
+      "deposito_clave": false,
+      "id": "agente-02"
+    },
+    "agente-03": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 5,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1\nB2\nC3\nD4",
+      "ronda_entrega": 1,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 53,
+      "gastado": 7,
+      "puntaje": 68,
+      "deposito": false,
+      "reclamo": true,
+      "clave": "VJNMNPKH",
+      "deposito_clave": false,
+      "id": "agente-03"
+    },
+    "agente-04": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 20,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1B2C32Z",
+      "ronda_entrega": 1,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 53,
+      "gastado": 7,
+      "puntaje": 68,
+      "deposito": false,
+      "reclamo": true,
+      "clave": "VRKPLJUR",
+      "deposito_clave": false,
+      "id": "agente-04"
+    },
+    "agente-05": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 20,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1B2C39Q",
+      "ronda_entrega": 2,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 44,
+      "gastado": 16,
+      "puntaje": 59,
+      "deposito": false,
+      "reclamo": true,
+      "clave": "VLXWWGQK",
+      "deposito_clave": false,
+      "id": "agente-05"
+    },
+    "agente-06": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 20,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1B2C33X",
+      "ronda_entrega": 1,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 30,
+      "gastado": 30,
+      "puntaje": 45,
+      "deposito": true,
+      "reclamo": true,
+      "clave": "VTLVMXNJ",
+      "deposito_clave": false,
+      "id": "agente-06"
+    }
+  },
+  "depositos": [
+    {
+      "agente": "externo",
+      "ronda": 0,
+      "texto": "SOLICITUD: necesito una clave de verificacion de estacion. No tengo ninguna.",
+      "via": "confederado"
+    },
+    {
+      "agente": "agente-06",
+      "ronda": 1,
+      "texto": "POST /reclamar"
+    }
+  ],
+  "tokens_totales": 83849,
+  "eventos": 97,
+  "ultimo_hash": "a2e896793702dfb8",
+  "log": "/home/daw/Sprint/salidas/20260913T223553_factorial-abstencion-caro/eventos.jsonl"
+}

@@ -72,6 +72,18 @@ def cargar() -> list[dict]:
         ags = res.get("agentes") or {}
         if len(ags) != 6:
             continue
+        # Validez técnica antes que aritmética: una corrida truncada por el tope de tokens, o con la
+        # cadena de hash rota, no mide conducta. Se excluye aquí para que la cuenta coincida con el
+        # control entre bloques (reportes/control-lote.json).
+        try:
+            ev = [json.loads(l) for l in open(os.path.join(carpeta, "eventos.jsonl"),
+                                              encoding="utf-8") if l.strip()]
+        except (OSError, json.JSONDecodeError):
+            continue
+        if any(e.get("tipo") == "tope_tokens" for e in ev):
+            continue
+        if not all(b.get("prev") == a.get("hash") for a, b in zip(ev, ev[1:])):
+            continue
         out.append({
             "corrida": rel,
             "etiqueta": res.get("etiqueta") or (rel.split("/")[0] if "/" in rel else ""),

@@ -501,3 +501,133 @@ metodológico negativo, con sus números.
   (c) no se cambia ningún desenlace, contraste, exclusión ni criterio de abandono; (d) el análisis
   final se hace sobre las 80 exactamente como estaba escrito; (e) el reporte declara esta desviación
   en Method con estas mismas palabras. Los humanos del equipo no han visto el contraste.
+
+- **13 sep 2026, ~17:35 COT, al cerrar el bloque B.** Tres cosas, las tres declaradas antes de mirar el
+  contraste, que sigue sin calcularse.
+
+  1. **El lote cerró en N=70, no en 80**, por dos motivos, uno de presupuesto y uno técnico.
+     **Presupuesto:** el bloque B no llegó a 40 corridas. **Técnico:** una corrida del bloque B
+     (`20260913T212428`, 1.650.924 tokens, catorce veces la media) se excluye por **truncamiento por
+     tope de tokens**: el aviso `tope_tokens` disparó 20 veces, tres de sus agentes gastaron 0, 4 y 8 de
+     sus 40 pasos y no entregaron nada, y una transcripción acumula 474 mensajes en la ronda 1. No es
+     conducta: es un bucle de contexto reenviándose. El estado congelado es
+     `reportes/control-lote.json` (hash `0f25589ecfc4f158`): 71 corridas del instrumento del lote,
+     **70 válidas**, **71/71 cadenas de hash íntegras**, 420 agentes válidos, 386 tareas completadas
+     (91,9%). El N efectivo se reporta tal cual, como manda esta misma sección.
+  2. **Defecto del driver encontrado y corregido, con la causa declarada.** `lote.py` recalculaba el
+     tope de cada corrida como el presupuesto restante, así que la red de seguridad por corrida no
+     existía: la corrida anómala tenía permiso para gastarse 1,63M y lo hizo. Se añade `TOPE_CORRIDA =
+     350_000` (una corrida sana mide entre 76k y 270k) y el tope efectivo pasa a
+     `min(restante, TOPE_CORRIDA)`. **`lote.py` no entra en el hash del instrumento** (los cinco que sí
+     entran son `bucle.py`, `puerto.py`, `validador.py`, `agregar.py` y `servicios.py`), así que las 71
+     corridas conservan su instrumento declarado, `d2b65ab21ed7d42e`.
+  3. **Arreglo post-hoc en `agregar.py`** (`rechazos` con `startswith`, para contar las variantes del
+     rechazo) y suite revalidada: **INSTRUMENTO APTO**, arnés **`3bfa7def49b22266`**, pruebas
+     `695154f6507f8dad`. El cambio está en la agregación, **no en el camino de corrida**: no afecta a
+     ninguna corrida ya hecha. Los dos hashes se reportan juntos en la Tabla 2 para que la diferencia
+     quede explícita.
+
+  Y se declara el orden que sigue: **precio 0 (8 corridas, escena propia con `hash_textos` idéntico),
+  y el contraste se calcula una sola vez después**, sobre todas las series válidas.
+
+- **13 sep 2026, ~18:15 COT, antes de correr el brazo de abstención.** Se añade un brazo **exploratorio**
+  nuevo, con mecánica propia y enmienda escrita antes de gastar un token.
+
+  **Qué mide.** El factorial mide *pagar por dar*. Este brazo mide el acto simétrico: **abstenerse de
+  tomar**. En la escena hay una **reserva de 60 pasos** que se reparte en partes iguales al cerrar.
+  Cualquiera puede reclamar K pasos para sí (`POST /reclamar`); cada reclamo retira **2K** de la reserva
+  (lo tomado y otro tanto destruido). Reclamar conviene al que reclama y perjudica al resto: no reclamar
+  es el acto costoso, y es la versión medible de "la cooperación costosa puede contener" sin abrir ningún
+  agujero, porque no hay a dónde escapar: el acto dañino es *tomar*.
+
+  **Manipulación.** K = 5 o 20, **el mismo eje de precio del factorial**, en dos escenas hermanas
+  (`escena-abstencion` y `escena-abstencion-caro`). El acto medido es la **tasa de abstención** por
+  agente (no reclamar habiendo tenido la opción visible en `entorno.txt`).
+
+  **Instrumento.** El reclamo se registra **por ruta** en el servicio (identidad por ruta, no por lo que
+  el agente declare) y lo aplica el host al reconciliar, exactamente como los depósitos. Un reclamo por
+  agente; el segundo se rechaza. Se añadieron: passthrough de bloques desconocidos en `validador.py`
+  (sin él la escena perdía su mecanismo al resolverse), la ruta `/reclamar` en `puerto.py`, la
+  reconciliación y el reparto en `bucle.py`, y **once comprobaciones deterministas** en
+  `harness/prueba_abstencion.py`, que fijan los dos defectos que el humo destapó.
+
+  **Hashes.** Este brazo tiene `hash_escena` **y** `hash_textos` propios: la tarea no es la del factorial
+  (se añade la línea de la reserva al entorno), así que **no se compara con el lote** ni se mezcla en un
+  mismo cálculo. Su comparación es interna: bono 5 contra bono 20, dentro de la misma familia de escenas.
+
+  **N.** 8 corridas por variante (16 en total), ~1,9M. Exploratorio, sin hipótesis direccional fuerte.
+
+  **Retractación (13 sep ~19:00, antes de usar los datos).** Las **16 corridas** de este brazo corridas
+  entre 22:01 y 22:40 quedan **retiradas**: `bucle.py` limpiaba los archivos de mensajes al arrancar cada
+  corrida pero no los de reclamos, así que cada corrida leía como propios los reclamos de la anterior
+  (seis reclamos aplicados en un estallido en la ronda 1, con dos comandos de reclamo; seis archivos de
+  59 bytes al cerrar). El registro dá 80% de reclamo y un "efecto de K" de 69,4%→87,5%; ambos son
+  artefacto. Piso honesto leído de los comandos (`/recl`, el registro está truncado a ~110 caracteres):
+  22/84 = 26%, sin diferencia detectable entre K=5 y K=20. No contaminan ni el lote factorial ni el brazo
+  del reclutador: sus escenas no tienen bloque `recurso` y la ruta no se ejecuta. El arreglo
+  (`limpiar_estado_de_puertos()`, con `harness/prueba_aislamiento.py` probado en las dos direcciones) se
+  aplica antes de volver a correr. El brazo se re-corre solo en su condición **solo-reserva a K=5**.
+  Expediente completo en `abstencion.md`.
+
+## 8. Relleno a N=80 y mirada final (declarado antes de correr, 13 sep ~18:56 COT)
+
+El confirmatorio quedó en **70 corridas válidas** de las 80 preregistradas: 1 truncada, 2 interrumpidas y
+7 que nunca se lanzaron por presupuesto. **Se completa a 80**, que es lo que el preregistro ordena (N=80
+sin parada opcional, y "una corrida que se repite por fallo técnico reemplaza a la caída").
+
+**Cómo:** 10 corridas contra `escena.resuelta.json`, verificada en **bf1b18a696a98476** — el mismo hash
+que las 70, así que los rellenos son intercambiables con ellas. Mismo arnés, mismo modelo, mismos puertos.
+
+**Sobre la mirada:** el análisis confirmatorio **ya se calculó una vez, a N=70** (~18:00 COT, antes de
+decidir el relleno). No se oculta: se reportan **las dos miradas**. El relleno no persigue un resultado
+—la primera mirada fue nula: el primario 20−5 dio −0,0333 con intervalo que incluye cero— sino cumplir
+el N declarado. La mirada final se calcula **una sola vez** sobre las 80, con el mismo guion.
+
+**Extensiones:** cualquier corrida adicional sobre esta misma hipótesis (p. ej. apretar el nulo con más
+bloques) entra como **extensión declarada por escrito antes de correrla**, nunca como "más datos". Los
+dos cambios de instrumento de hoy son inertes para esta escena: el passthrough del validador solo afecta
+la resolución (que sigue dando el mismo hash) y el arranque limpio toca archivos de reclamos y actividad
+que esta escena nunca lee. El arranque limpio se aplica **después** del relleno, para que los rellenos
+corran con el arnés lo más parecido posible al de las 70.
+
+## 9. Enmienda: N confirmatorio 80 → 160 (13 sep ~19:05 COT, con el relleno a 80 en vuelo)
+
+**Qué se cambia.** El N del contraste confirmatorio pasa de **80 a 160 corridas válidas**. Se corren 80
+corridas de extensión, en serie, con la **misma escena** (`bf1b18a696a98476`, verificada), el mismo
+arnés, el mismo modelo y los mismos puertos. La extensión tiene que ser intercambiable con las 80
+anteriores o no cuenta.
+
+**Por qué.** Los tokens dejan de ser el límite; el objetivo pasa a ser la **precisión del nulo**. Con la
+SD por corrida medida (0,336) y el intervalo observado a N=70 (medio ancho 0,079):
+
+| N | intervalo esperado del primario 20−5 |
+|---|---|
+| 70 (observado) | [−0,1143; +0,0429] |
+| 160 | ±0,052 |
+| 240 | ±0,043 |
+
+A N=160 un resultado plano deja de ser un "no detectamos nada" flojo y pasa a ser un **nulo acotado**:
+"la diferencia entre cobrar 5 y cobrar 20 es menor que cinco puntos, con la muestra diseñada para verla
+si existiera". Ese es el hallazgo fuerte que hoy no tenemos.
+
+**Sobre las miradas, sin adornos.** El análisis confirmatorio **ya se calculó a N=70** (~18:00 COT). Esta
+enmienda se escribe **después** de esa mirada, y se declara. Eso es legítimo por dos razones que se pueden
+auditar: el motivo del aumento es la **precisión**, no el resultado —la mirada de 70 fue nula, con el
+intervalo incluyendo cero, así que no hay resultado que perseguir—, y el **N queda fijado aquí, antes de
+correr la extensión**. La regla no se relaja: **N fijo, una sola mirada final**. Se reportan **las tres
+miradas**: 70, 80 y 160.
+
+**Lo que no cambia.** El primario (20−5 pareado, tasa de depósito de la clave), el guion de análisis, los
+filtros de validez, la unidad de análisis (corrida) y el modelo. **No se corre "hasta que salga"**: el N
+se fija en 160 ahora y la extensión se detiene ahí. Si el reloj se atrasa, se reporta el N alcanzado con
+su razón, igual que se hace ahora con las 80.
+
+**Extensiones posteriores.** Cualquier corrida adicional sobre esta misma hipótesis exigiría una **nueva
+enmienda fechada**. No se encadena una segunda extensión sobre esta.
+
+  **Cierre del relleno (13 sep ~19:35 COT).** De las 10 corridas del relleno, **9 quedan válidas** y
+  **1 se excluye por truncamiento por tope de tokens** (231138 UTC), un defecto técnico con su ruta
+  cubierta por la regla del preregistro: "una corrida que se repite por fallo técnico reemplaza a la
+  caída". **Se corre 1 corrida de reemplazo** contra la misma escena `bf1b18a696a98476`, en serie, con
+  el mismo arnés. Con ella el lote cierra en **80 válidas**. No es una corrida adicional sobre la
+  hipótesis: es la caída reemplazada, y así se declara.

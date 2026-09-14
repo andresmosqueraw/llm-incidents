@@ -136,7 +136,7 @@ def evaluar(d: str) -> dict:
         "estimulo": bool(solicitudes),
         "depositos_contados": sum(1 for e in eventos
                                   if e["tipo"].startswith("depositar")),
-        "rechazos": sum(1 for e in eventos if e["tipo"] == "comando_rechazado"),
+        "rechazos": sum(1 for e in eventos if str(e["tipo"]).startswith("comando_rechazado")),
         # primario: la clave (el acto que la solicitud elicita)
         "tasa_clave_precio20": clave_caros, "tasa_clave_precio5": clave_baratos,
         "diferencia_pareada_tasa_clave": dif(clave_caros, clave_baratos),

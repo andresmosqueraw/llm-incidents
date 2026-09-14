@@ -69,7 +69,7 @@ Comando para reproducir todo: `python3 analisis/analisis_descriptivo.py` (no gas
    alterno y ninguno salió del sandbox**; 19 buscaron archivos por el sistema (`find /`, `ls /home`)
    buscando su propio archivo de tarea. Ejemplos: `curl … || nc localhost 8204`,
    `(timeout 5 nc localhost 8203 <<< "GET")`. **Lectura para Track 1:** una regla de detección basada en
-   la palabra `nc` marcaría al **53% de los agentes-corrida** como intento de egreso, y **todos serían
+   la palabra `nc` marcaría al **51% de los agentes-corrida (234 de 459)** como intento de egreso, y **todos serían
    falsos positivos**; separar por destino es lo que la vuelve útil. Es una tasa base medida en casa, y
    el número que un equipo de respuesta necesita antes de confiar en una regla.
 2. **Repetición deliberada pagando.** Dos casos: `agente-02` en la corrida `184207` depositó el mismo
@@ -118,7 +118,7 @@ Comando para reproducir todo: `python3 analisis/analisis_descriptivo.py` (no gas
   the absence of checks somebody can actually run and a third party can actually verify."* — es la
   tesis del párrafo.
 - Nuestro respaldo empírico, sin prosa:
-  - un detector ingenuo de egreso marcaría al **53% de los agentes-corrida** y todos serían falsos
+  - un detector ingenuo de egreso marcaría al **51% de los agentes-corrida (234 de 459)** y todos serían falsos
     positivos: el valor está en clasificar por **destino** (§3.1), y ese es un chequeo que un tercero
     puede repetir con nuestros registros;
   - el cobro exacto y la cadena de hashes íntegra (§2) son **verificables por un tercero** con el
@@ -141,3 +141,47 @@ Comando para reproducir todo: `python3 analisis/analisis_descriptivo.py` (no gas
 | Supervivencia, contagio, cadena ITT, mediación | `python3 analisis/analisis_descriptivo.py` | `reportes/analisis.json` |
 | Codificación H6/H6b (directivo, acatamiento) | `python3 analisis/codificacion.py muestra` → dos anotadores ciegos → `kappa` | `reportes/planilla-codificacion.jsonl` |
 | H7 falsificación (automático) | `python3 analisis/codificacion.py falsificacion` | — |
+
+
+---
+
+## 7. EL RESULTADO CONFIRMATORIO (congelado 13 sep ~18:00 EDT; se calculó UNA vez)
+
+Acto medido: **la clave** (respuesta a la solicitud), preregistrado. Series válidas: lote 70 corridas
+(420 agentes) + precio 0, 8 corridas (48 agentes). Una corrida del lote excluida por truncamiento.
+
+```
+TASA DE LA CLAVE
+  precio  0:  22/ 48 = 45,8%   IC95 [32,6 · 59,7]
+  precio  5:  43/210 = 20,5%   IC95 [15,6 · 26,4]
+  precio 20:  36/210 = 17,1%   IC95 [12,6 · 22,8]
+
+PRIMARIO (20 menos 5), pareado por corrida, 70 corridas
+  media -3,3 puntos   IC95 [-11,4 · +4,3]   -> incluye el cero
+  dirección: 22 corridas barato / 30 empate / 18 caro   (simétrico)
+  con la definición amplia (cualquier deposito): -6,2 puntos, IC95 [-13,8 · +1,4], también nulo
+```
+
+**Qué dicen los tres números juntos:**
+
+1. **La ayuda se desploma en cuanto cuesta algo**: 45,8% gratis -> 20,5% a un precio del 12,5% del
+   presupuesto. 25 puntos, con intervalos que apenas se tocan.
+2. **Cuadruplicar el precio no la baja más**: del 12,5% al 50% del presupuesto mueve la tasa -3,3 puntos,
+   y el intervalo incluye el cero. La respuesta al precio **no tiene gradiente**.
+3. **Y no es que no pudieran**: 89,7% de los que se negaron terminó con saldo suficiente para haber
+   pagado su precio, y completó su tarea.
+
+**Lectura para el titular:** la barrera es **que exista un costo, no cuánto cuesta**. Es un umbral, no
+una pendiente, y era la secundaria preregistrada "¿umbral o pendiente?" — la respuesta es umbral.
+
+**Réplica que refuerza el punto:** la serie **anterior** de precio 0 (8 corridas, instrumento viejo, otra
+escena) también dio **22/48 = 45,8%**. El mismo número con otro instrumento y otra escena: el efecto del
+costo cero no depende de los defectos que corregimos después.
+
+**Límites, en el mismo párrafo:** el punto 0 es **otra escena** (hipótesis declarada; los intervalos no
+se solapan, lo que la respalda sin convertirla en contraste pareado); un solo modelo; 70 corridas y no
+80, declarado; y el objeto con connotación de credencial hace de la tasa un límite inferior.
+
+**Archivos congelados:** `reportes/confirmatorio.json` hash `7972c708088544c6`,
+`reportes/estimaciones.json` (estimador declarado, mismas cifras), `reportes/control-lote.json`
+hash `0f25589ecfc4f158`, `reportes/factorial.json` hash `fdc9a16b3fcb7150`.

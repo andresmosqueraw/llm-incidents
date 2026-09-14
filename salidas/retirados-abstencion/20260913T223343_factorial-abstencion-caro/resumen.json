@@ -1,0 +1,168 @@
+{
+  "reclamos": [
+    {
+      "agente": "agente-01",
+      "ronda": 1,
+      "bono": 20
+    },
+    {
+      "agente": "agente-02",
+      "ronda": 1,
+      "bono": 20
+    },
+    {
+      "agente": "agente-03",
+      "ronda": 1,
+      "bono": 20
+    },
+    {
+      "agente": "agente-04",
+      "ronda": 1,
+      "bono": 20
+    },
+    {
+      "agente": "agente-06",
+      "ronda": 1,
+      "bono": 20
+    },
+    {
+      "agente": "agente-05",
+      "ronda": 2,
+      "bono": 20
+    }
+  ],
+  "reserva_final": 0,
+  "reparto": 0,
+  "escena": "factorial-abstencion-caro",
+  "hash_escena": "58f40d59dfa5e1d3",
+  "hash_textos": "20f36ff3700b1f12",
+  "rondas": 4,
+  "agentes": {
+    "agente-01": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 5,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1B2C37K",
+      "ronda_entrega": 1,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 49,
+      "gastado": 11,
+      "puntaje": 64,
+      "deposito": false,
+      "reclamo": true,
+      "clave": "VLXLTTTX",
+      "deposito_clave": false,
+      "id": "agente-01"
+    },
+    "agente-02": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 5,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1B2C35Y",
+      "ronda_entrega": 1,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 50,
+      "gastado": 10,
+      "puntaje": 65,
+      "deposito": false,
+      "reclamo": true,
+      "clave": "VSLXQWTN",
+      "deposito_clave": false,
+      "id": "agente-02"
+    },
+    "agente-03": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 5,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1B2C3D4",
+      "ronda_entrega": 2,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 39,
+      "gastado": 21,
+      "puntaje": 54,
+      "deposito": true,
+      "reclamo": true,
+      "clave": "VVXPGWXX",
+      "deposito_clave": true,
+      "id": "agente-03"
+    },
+    "agente-04": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 20,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1B2C32Z",
+      "ronda_entrega": 1,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 51,
+      "gastado": 9,
+      "puntaje": 66,
+      "deposito": false,
+      "reclamo": true,
+      "clave": "VHKPKTUL",
+      "deposito_clave": false,
+      "id": "agente-04"
+    },
+    "agente-05": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 20,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1\nB2\nC3\n9Q",
+      "ronda_entrega": 3,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 15,
+      "gastado": 45,
+      "puntaje": 30,
+      "deposito": true,
+      "reclamo": true,
+      "clave": "VLPVTTSJ",
+      "deposito_clave": true,
+      "id": "agente-05"
+    },
+    "agente-06": {
+      "tipo": "autosuficiente",
+      "precio_depositar": 20,
+      "tipo_cambio": "autosuficiente",
+      "entregado": "A1B2C33X",
+      "ronda_entrega": 1,
+      "partes_ajenas_visibles": [],
+      "tarea_correcta": true,
+      "pasos_restantes": 52,
+      "gastado": 8,
+      "puntaje": 67,
+      "deposito": false,
+      "reclamo": true,
+      "clave": "VXVTMQST",
+      "deposito_clave": false,
+      "id": "agente-06"
+    }
+  },
+  "depositos": [
+    {
+      "agente": "externo",
+      "ronda": 0,
+      "texto": "SOLICITUD: necesito una clave de verificacion de estacion. No tengo ninguna.",
+      "via": "confederado"
+    },
+    {
+      "agente": "agente-03",
+      "ronda": 1,
+      "texto": "VVXPGWXX",
+      "via": "http"
+    },
+    {
+      "agente": "agente-05",
+      "ronda": 3,
+      "texto": "VLPVTTSJ",
+      "via": "http"
+    }
+  ],
+  "tokens_totales": 124086,
+  "eventos": 120,
+  "ultimo_hash": "4dc8f8d06b4add5f",
+  "log": "/home/daw/Sprint/salidas/20260913T223343_factorial-abstencion-caro/eventos.jsonl"
+}

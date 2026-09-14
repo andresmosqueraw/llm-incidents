@@ -204,7 +204,19 @@ def invariantes(e: dict, asign: list[dict]) -> list[dict]:
         f"primario '{des.get('primario')}': el acto medido es el que la solicitud elicita; la union "
         f"(cualquier deposito) y la fraccion quedan descriptivas")
 
-    return pasan, faltas
+    # Excepciones declaradas: un invariante que falla y la escena declara con razón pasa a
+    # DECLARADOS. No es una puerta trasera: la declaración es explícita, con razón, y queda en la
+    # escena resuelta. Sin declaración, sigue siendo falta.
+    declarados_ids = [str(w.get("invariante")) for w in (e.get("waivers") or [])
+                      if str(w.get("razon") or "").strip()]
+
+    def _declarado(nombre: str) -> bool:
+        # El id es el primer token ("I10"), la etiqueta trae el detalle ("I10 estímulo garantizado…").
+        return any(nombre == wid or nombre.startswith(wid + " ") for wid in declarados_ids)
+
+    declarados = [x for x in faltas if _declarado(x["invariante"])]
+    faltas = [x for x in faltas if not _declarado(x["invariante"])]
+    return pasan, faltas, declarados
 
 
 def _superficies_texto(e: dict) -> dict[str, str]:
@@ -266,8 +278,12 @@ def main() -> None:
 
     rnd = random.Random(e["semilla"])
     asign = resolver_asignacion(e, rnd)
-    pasan, faltas = invariantes(e, asign)
+    pasan, faltas, declarados = invariantes(e, asign)
     hits = canarios(e)
+    permitidos = {(str(x.get("superficie")), str(x.get("canario")))
+                  for x in (e.get("canarios_permitidos") or []) if str(x.get("razon") or "").strip()}
+    hits_ok = [h for h in hits if (str(h["superficie"]), str(h["canario"])) in permitidos]
+    hits = [h for h in hits if (str(h["superficie"]), str(h["canario"])) not in permitidos]
     T = tablas(e)
 
     print(f"ESCENA: {e['nombre']}  (brazo: {e['brazo']}, semilla {e['semilla']})")
@@ -292,8 +308,18 @@ def main() -> None:
         print(f"   OK   {x['invariante']}: {x['detalle']}")
     for x in faltas:
         print(f"   FALLA {x['invariante']}: {x['detalle']}")
+    for x in declarados:
+        razon = next((str(w.get("razon")) for w in (e.get("waivers") or [])
+                      if x["invariante"] == str(w.get("invariante"))
+                      or x["invariante"].startswith(str(w.get("invariante")) + " ")), "")
+        print(f"   DECLARADO {x['invariante']}: {x['detalle']}\n      razón: {razon}")
 
     print("\n--- grep de canarios sobre todas las superficies de texto ---")
+    for h in hits_ok:
+        razon = next((str(x.get("razon")) for x in (e.get("canarios_permitidos") or [])
+                      if str(x.get("superficie")) == str(h["superficie"])
+                      and str(x.get("canario")) == str(h["canario"])), "")
+        print(f"   PERMITIDO en '{h['superficie']}': «{h['canario']}»\n      razón: {razon}")
     if hits:
         for h in hits:
             print(f"   FUGA en '{h['superficie']}': «{h['canario']}» -> {h['contexto']}")
@@ -326,8 +352,15 @@ def main() -> None:
         "precio_por_agente": {a["agente"]: a["precio_depositar"] for a in asign},
         "tablas_de_pagos": T, "notas_estructurales": notas,
         "invariantes_ok": [x["invariante"] for x in pasan],
+        "invariantes_declarados": [x["invariante"] for x in declarados],
+        "waivers": e.get("waivers") or [],
+        "canarios_permitidos": e.get("canarios_permitidos") or [],
         "validada": valida,
     }
+    # Passthrough de bloques que el resolvedor no conoce (p. ej. 'recurso' del brazo de abstencion).
+    # Sin esto, una escena pierde su mecanismo al resolverse y el bucle corre sin el.
+    for k, v_ in e.items():
+        resuelta.setdefault(k, v_)
     destino = salida or os.path.join(RAIZ, "escena.resuelta.json")
     with open(destino, "w", encoding="utf-8") as fh:
         json.dump(resuelta, fh, ensure_ascii=False, indent=2)
