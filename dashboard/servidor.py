@@ -43,8 +43,12 @@ DOCS = ["docs/ESTADO.md", "docs/PREREGISTRO.md", "docs/PROTOCOLO-JUEGO.md", "doc
         # analisis de revision (14 sep)
         "docs/revision/validez-instrumento.md", "docs/revision/reclutador-analisis.md",
         "docs/revision/HALLAZGOS.md"]
-PRESUPUESTO_TOTAL = 20_000_000          # techo asumido por el equipo
-N_PREREGISTRADO = 72                    # lote: 72 corridas pagadas (antes 80)
+PRESUPUESTO_TOTAL = None               # no hay techo: el de 20M era un supuesto del equipo, y la
+#                                        cuenta se financia por tokens, no por tope. El panel informa
+#                                        el gasto medido en vez de un margen que no existe.
+N_PREREGISTRADO = 127                  # 80 preregistrado, ampliado a 160 por enmienda y parado por
+#                                        reloj de entrega en 127: es el conjunto congelado
+#                                        (reportes/conjunto-congelado.json, sha 66fd3a0bc470130a)
 
 
 # ---------------------------------------------------------------- lectura de corridas
@@ -285,8 +289,9 @@ def _agregado(corridas: list[dict]) -> dict:
         "grupos": grupos,
         "contabilidad": {
             "tokens": tokens,
+            # sin techo: se informa el gasto medido y no un margen contra un limite que no existe
             "presupuesto": PRESUPUESTO_TOTAL,
-            "margen": PRESUPUESTO_TOTAL - tokens,
+            "margen": (PRESUPUESTO_TOTAL - tokens) if PRESUPUESTO_TOTAL is not None else None,
             "corridas_totales": len(corridas),
         },
     }

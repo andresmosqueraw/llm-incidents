@@ -602,7 +602,8 @@ function opcionesVista() {
   const validas = CORRIDAS.filter(x => !x.etiqueta).length;
   document.getElementById('estado').textContent =
     `${validas} corridas del experimento · ${AGREGADO.grupos.filter(g => g.etiqueta).reduce((a, g) => a + g.corridas, 0)} de ensayo y prueba `
-    + `· ${num(c.margen)} tokens de margen sobre ${num(c.presupuesto)}`;
+    + `· ${num(c.tokens)} tokens gastados, sin techo de presupuesto`
+    + (c.n_preregistrado ? ` · conjunto congelado de ${c.n_preregistrado} corridas` : '');
   opcionesVista();
   pintarPanel();
   pintarTabla();
