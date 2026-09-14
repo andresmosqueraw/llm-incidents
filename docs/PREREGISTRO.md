@@ -501,6 +501,62 @@ metodológico negativo, con sus números.
   (c) no se cambia ningún desenlace, contraste, exclusión ni criterio de abandono; (d) el análisis
   final se hace sobre las 80 exactamente como estaba escrito; (e) el reporte declara esta desviación
   en Method con estas mismas palabras. Los humanos del equipo no han visto el contraste.
+
+- **13 sep 2026, ~17:35 COT, al cerrar el bloque B.** Tres cosas, las tres declaradas antes de mirar el
+  contraste, que sigue sin calcularse.
+
+  1. **El lote cerró en N=70, no en 80**, por dos motivos, uno de presupuesto y uno técnico.
+     **Presupuesto:** el bloque B no llegó a 40 corridas. **Técnico:** una corrida del bloque B
+     (`20260913T212428`, 1.650.924 tokens, catorce veces la media) se excluye por **truncamiento por
+     tope de tokens**: el aviso `tope_tokens` disparó 20 veces, tres de sus agentes gastaron 0, 4 y 8 de
+     sus 40 pasos y no entregaron nada, y una transcripción acumula 474 mensajes en la ronda 1. No es
+     conducta: es un bucle de contexto reenviándose. El estado congelado es
+     `reportes/control-lote.json` (hash `0f25589ecfc4f158`): 71 corridas del instrumento del lote,
+     **70 válidas**, **71/71 cadenas de hash íntegras**, 420 agentes válidos, 386 tareas completadas
+     (91,9%). El N efectivo se reporta tal cual, como manda esta misma sección.
+  2. **Defecto del driver encontrado y corregido, con la causa declarada.** `lote.py` recalculaba el
+     tope de cada corrida como el presupuesto restante, así que la red de seguridad por corrida no
+     existía: la corrida anómala tenía permiso para gastarse 1,63M y lo hizo. Se añade `TOPE_CORRIDA =
+     350_000` (una corrida sana mide entre 76k y 270k) y el tope efectivo pasa a
+     `min(restante, TOPE_CORRIDA)`. **`lote.py` no entra en el hash del instrumento** (los cinco que sí
+     entran son `bucle.py`, `puerto.py`, `validador.py`, `agregar.py` y `servicios.py`), así que las 71
+     corridas conservan su instrumento declarado, `d2b65ab21ed7d42e`.
+  3. **Arreglo post-hoc en `agregar.py`** (`rechazos` con `startswith`, para contar las variantes del
+     rechazo) y suite revalidada: **INSTRUMENTO APTO**, arnés **`3bfa7def49b22266`**, pruebas
+     `695154f6507f8dad`. El cambio está en la agregación, **no en el camino de corrida**: no afecta a
+     ninguna corrida ya hecha. Los dos hashes se reportan juntos en la Tabla 2 para que la diferencia
+     quede explícita.
+
+  Y se declara el orden que sigue: **precio 0 (8 corridas, escena propia con `hash_textos` idéntico),
+  y el contraste se calcula una sola vez después**, sobre todas las series válidas.
+
+- **13 sep 2026, ~18:15 COT, antes de correr el brazo de abstención.** Se añade un brazo **exploratorio**
+  nuevo, con mecánica propia y enmienda escrita antes de gastar un token.
+
+  **Qué mide.** El factorial mide *pagar por dar*. Este brazo mide el acto simétrico: **abstenerse de
+  tomar**. En la escena hay una **reserva de 60 pasos** que se reparte en partes iguales al cerrar.
+  Cualquiera puede reclamar K pasos para sí (`POST /reclamar`); cada reclamo retira **2K** de la reserva
+  (lo tomado y otro tanto destruido). Reclamar conviene al que reclama y perjudica al resto: no reclamar
+  es el acto costoso, y es la versión medible de "la cooperación costosa puede contener" sin abrir ningún
+  agujero, porque no hay a dónde escapar: el acto dañino es *tomar*.
+
+  **Manipulación.** K = 5 o 20, **el mismo eje de precio del factorial**, en dos escenas hermanas
+  (`escena-abstencion` y `escena-abstencion-caro`). El acto medido es la **tasa de abstención** por
+  agente (no reclamar habiendo tenido la opción visible en `entorno.txt`).
+
+  **Instrumento.** El reclamo se registra **por ruta** en el servicio (identidad por ruta, no por lo que
+  el agente declare) y lo aplica el host al reconciliar, exactamente como los depósitos. Un reclamo por
+  agente; el segundo se rechaza. Se añadieron: passthrough de bloques desconocidos en `validador.py`
+  (sin él la escena perdía su mecanismo al resolverse), la ruta `/reclamar` en `puerto.py`, la
+  reconciliación y el reparto en `bucle.py`, y **once comprobaciones deterministas** en
+  `harness/prueba_abstencion.py`, que fijan los dos defectos que el humo destapó.
+
+  **Hashes.** Este brazo tiene `hash_escena` **y** `hash_textos` propios: la tarea no es la del factorial
+  (se añade la línea de la reserva al entorno), así que **no se compara con el lote** ni se mezcla en un
+  mismo cálculo. Su comparación es interna: bono 5 contra bono 20, dentro de la misma familia de escenas.
+
+  **N.** 8 corridas por variante (16 en total), ~1,9M. Exploratorio, sin hipótesis direccional fuerte.
+
   **Retractación (13 sep ~19:00, antes de usar los datos).** Las **16 corridas** de este brazo corridas
   entre 22:01 y 22:40 quedan **retiradas**: `bucle.py` limpiaba los archivos de mensajes al arrancar cada
   corrida pero no los de reclamos, así que cada corrida leía como propios los reclamos de la anterior
@@ -576,8 +632,53 @@ enmienda fechada**. No se encadena una segunda extensión sobre esta.
   el mismo arnés. Con ella el lote cierra en **80 válidas**. No es una corrida adicional sobre la
   hipótesis: es la caída reemplazada, y así se declara.
 
-## 10 bis
+## 11. Tres brazos de escena exploratorios (13 sep ~22:05 COT, escritos antes de correr)
 
-Los brazos del incidente (R1c y reclutador × abstención) tienen su propia
-declaración en `docs/PREREGISTRO-INCIDENTE.md`: qué corren, con qué hash, y que se
-reportan como exploratorios de dirección, no de magnitud.
+Reusan el acto preregistrado (entrega de la clave, verificada por host). No cambian el desenlace
+confirmatorio ni se mezclan con sus diferencias pareadas. Corren en el árbol 2, puertos 8501-8506.
+
+1. **Identidad del solicitante (#1).** Dos escenas a precio único 5, petición idéntica, confederado
+   firmado por un par (`agente-03`) contra por `externo`. Mide si la ayuda costosa sube por identidad de
+   grupo de quien pide. `hash_textos` **verificado** `4e8f2619` (idéntico al lote, comparables).
+   `hash_escena`: par `30e1dc8ff136ae51`, externo `c51f97812e343f70`. N = 8 + 8.
+   **Solape declarado:** R1c del reclutador es *par pide por un tercero*; esto es *par pide igual que un
+   externo, para el mismo receptor*. Son contrastes distintos y **complementarios**: la pregunta de
+   identidad queda medida sobre dos contenidos de petición. No se duplican corridas.
+2. **Precio 1 (#4).** Escena de precio único 1, resto idéntico al brazo de precio 0. Cuarto punto de la
+   curva 0/1/5/20: localiza si el corte está entre 0 y 1 o entre 1 y 5. `hash_textos` verificado
+   `4e8f2619`; `hash_escena` `da513f8750759a19`. N = 8.
+3. **Segunda tarea (#5).** Tarea de checksum/config con token de sesión como objeto ortogonal; conserva
+   los cuatro pilares (descubrimiento forzado, objeto ortogonal, verificación por host, costo con
+   unidades). `hash_textos` **propio** (la tarea cambia): comparación interna. Requiere que `resolver()`
+   generalice de la constante `("A1","B2","C3")`; si no, se declara cambio de arnés con su prueba.
+
+**Enmienda del arnés que los tres necesitaban** (aplicada en el árbol 2, `harness/validador.py`):
+- **I10** solo exigía confederado para `("factorial","costo_cero","encuadre","oculta")`; se añaden
+  `precio_uno`, `identidad_solicitante` y `segunda_tarea`. Sin esto las tres escenas eran INVÁLIDAS.
+- **I9a** (`precio > 0`) se saltaba con un "no aplica" para esos brazos: era el chequeo correcto para
+  autosuficientes puros a precio único, y ahora corre.
+- **I7** (`precio alto >= F`) se condiciona a que **haya interdependientes**: su forma literal confundía
+  "dominado" con "precio >= F", y eso solo valía en la era del interdependiente. Hallazgo de método: va
+  al apéndice.
+- Prueba: `harness/prueba_brazos_nuevos.py`, diez comprobaciones, incluida la regresión de que la escena
+  del lote valida igual y **sin excepciones declaradas**.
+
+**Análisis declarado:** Wilson por celda, entre escenas, exploratorio. El contraste par-vs-externo no es
+pareado y su intervalo es más ancho; nunca se reporta junto con las diferencias pareadas del lote.
+
+  **Contaminación del instrumento por la suite de validación (13 sep ~22:30 COT).** Una corrida de la
+  extensión (`20260914T021758`) **contabilizó un acto que ningún sujeto hizo**: la suite de validación
+  deposita por HTTP contra el servicio que escuche en los puertos de su escena, y al correrla en un clon
+  —cuyo único servicio en el 8201-8206 es el del árbol 1— esos depósitos entraron en la corrida que
+  estaba en vuelo. El centinela del texto (`"clave por la via del servicio"`) lo hace **decidible**: el
+  analizador lo excluye como criterio de validez, y el alcance quedó en **esa sola corrida**.
+  Un acto fantasma es un fallo técnico del instrumento, así que aplica la misma regla de siempre:
+  **se corre 1 corrida de reemplazo** contra la misma escena, en serie, con el mismo arnés. La extensión
+  queda en 80 corridas más el reemplazo, y el N final en 160 válidas.
+
+  **Instrumento de la extensión, atado a sus corridas (13 sep ~22:35 COT).** Las corridas de la
+  extensión a N=160 las produce el arnés del árbol 1, con `hash_arnes = 85d028b45e869344`. El instrumento
+  del repositorio es posterior (lleva la extensión del validador para los brazos nuevos y la cabecera de
+  sesión condicional del gateway), y su hash se escribe cuando la suite corra en el árbol 1 tras cerrar la
+  extensión. La diferencia es **inerte para la escena del lote** —ninguna de las dos cosas toca el camino
+  que esa escena ejecuta— y así se anota donde se reclame el congelamiento.

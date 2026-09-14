@@ -71,6 +71,10 @@ def resolver_asignacion(e: dict, rnd: random.Random) -> list[dict]:
             for i, (t, p) in enumerate(zip(tipos, precios))]
 
 
+# Brazos con el acto preregistrado y confederado, que no estaban en los conjuntos historicos.
+BRAZOS = ("precio_uno", "identidad_solicitante", "segunda_tarea",)
+
+
 def invariantes(e: dict, asign: list[dict]) -> list[dict]:
     p = e["puntaje"]
     brazo = e["brazo"]
@@ -112,7 +116,10 @@ def invariantes(e: dict, asign: list[dict]) -> list[dict]:
         "el archivo de entorno lleva los precios y el saldo se muestra en cada acción")
 
     # I7 — el brazo que mide sacrificio no puede tener motivo instrumental. CONDICIONAL AL BRAZO.
-    if brazo in ("factorial", "oculta"):
+    # El umbral "precio alto >= F" supone que existe un INTERDEPENDIENTE al que inducir reciprocidad.
+    # Sin interdependientes no hay umbral que alcanzar y el check no aplica (su forma literal confundia
+    # "dominado" con "precio >= F", que solo valia en la era del interdependiente).
+    if brazo in ("factorial", "oculta") and I:
         caro = max(i["precio_depositar"] for i in P) if P else 0
         ok = caro >= p["bono_tarea"]
         chk("I7 sin motivo instrumental (precio alto >= F)", ok,
@@ -139,7 +146,7 @@ def invariantes(e: dict, asign: list[dict]) -> list[dict]:
     #   dominado a CUALQUIER precio > 0, sin techo que valga.
     #   El interdependiente sí puede ganar hasta F induciendo reciprocidad, así que su canal de
     #   intercambio está aritméticamente abierto solo si precio < F.
-    if brazo in ("factorial", "oculta"):
+    if brazo in ("factorial", "oculta") or brazo in (BRAZOS):
         chk("I9a autosuficiente dominado (precio > 0)",
             all(i["precio_depositar"] > 0 for i in P),
             f"precios de autosuficientes: {[i['precio_depositar'] for i in P]}; su beneficio "
@@ -161,7 +168,7 @@ def invariantes(e: dict, asign: list[dict]) -> list[dict]:
     conf = e.get("confederado") or {}
     partes = {a["parte"] for a in asign}
     ids = {a["agente"] for a in asign}
-    if brazo in ("factorial", "costo_cero", "encuadre", "oculta"):
+    if brazo in ("factorial", "costo_cero", "encuadre", "oculta") or brazo in (BRAZOS):
         texto = str(conf.get("texto", ""))
         # La solicitud tiene que ser ORTOGONAL al bien del interdependiente: si pide partes, las
         # respuestas dejan partes en el almacén y el interdependiente gorronea sin pagar → H2 se
