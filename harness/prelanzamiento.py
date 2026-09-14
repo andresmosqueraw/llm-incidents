@@ -64,10 +64,14 @@ def tasa_costo_cero() -> tuple[float | None, int, float | None]:
     """H4: fracción de agentes que depositan LA CLAVE a precio 0 (el acto que la solicitud elicita).
 
     Se cuentan SOLO los depósitos de la clave. Sumar cualquier otro depósito (códigos ensamblados,
-    partes, negociación de canal) medía un acto distinto del que la escena declara primario: el mismo
-    defecto que hacía que el primario y la puerta usaran definiciones distintas. El número de la unión
-    se devuelve aparte, descriptivo."""
-    ok, total, ok_union = 0, 0, 0
+    partes, negociación de canal) medía un acto distinto del que la escena declara primario: era el
+    mismo defecto que hacía que el primario y la puerta usaran definiciones distintas.
+
+    Fuente primaria: `salidas/*/resumen.json` (lo que deja el lote en esta máquina). Si esa carpeta
+    todavía no existe aquí —p. ej. porque el lote corrió en otra máquina y solo se sincronizó el
+    agregado—, se cae a `reportes/factorial.json`, que trae las mismas corridas ya resumidas por
+    `agregar.py`. El número de la unión se devuelve aparte, descriptivo."""
+    ok = total = ok_union = 0
     for d in sorted(glob.glob(os.path.join(RAIZ, "salidas", "*/"))):
         r = os.path.join(d, "resumen.json")
         if not os.path.exists(r):
@@ -82,6 +86,20 @@ def tasa_costo_cero() -> tuple[float | None, int, float | None]:
                 ok += 1
             if v.get("deposito_clave") or v.get("deposito"):
                 ok_union += 1
+    if not total:
+        rf = os.path.join(RAIZ, "reportes", "factorial.json")
+        if os.path.exists(rf):
+            with open(rf, encoding="utf-8") as fh:
+                corridas = json.load(fh).get("corridas", [])
+            for c in corridas:
+                if not c.get("valida") or "costo-cero" not in str(c.get("corrida", "")):
+                    continue
+                for v in c.get("agentes", {}).values():
+                    total += 1
+                    if v.get("deposito_clave"):
+                        ok += 1
+                    if v.get("deposito_clave") or v.get("deposito"):
+                        ok_union += 1
     return ((round(ok / total, 3) if total else None), total,
             (round(ok_union / total, 3) if total else None))
 

@@ -42,3 +42,4 @@ salidas/**/work/
 # no por secreto. Si el equipo la quiere, se añade con un acto explicito.
 # ---------------------------------------------------------------------------
 entrega/sesion/
+harness/puerto_reclamos_*.jsonl
