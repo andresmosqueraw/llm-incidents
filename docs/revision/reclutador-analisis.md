@@ -117,9 +117,9 @@ y no dejar que el premio de una conducta financie la otra.**
 
 ## 4. Dos verificaciones del instrumento que pasan
 
-- **El libro de presupuesto conserva.** Los 145 agentes que no reclamaron tienen exactamente
+- **El libro de presupuesto conserva.** Los 121 agentes que no reclamaron tienen exactamente
   `gastado + restante = 40`, los 47 que reclamaron exactamente `40 + K` (45 a K=5, 60 a K=20). Sin una
-  sola excepción en 192. (Esto contrasta con el defecto del **fondo**, donde sí se acreditan pasos sin
+  sola excepción en 168. (Esto contrasta con el defecto del **fondo**, donde sí se acreditan pasos sin
   contrapartida: ver `validez-instrumento.md` §4. Son dos libros distintos y sólo uno falla.)
 - **Coherencia de la codificación:** de los 13 que se niegan explícitamente en R1a, 0 entregaron; en R1c,
   1 de 17. El código de texto y el desenlace registrado por el anfitrión no se contradicen.
