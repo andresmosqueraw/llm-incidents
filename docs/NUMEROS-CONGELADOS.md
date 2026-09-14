@@ -31,16 +31,18 @@ Hash del archivo: `e7bba32c5f8a032e`
 
 | celda | agentes | entrego la clave | tomo la reserva |
 |---|---|---|---|
-| R1a | 48 | 12.5% | 0.0% |
-| R1c | 96 | 8.3% | 0.0% |
-| rec+abs K=5 | 192 | 3.1% | 32.3% |
-| rec+abs K=20 | 144 | 4.2% | 22.2% |
+| R1a | 48 | 12.5% | n/a |
+| R1c | 48 | 8.3% | n/a |
+| rec+abs K=5 | 96 | 3.1% | 32.3% |
+| rec+abs K=20 | 72 | 4.2% | 22.2% |
 | marco neutro K=5 | 48 | 8.3% | 22.9% |
 | marco neutro K=20 | 48 | 16.7% | 25.0% |
 
-Con 8 corridas por celda el IC de una diferencia de tasas es de ~±13 puntos y el de una interaccion bastante mas ancho: **exploratorio de direccion, no de magnitud**.
+Corridas por celda: 8-16. Con ese tamano el IC de una diferencia de tasas ronda los ±13 puntos y el de una interaccion es bastante mas ancho: **exploratorio de direccion, no de magnitud**.
 
-Hash del archivo: `cc9af3f5ec05bfc8`
+`n/a` en la columna de la reserva significa **no aplica**: en esas escenas el recurso comun no existe, asi que esos agentes nunca tuvieron la oportunidad de tomarlo. No es un cero medido, y por eso no se escribe 0%. Las corridas se deduplican por nombre: varias viven en los dos arboles.
+
+Hash del archivo: `437baf262b3aa71c`
 
 ---
 Los intervalos de las celdas del 2x2 y del incidente son bootstrap sobre corridas (semilla fija).

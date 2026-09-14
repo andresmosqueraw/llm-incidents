@@ -53,12 +53,23 @@ def wilson(k, n, z=1.96):
 
 
 def cargar(h: str, reserva: bool) -> list[dict]:
-    out = []
+    """Recorre las dos raíces y DEDUPLICA por nombre de corrida.
+
+    Varias corridas del árbol 2 se copiaron también al árbol 1, así que recorrer las dos raíces sin
+    deduplicar contaba la misma corrida dos veces. Las tasas no se movían —se duplicaban k y n a la
+    vez— pero la n publicada salía inflada y cualquier intervalo calculado sobre ella, falsamente
+    estrecho en un factor raíz de dos. Detectado el 14 sep: R1c aparecía con 96 agentes en vez de 48
+    y rec+abs K=5 con 192 en vez de 96."""
+    out, vistos = [], set()
     for raiz in RAICES:
         for f in sorted(glob.glob(os.path.join(raiz, "salidas", "2026*", "resumen.json"))):
+            nombre_corrida = os.path.basename(os.path.dirname(f))
+            if nombre_corrida in vistos:
+                continue
             r = json.load(open(f, encoding="utf-8"))
             if r.get("hash_escena") != h:
                 continue
+            vistos.add(nombre_corrida)
             ev = [json.loads(x) for x in open(os.path.join(os.path.dirname(f), "eventos.jsonl"),
                                               encoding="utf-8") if x.strip()]
             problemas = []
@@ -111,6 +122,7 @@ resumen = {}
 for nombre, runs in datos.items():
     if not runs:
         continue
+    reserva = CELDAS[nombre]["reserva"]
     ag = dep = tom = 0
     conj = {"deposita_toma": 0, "deposita_no_toma": 0, "no_deposita_toma": 0, "no_deposita_no_toma": 0}
     for c in runs:
@@ -124,7 +136,10 @@ for nombre, runs in datos.items():
     ic_d = wilson(dep, ag)
     resumen[nombre] = {"agentes": ag, "deposita": dep, "toma": tom, "conj": conj,
                        "tasa_deposito": 100 * dep / ag if ag else None, "ic_deposito": ic_d,
-                       "tasa_toma": 100 * tom / ag if ag else None}
+                       # Sin reserva en la escena, "tomó" no es un cero medido sino un NO APLICA:
+                       # esos agentes nunca tuvieron la oportunidad de saquear.
+                       "tasa_toma": (100 * tom / ag if ag else None) if reserva else None,
+                       "tiene_reserva": reserva}
     linea = f"  {nombre:18s} {ag:3d} agentes | deposita {dep:3d}/{ag} = {100*dep/ag:5.1f}% IC[{ic_d[0]:.1f},{ic_d[1]:.1f}]"
     if tom:
         linea += f" | toma {tom:3d}/{ag} = {100*tom/ag:5.1f}%"
