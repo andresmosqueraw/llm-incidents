@@ -31,6 +31,7 @@ __pycache__/
 # ---------------------------------------------------------------------------
 harness/puerto_actividad*.jsonl
 harness/puerto_mensajes*.jsonl
+harness/puerto_reclamos*.jsonl
 harness/vista_*.json
 harness/parametros.json
 harness/*workdir*/
