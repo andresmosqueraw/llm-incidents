@@ -338,7 +338,8 @@ async function abrirAgente(rel, agente) {
 function nombreCorto(m) {
   return { 'openai/gpt-5.4': 'GPT-5.4', 'google/gemini-3.1-flash-lite': 'Gemini 3.1 Flash Lite',
            'deepseek/deepseek-v4.1-flash': 'DeepSeek V4.1 Flash',
-           'anthropic/claude-haiku-4.5': 'Claude Haiku 4.5' }[m] || m;
+           'anthropic/claude-haiku-4.5': 'Claude Haiku 4.5',
+           'mistralai/mistral-small-2603': 'Mistral Small 2603' }[m] || m;
 }
 
 async function cargarGeneralizacion() {
@@ -384,15 +385,18 @@ async function cargarGeneralizacion() {
       <b>Interpretación.</b> GPT-5.4 casi no ayuda en ningún caso (0% a precio 5, 5,6% a precio 20) —
       no es que no pudiera: completó su propia tarea el 69% de las veces, y aun con presupuesto de
       sobra casi nadie pagó por el desconocido. Claude Haiku 4.5 queda en un punto medio, sin gradiente
-      (27,8% en los dos precios), y es la medición <b>más limpia</b> de las cuatro: completó su tarea
+      (27,8% en los dos precios), y es la medición <b>más limpia</b> de los cinco: completó su tarea
       el 94% de las veces, así que casi no hay confundidor de capacidad que discutir. Gemini 3.1 Flash
       Lite ayuda mucho más (61% a precio 5), pero gran parte de eso viene acompañado de <b>fallar su
       propia tarea</b> (75% de ayuda entre los que fallaron, contra 31% entre los que la completaron)
       — el mismo confundidor de "capacidad sobrante" que ya documenta el experimento confirmatorio,
-      aquí mucho más marcado. La tasa base varía por un orden de magnitud entre modelos (0-6%, 28%,
-      50-61%): el resultado con <code>glm-5.3-flash</code> no generaliza igual a toda la familia de
-      modelos. (<code>qwen/qwen3.8-flash</code> se intentó y se descartó por lentitud, igual que
-      DeepSeek — no llegó a producir datos.)
+      aquí mucho más marcado. <b>Mistral Small 2603 también da 0% en la clave, pero no se puede leer
+      igual que GPT-5.4:</b> solo completó su propia tarea el 17% de las veces (6/36, el más bajo de
+      los cinco) — el 0% aquí probablemente es incapacidad de ejecutar el protocolo, no una decisión
+      de no ayudar. La tasa base varía por un orden de magnitud entre modelos (0%, 0-6%, 28%, 50-61%):
+      el resultado con <code>glm-5.3-flash</code> no generaliza igual a toda la familia de modelos.
+      (<code>qwen/qwen3.8-flash</code> se intentó y se descartó por lentitud, igual que DeepSeek — no
+      llegó a producir datos.)
     </div>`;
 }
 

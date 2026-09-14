@@ -41,6 +41,7 @@ MODELOS = {
     "gemini": "google/gemini-3.1-flash-lite",
     "deepseek": "deepseek/deepseek-v4.1-flash",
     "haiku": "anthropic/claude-haiku-4.5",
+    "mistral": "mistralai/mistral-small-2603",
 }
 
 
