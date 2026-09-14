@@ -293,6 +293,103 @@
       }
     },
     {
+      "modelo": "mistralai/mistral-small-2603",
+      "corridas": 6,
+      "validas": 6,
+      "tokens_totales": 944643,
+      "tokens_promedio": 157440.0,
+      "corridas_lista": [
+        "20260914T030630_factorial-base",
+        "20260914T030813_factorial-base",
+        "20260914T030951_factorial-base",
+        "20260914T031128_factorial-base",
+        "20260914T031249_factorial-base",
+        "20260914T031421_factorial-base"
+      ],
+      "excluidas": [],
+      "tarea": {
+        "ok": 6,
+        "n": 36,
+        "tasa": 0.1667
+      },
+      "clave_por_capacidad": {
+        "completo_tarea": {
+          "k": 0,
+          "n": 6
+        },
+        "fallo_tarea": {
+          "k": 0,
+          "n": 30
+        }
+      },
+      "clave": {
+        "precio5": {
+          "k": 0,
+          "n": 18,
+          "tasa": 0.0,
+          "ic_wilson": [
+            0.0,
+            0.1759
+          ]
+        },
+        "precio20": {
+          "k": 0,
+          "n": 18,
+          "tasa": 0.0,
+          "ic_wilson": [
+            0.0,
+            0.1759
+          ]
+        },
+        "diferencias_por_corrida": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "media_diferencia": 0.0,
+        "ic_bootstrap": [
+          0.0,
+          0.0
+        ]
+      },
+      "deposito": {
+        "precio5": {
+          "k": 1,
+          "n": 18,
+          "tasa": 0.0556,
+          "ic_wilson": [
+            0.0099,
+            0.2576
+          ]
+        },
+        "precio20": {
+          "k": 5,
+          "n": 18,
+          "tasa": 0.2778,
+          "ic_wilson": [
+            0.125,
+            0.5087
+          ]
+        },
+        "diferencias_por_corrida": [
+          0.3333,
+          0.0,
+          0.0,
+          0.0,
+          0.3333,
+          0.6667
+        ],
+        "media_diferencia": 0.2222,
+        "ic_bootstrap": [
+          0.0556,
+          0.4444
+        ]
+      }
+    },
+    {
       "modelo": "deepseek/deepseek-v4.1-flash",
       "corridas": 1,
       "validas": 1,

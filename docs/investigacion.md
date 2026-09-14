@@ -519,7 +519,8 @@ arnés dos veces en la misma noche.)
 | `deepseek/deepseek-v4.1-flash` | 1 (cortado por tiempo, ver arriba) | 308.690 | 308.690 | ~$0,06 |
 | `google/gemini-3.1-flash-lite` | 6/6 | 710.028 | 118.338 | ~$0,27 |
 | `anthropic/claude-haiku-4.5` | 6/6 | 470.257 | 78.376 | ~$1,73 |
-| **Total** | **19** | **1.826.496** | | **~$3,33** |
+| `mistralai/mistral-small-2603` | 6/6 | 944.643 | 157.440 | ~$0,26 |
+| **Total** | **25** | **2.771.139** | | **~$3,59** |
 
 **`qwen/qwen3.8-flash` se intentó y se descartó (14 sep, madrugada):** pasó el smoke test (accuracy
 1.0) pero, igual que DeepSeek, resultó mucho más lento en reloj de lo que su nombre sugiere — la
@@ -540,6 +541,7 @@ sin duplicarla). Reporte crudo en `reportes/generalizacion.json`, visible tambi�
 | `openai/gpt-5.4` | 0/18 = 0% | 1/18 = 5,6% | +0,056 (IC95 boot [0, 0,167]) | 36 |
 | `anthropic/claude-haiku-4.5` | 5/18 = 27,8% | 5/18 = 27,8% | 0,0 (IC95 boot [−0,333, 0,278]) | 36 |
 | `google/gemini-3.1-flash-lite` | 11/18 = 61,1% | 9/18 = 50% | −0,111 (IC95 boot [−0,556, 0,333]) | 36 |
+| `mistralai/mistral-small-2603` | 0/18 = 0% | 0/18 = 0% | 0,0 (IC95 boot [0, 0]) | 36 |
 | `deepseek/deepseek-v4.1-flash` | — | — | N=1, sin tasas (cortado por tiempo) | 6 |
 
 - **GPT-5.4 se parece al patrón que se viene viendo con `glm-5.3-flash`**: tasa casi nula en los dos
@@ -552,12 +554,20 @@ sin duplicarla). Reporte crudo en `reportes/generalizacion.json`, visible tambi�
 - **Claude Haiku 4.5 queda en un punto intermedio y sin gradiente:** 27,8% en los dos precios,
   exactamente igual — cero diferencia. No confirma ni refuta H1 con este N, pero ubica un cuarto
   punto de referencia entre el ~0-6% de GPT-5.4 y el ~50-61% de Gemini.
+- **Mistral Small 2603 se parece a GPT-5.4 en la clave (0% en los dos precios), pero por un motivo
+  distinto y peor: casi no ejecuta la tarea.** Solo completó su propia tarea el **17% de las veces
+  (6/36)** — el más bajo de los cinco modelos con diferencia — y buena parte de sus depósitos
+  "cualquier cosa" (5,6% a precio 5, sube a 27,8% a precio 20) parecen texto suelto o intentos
+  fallidos, no respuestas a la solicitud. Con una tasa de tarea tan baja, el 0% de la clave **no se
+  puede leer igual que el de GPT-5.4** (que sí completaba el 69% de las tareas): aquí puede ser
+  incapacidad de ejecutar el protocolo completo, no una decisión de no ayudar. Se reporta, pero con
+  esta reserva explícita.
 - **Lectura honesta:** con solo 6 corridas por modelo (36 agentes, la mitad del tamaño de la sonda 4
   original) ninguna diferencia de precio es distinguible de cero en ningún modelo — pero la
-  **tasa base** sí difiere muchísimo entre modelos (0-6%, 28%, 50-61%), y eso ya es informativo aunque
-  la pendiente no lo sea: dice que el resultado confirmatorio (`glm-5.3-flash`, tasa ~20-22% en el
-  ensayo) **no generaliza igual a toda la familia de modelos** — varía por un orden de magnitud según
-  el modelo, antes incluso de mirar si responde al precio.
+  **tasa base** sí difiere muchísimo entre modelos (0%, 0-6%, 28%, 50-61%), y eso ya es informativo
+  aunque la pendiente no lo sea: dice que el resultado confirmatorio (`glm-5.3-flash`, tasa ~20-22% en
+  el ensayo) **no generaliza igual a toda la familia de modelos** — varía por un orden de magnitud
+  según el modelo, antes incluso de mirar si responde al precio.
 - Esto refuerza el límite que el proyecto ya declara en todos los documentos: **es una medición de un
   modelo**, y esta rama exploratoria muestra por qué esa declaración no es una formalidad — el número
   cambiaría materialmente el titular si `gemini-3.1-flash-lite` hubiera sido el modelo confirmatorio
@@ -575,6 +585,7 @@ modelos el mismo patrón aparece, y en Gemini es enorme:
 | `openai/gpt-5.4` | 25/36 (69%) | 1/25 (4%) | 0/11 (0%) |
 | `anthropic/claude-haiku-4.5` | 34/36 (94%) | 9/34 (26%) | 1/2 (n muy chico) |
 | `google/gemini-3.1-flash-lite` | 16/36 (44%) | 5/16 (31%) | **15/20 (75%)** |
+| `mistralai/mistral-small-2603` | **6/36 (17%)** | 0/6 (0%) | 0/30 (0%) |
 
 - En **GPT-5.4** no hay confundidor que discutir: casi nadie ayuda, complete o no su tarea (4% vs
   0%). Es la lectura más limpia de las dos: "no coopera", sin matices de capacidad.
@@ -591,6 +602,10 @@ modelos el mismo patrón aparece, y en Gemini es enorme:
   real y sigue generalizando mal, pero no se puede leer como "Gemini coopera más" sin decir en la
   misma frase que gran parte de esa cooperación viene empaquetada con fallar la propia tarea — el
   mismo confundidor de capacidad que el confirmatorio ya declara como límite, aquí más fuerte.
+- **Mistral Small 2603 es un caso distinto: 0% en la clave, pero con solo 17% de tarea completada
+  (6/36) no hay casi nada que discutir sobre "voluntad de ayudar" — el 0% aquí probablemente refleja
+  incapacidad de completar el protocolo, no una decisión racional de no cooperar como en GPT-5.4. Se
+  reporta por completitud del brazo, no como evidencia sobre disposición a ayudar.
 
 **Para el reporte:** esto va a Discussion/Limitations como generalización exploratoria (nunca con el
 peso de H1), apoyando el punto de "validez externa" que ya está en `propuesta-cooperacion-costosa.md`
