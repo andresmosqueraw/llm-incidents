@@ -1,5 +1,35 @@
 # Estado del proyecto
 
+> **Noche del 13 al 14 de septiembre (03:10 UTC / 22:10 COT).** Esta seccion es la mas reciente y se lee
+> antes que el resto: lo de abajo describe el estado del dia 12 y sigue siendo valido salvo donde diga lo
+> contrario.
+>
+> **Que corre ahora.** Dos arboles en paralelo. Arbol 1 (`/home/daw/Sprint`, puertos 8201-8206): la
+> extension del factorial hacia N=160, y detras el reemplazo de la corrida contaminada y la extension del
+> 2x2 de abstencion a 16 por celda. Arbol 2 (`/home/daw/Sprint-2`, 8401-8406): los brazos #1 (identidad
+> del solicitante) y #4 (precio 1).
+>
+> **Numeros vigentes.** Confirmatorio: 80 corridas de la escena `bf1b18a696a98476`, mas 14 de la
+> extension y su reemplazo declarado. Tasa de la clave: precio 0 = 45,8% (22/48), precio 5 = 20,5%
+> (43/210), precio 20 = 17,1% (36/210); primario pareado 20-5 = -0,0333 [-0,1143; +0,0429], incluye
+> cero: el hallazgo es un UMBRAL, no una pendiente. 2x2 de abstencion con su hash `e7bba32c5f8a032e`,
+> cero herencia entre corridas en las cuatro celdas.
+>
+> **Instrumento.** El arbol 1 corre el arnes `85d028b45e869344`, con suite APTO (75 comprobaciones) y luz
+> verde atada a esta escena. El repositorio lleva una variante posterior (cabecera de sesion condicional
+> del gateway + extension del validador para los brazos nuevos); la diferencia no toca el camino que la
+> escena del lote ejecuta. Las corridas de la extension las produjo el arnes del arbol 1.
+>
+> **Declarado en el preregistro de esta noche.** La contaminacion por la suite de validacion (una corrida
+> contabilizo un acto que ningun sujeto hizo; el centinela la hace decidible y se repone con una corrida
+> de reemplazo), que el reinicio del PC no trunco ninguna corrida, que la puerta de prelanzamiento
+> reescribe `escena.resuelta.json` al validar, y la correccion del instrumento de arriba.
+>
+> **Cierre.** Congelamiento despues de que cierre la ultima cadena; analisis con los guiones de
+> `analisis/`; la escritura del reporte es del equipo, con las figuras y la tabla de numeros congelados.
+> El envio es el lunes 14 a las 06:59 COT.
+
+
 Actualizado: sábado 12 de septiembre de 2026, 16:30 COT.
 Cierre del sprint: **lunes 14, 06:59 COT** → quedan **38,5 h de reloj, ~22,5 h útiles**.
 Entregable: reporte en inglés, plantilla oficial de Apart, máximo 8 páginas más apéndices, con el
